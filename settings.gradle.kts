@@ -11,5 +11,5 @@ dependencyResolutionManagement {
         }
     }
 }
-rootProject.name = "Mirage"
+rootProject.name = "GhostViki"
 include(":app", ":probe", ":core")
