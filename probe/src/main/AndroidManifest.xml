@@ -6,7 +6,7 @@
         <package android:name="me.weishu.kernelsu" />
         <package android:name="me.bmax.apatch" />
     </queries>
-    <application android:label="Mirage Probe" android:theme="@android:style/Theme.Material.NoActionBar"
+    <application android:label="GhostViki Probe" android:theme="@android:style/Theme.Material.NoActionBar"
         android:allowBackup="false" android:supportsRtl="true">
         <activity android:name=".ProbeActivity" android:exported="true">
             <intent-filter>
