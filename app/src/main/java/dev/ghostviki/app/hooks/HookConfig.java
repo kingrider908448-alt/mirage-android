@@ -44,7 +44,12 @@ final class HookConfig {
                                     preferences.getString("longitude:" + packageName, ""));
                         } catch (IllegalArgumentException ignored) { /* Invalid settings disable replacement. */ }
                     }
-                    snapshot = new Snapshot(identity, id, serial, preferences.getBoolean("hide_files", false),
+                    snapshot = new Snapshot(identity, id, serial,
+                            value("device_id"), value("wifi_mac"), value("bluetooth_mac"),
+                            value("imei1"), value("imei2"), value("imsi"), value("iccid"),
+                            value("build_id"), value("hardware"), value("brand"), value("model"),
+                            value("manufacturer"), value("device"), value("product"), value("fingerprint"),
+                            preferences.getBoolean("hide_files", false),
                             preferences.getBoolean("hide_packages", false), coordinates);
                 }
             } catch (RuntimeException e) {
@@ -61,15 +66,42 @@ final class HookConfig {
         return snapshot;
     }
 
+    private String value(String key) {
+        return preferences.getString(key + ":" + packageName, "");
+    }
+
     static final class Snapshot {
-        static final Snapshot OFF = new Snapshot(false, "", "", false, false, null);
+        static final Snapshot OFF = new Snapshot(false, "", "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", "", false, false, null);
         final boolean identity, hideFiles, hidePackages;
-        final String androidId, serial;
+        final String androidId, serial, deviceId, wifiMac, bluetoothMac;
+        final String imei1, imei2, imsi, iccid;
+        final String buildId, hardware, brand, model, manufacturer, device, product, fingerprint;
         final Coordinates coordinates;
-        Snapshot(boolean identity, String androidId, String serial, boolean hideFiles, boolean hidePackages, Coordinates coordinates) {
+        Snapshot(boolean identity, String androidId, String serial, String deviceId,
+                 String wifiMac, String bluetoothMac, String imei1, String imei2,
+                 String imsi, String iccid, String buildId, String hardware, String brand,
+                 String model, String manufacturer, String device, String product,
+                 String fingerprint, boolean hideFiles, boolean hidePackages,
+                 Coordinates coordinates) {
             this.identity = identity;
             this.androidId = androidId;
             this.serial = serial;
+            this.deviceId = deviceId;
+            this.wifiMac = wifiMac;
+            this.bluetoothMac = bluetoothMac;
+            this.imei1 = imei1;
+            this.imei2 = imei2;
+            this.imsi = imsi;
+            this.iccid = iccid;
+            this.buildId = buildId;
+            this.hardware = hardware;
+            this.brand = brand;
+            this.model = model;
+            this.manufacturer = manufacturer;
+            this.device = device;
+            this.product = product;
+            this.fingerprint = fingerprint;
             this.hideFiles = hideFiles;
             this.hidePackages = hidePackages;
             this.coordinates = coordinates;
