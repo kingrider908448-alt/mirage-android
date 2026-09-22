@@ -1,4 +1,4 @@
-package dev.mirage.app;
+package dev.ghostviki.app;
 
 public final class ModuleStatus {
     private ModuleStatus() {}
