@@ -78,9 +78,12 @@ public final class ProbeActivity extends Activity {
         return button;
     }
 
+    public static boolean ghostVikiHookActive() { return false; }
+
     @SuppressWarnings("deprecation")
     private void read() {
         values.clear();
+        values.put("GhostViki hook status", ghostVikiHookActive() ? "ACTIVE" : "NOT ACTIVE");
         values.put("Android ID", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
         values.put("Manufacturer", Build.MANUFACTURER);
         values.put("Brand", Build.BRAND);
