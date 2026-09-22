@@ -6,6 +6,6 @@ java {
 val checkCore by tasks.registering(JavaExec::class) {
     dependsOn(tasks.testClasses)
     classpath = sourceSets.test.get().runtimeClasspath
-    mainClass.set("dev.mirage.core.CoreChecks")
+    mainClass.set("dev.ghostviki.core.CoreChecks")
 }
 tasks.check { dependsOn(checkCore) }
