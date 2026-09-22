@@ -1,4 +1,4 @@
-package dev.mirage.probe;
+package dev.ghostviki.probe;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -48,7 +48,7 @@ public final class ProbeActivity extends Activity {
         scroll.addView(body);
         setContentView(scroll);
         TextView title = new TextView(this);
-        title.setText("Mirage Probe"); title.setTextSize(28); title.setTextColor(Color.rgb(106, 255, 183));
+        title.setText("GhostViki Probe"); title.setTextSize(28); title.setTextColor(Color.rgb(106, 255, 183));
         body.addView(title);
         report = new TextView(this);
         report.setTextSize(14); report.setTextColor(Color.WHITE); report.setTextIsSelectable(true);
