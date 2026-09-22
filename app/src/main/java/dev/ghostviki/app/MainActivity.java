@@ -438,15 +438,15 @@ public final class MainActivity extends Activity {
         } else if ("android".equals(c)) {
             rows.add(row("ANDROID ID (SSAID)", pref(pkg, "android_id", synth(pkg, "android_id", "hex16"))));
             rows.add(row("DEVICE SERIAL", pref(pkg, "serial", synth(pkg, "serial", "serial"))));
-            rows.add(row("ANDROID DEVICE ID", synth(pkg, "device_id", "hex16")));
-            rows.add(row("BOOT ID", synth(pkg, "boot_id", "uuid")));
+            rows.add(row("ANDROID DEVICE ID", pref(pkg, "device_id", synth(pkg, "device_id", "hex16"))));
+            rows.add(row("BOOT ID", pref(pkg, "boot_id", synth(pkg, "boot_id", "uuid"))));
             rows.add(row("BOOT COUNT", synth(pkg, "boot_count", "digits4")));
             rows.add(row("DEVICE NAME", "GHOST-" + synth(pkg, "device_name", "hex4").toUpperCase(Locale.ROOT)));
-            rows.add(row("BUILD ID", "GV" + synth(pkg, "build_id", "hex14").toUpperCase(Locale.ROOT)));
-            rows.add(row("HARDWARE", "gv_" + synth(pkg, "hardware", "hex4")));
+            rows.add(row("BUILD ID", pref(pkg, "build_id", "GV" + synth(pkg, "build_id", "hex14").toUpperCase(Locale.ROOT))));
+            rows.add(row("HARDWARE", pref(pkg, "hardware", "gv_" + synth(pkg, "hardware", "hex4"))));
         } else if ("network".equals(c)) {
-            rows.add(row("WIFI MAC", synth(pkg, "wifi_mac", "mac")));
-            rows.add(row("BLUETOOTH MAC", synth(pkg, "bt_mac", "mac")));
+            rows.add(row("WIFI MAC", pref(pkg, "wifi_mac", synth(pkg, "wifi_mac", "mac"))));
+            rows.add(row("BLUETOOTH MAC", pref(pkg, "bluetooth_mac", synth(pkg, "bt_mac", "mac"))));
             rows.add(row("SSID", "GHOSTVIKI_" + synth(pkg, "ssid", "hex4").toUpperCase(Locale.ROOT)));
             rows.add(row("BSSID", synth(pkg, "bssid", "mac")));
             rows.add(row("IPV4", synth(pkg, "ipv4", "ipv4")));
@@ -456,11 +456,11 @@ public final class MainActivity extends Activity {
             rows.add(row("DNS 1", "1.1.1.1"));
             rows.add(row("NETWORK INTERFACE", "wlan" + (Integer.parseInt(synth(pkg, "iface", "hex4").substring(0,1),16)%4)));
         } else if ("telephony".equals(c)) {
-            rows.add(row("IMEI (SIM 1)", synth(pkg, "imei1", "digits15")));
-            rows.add(row("IMEI (SIM 2)", synth(pkg, "imei2", "digits15")));
+            rows.add(row("IMEI (SIM 1)", pref(pkg, "imei1", synth(pkg, "imei1", "digits15"))));
+            rows.add(row("IMEI (SIM 2)", pref(pkg, "imei2", synth(pkg, "imei2", "digits15"))));
             rows.add(row("MEID", synth(pkg, "meid", "hex14").toUpperCase(Locale.ROOT)));
-            rows.add(row("IMSI", synth(pkg, "imsi", "digits15")));
-            rows.add(row("ICCID", synth(pkg, "iccid", "digits20")));
+            rows.add(row("IMSI", pref(pkg, "imsi", synth(pkg, "imsi", "digits15"))));
+            rows.add(row("ICCID", pref(pkg, "iccid", synth(pkg, "iccid", "digits20"))));
             rows.add(row("MSISDN", "+1 202 555 " + synth(pkg, "msisdn", "digits4")));
             rows.add(row("MCC / MNC", "310 / 260"));
             rows.add(row("OPERATOR", "GHOST MOBILE " + synth(pkg, "operator", "digits4")));
@@ -495,11 +495,11 @@ public final class MainActivity extends Activity {
             rows.add(row("WEBVIEW PROFILE ID", synth(pkg, "webview_id", "uuid")));
             rows.add(row("INSTALL SESSION ID", synth(pkg, "install_session", "uuid")));
         } else if ("hardware".equals(c)) {
-            rows.add(row("BRAND", "GhostViki"));
-            rows.add(row("MODEL", "GV-" + synth(pkg, "model", "hex4").toUpperCase(Locale.ROOT)));
-            rows.add(row("MANUFACTURER", "GhostViki Labs"));
-            rows.add(row("DEVICE", "gv_" + synth(pkg, "device", "hex4")));
-            rows.add(row("PRODUCT", "gv_" + synth(pkg, "product", "hex4")));
+            rows.add(row("BRAND", pref(pkg, "brand", "GhostViki")));
+            rows.add(row("MODEL", pref(pkg, "model", "GV-" + synth(pkg, "model", "hex4").toUpperCase(Locale.ROOT))));
+            rows.add(row("MANUFACTURER", pref(pkg, "manufacturer", "GhostViki Labs")));
+            rows.add(row("DEVICE", pref(pkg, "device", "gv_" + synth(pkg, "device", "hex4"))));
+            rows.add(row("PRODUCT", pref(pkg, "product", "gv_" + synth(pkg, "product", "hex4"))));
             rows.add(row("BOARD", "board_" + synth(pkg, "board", "hex4")));
             rows.add(row("BOOTLOADER", "GV" + synth(pkg, "bootloader", "hex14").toUpperCase(Locale.ROOT)));
             rows.add(row("PROCESSOR / SOC", "Google Tensor G4"));
@@ -510,7 +510,7 @@ public final class MainActivity extends Activity {
             rows.add(row("ABI", "arm64-v8a"));
             rows.add(row("DISPLAY PROFILE", (1080 + Integer.parseInt(synth(pkg, "display", "hex4").substring(0,2),16)%400) + " × 2400"));
             rows.add(row("MEMORY PROFILE", (6 + Integer.parseInt(synth(pkg, "memory", "hex4").substring(0,1),16)%7) + " GB"));
-            rows.add(row("BUILD FINGERPRINT", "ghostviki/gv/gv:16/GV" + synth(pkg, "fingerprint", "hex14").toUpperCase(Locale.ROOT) + "/" + synth(pkg, "build_number", "digits8") + ":user/release-keys"));
+            rows.add(row("BUILD FINGERPRINT", pref(pkg, "fingerprint", "ghostviki/gv/gv:16/GV" + synth(pkg, "fingerprint", "hex14").toUpperCase(Locale.ROOT) + "/" + synth(pkg, "build_number", "digits8") + ":user/release-keys")));
         }
         return rows;
     }
