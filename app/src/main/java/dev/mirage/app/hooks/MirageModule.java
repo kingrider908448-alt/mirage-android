@@ -1,8 +1,8 @@
-package dev.mirage.app.hooks;
+package dev.ghostviki.app.hooks;
 
 import android.os.Build;
 import android.provider.Settings;
-import dev.mirage.app.ConfigStore;
+import dev.ghostviki.app.ConfigStore;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -10,10 +10,10 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
-public final class MirageModule implements IXposedHookLoadPackage {
+public final class GhostVikiModule implements IXposedHookLoadPackage {
     @Override public void handleLoadPackage(XC_LoadPackage.LoadPackageParam param) {
         if (ConfigStore.PACKAGE.equals(param.packageName)) {
-            XposedHelpers.findAndHookMethod("dev.mirage.app.ModuleStatus", param.classLoader,
+            XposedHelpers.findAndHookMethod("dev.ghostviki.app.ModuleStatus", param.classLoader,
                     "isLoaded", XC_MethodReplacement.returnConstant(true));
             return;
         }
@@ -24,7 +24,7 @@ public final class MirageModule implements IXposedHookLoadPackage {
         install("identity", () -> installIdentity(config));
         install("root signals", () -> RootHooks.install(config));
         install("location", () -> LocationHooks.install(config, param.classLoader));
-        XposedBridge.log("Mirage: adapters registered for " + param.packageName
+        XposedBridge.log("GhostViki: adapters registered for " + param.packageName
                 + "; verify results in the target app (registration is not a passing detector result)");
     }
 
@@ -50,6 +50,6 @@ public final class MirageModule implements IXposedHookLoadPackage {
 
     private static void install(String name, Runnable action) {
         try { action.run(); }
-        catch (Throwable e) { XposedBridge.log("Mirage: " + name + " registration failed: " + e); }
+        catch (Throwable e) { XposedBridge.log("GhostViki: " + name + " registration failed: " + e); }
     }
 }
