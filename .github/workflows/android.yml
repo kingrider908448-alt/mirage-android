@@ -35,13 +35,13 @@ jobs:
       - name: Collect APKs and checksums
         run: |
           mkdir -p artifacts
-          cp app/build/outputs/apk/debug/app-debug.apk artifacts/Mirage-alpha.apk
-          cp probe/build/outputs/apk/debug/probe-debug.apk artifacts/Mirage-Probe.apk
+          cp app/build/outputs/apk/debug/app-debug.apk artifacts/GhostViki-alpha.apk
+          cp probe/build/outputs/apk/debug/probe-debug.apk artifacts/GhostViki-Probe.apk
           cd artifacts
           sha256sum *.apk > SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: Mirage-debug-${{ github.run_number }}
+          name: GhostViki-debug-${{ github.run_number }}
           path: artifacts/
           if-no-files-found: error
           retention-days: 14
