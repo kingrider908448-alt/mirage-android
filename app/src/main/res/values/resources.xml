@@ -1,0 +1,14 @@
+<resources>
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#6AFFB7</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#070D0A</item>
+    </style>
+    <string-array name="module_scope">
+        <item>dev.mirage.probe</item>
+        <item>com.eltavine.duckdetector</item>
+    </string-array>
+</resources>
