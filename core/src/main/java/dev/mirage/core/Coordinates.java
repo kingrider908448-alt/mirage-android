@@ -1,4 +1,4 @@
-package dev.mirage.core;
+package dev.ghostviki.core;
 
 public final class Coordinates {
     public final double latitude;
