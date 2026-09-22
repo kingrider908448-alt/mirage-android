@@ -1,4 +1,4 @@
-package dev.mirage.core;
+package dev.ghostviki.core;
 
 import java.security.SecureRandom;
 
