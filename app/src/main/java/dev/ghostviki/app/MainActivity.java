@@ -290,6 +290,18 @@ public final class MainActivity extends Activity {
     private void identityCategories() {
         subHeader("CHANGE IDENTITY");
 
+        long generation = config.preferences.getLong("generation", 0);
+        long changedAt = config.preferences.getLong("changed_at", 0);
+        heading("IDENTITY PROFILE  #" + generation,
+                config.targets().isEmpty() ? "SELECT A TARGET APP TO GENERATE VALUES"
+                        : (changedAt == 0 ? "READY TO GENERATE A SAVED PROFILE"
+                        : "ACTIVE SAVED PROFILE  •  " + config.targets().size() + " TARGET APP(S)"));
+        button("CHANGE ALL VALUES NOW", () -> {
+            if (config.targets().isEmpty()) { selectTargets(); return; }
+            save(config::rotateIdentity, "All profile values changed.");
+        }, true);
+        space(18);
+
         categoryCard("G", "GOOGLE IDENTIFIERS",
                 "GSF ID  |  AAID  |  APP SET ID  |  FID  |  FCM\nCRASHLYTICS  |  PLAY SERVICES",
                 "google");
@@ -422,13 +434,16 @@ public final class MainActivity extends Activity {
             rows.add(row("FCM REGISTRATION TOKEN", pref(pkg, "fcm_token", synth(pkg, "fcm", "fcm"))));
             rows.add(row("CRASHLYTICS INSTALLATION ID", pref(pkg, "crashlytics_installation_id", synth(pkg, "crash", "hex32"))));
             rows.add(row("PLAY SERVICES ID", synth(pkg, "play_services", "uuid")));
+            rows.add(row("LEGACY INSTANCE ID", synth(pkg, "instance_id", "hex32")));
         } else if ("android".equals(c)) {
             rows.add(row("ANDROID ID (SSAID)", pref(pkg, "android_id", synth(pkg, "android_id", "hex16"))));
             rows.add(row("DEVICE SERIAL", pref(pkg, "serial", synth(pkg, "serial", "serial"))));
             rows.add(row("ANDROID DEVICE ID", synth(pkg, "device_id", "hex16")));
             rows.add(row("BOOT ID", synth(pkg, "boot_id", "uuid")));
-            rows.add(row("BUILD ID", "BP2A.260905.008"));
-            rows.add(row("HARDWARE", "tensor"));
+            rows.add(row("BOOT COUNT", synth(pkg, "boot_count", "digits4")));
+            rows.add(row("DEVICE NAME", "GHOST-" + synth(pkg, "device_name", "hex4").toUpperCase(Locale.ROOT)));
+            rows.add(row("BUILD ID", "GV" + synth(pkg, "build_id", "hex14").toUpperCase(Locale.ROOT)));
+            rows.add(row("HARDWARE", "gv_" + synth(pkg, "hardware", "hex4")));
         } else if ("network".equals(c)) {
             rows.add(row("WIFI MAC", synth(pkg, "wifi_mac", "mac")));
             rows.add(row("BLUETOOTH MAC", synth(pkg, "bt_mac", "mac")));
@@ -437,7 +452,9 @@ public final class MainActivity extends Activity {
             rows.add(row("IPV4", synth(pkg, "ipv4", "ipv4")));
             rows.add(row("IPV6", synth(pkg, "ipv6", "ipv6")));
             rows.add(row("DHCP SERVER", "10.42.0.1"));
-            rows.add(row("GATEWAY", "10.42.0.1"));
+            rows.add(row("GATEWAY", "10.42." + (Integer.parseInt(synth(pkg, "gateway", "hex4").substring(0,2),16)%250+1) + ".1"));
+            rows.add(row("DNS 1", "1.1.1.1"));
+            rows.add(row("NETWORK INTERFACE", "wlan" + (Integer.parseInt(synth(pkg, "iface", "hex4").substring(0,1),16)%4)));
         } else if ("telephony".equals(c)) {
             rows.add(row("IMEI (SIM 1)", synth(pkg, "imei1", "digits15")));
             rows.add(row("IMEI (SIM 2)", synth(pkg, "imei2", "digits15")));
@@ -446,15 +463,16 @@ public final class MainActivity extends Activity {
             rows.add(row("ICCID", synth(pkg, "iccid", "digits20")));
             rows.add(row("MSISDN", "+1 202 555 " + synth(pkg, "msisdn", "digits4")));
             rows.add(row("MCC / MNC", "310 / 260"));
-            rows.add(row("OPERATOR", "TEST MOBILE"));
+            rows.add(row("OPERATOR", "GHOST MOBILE " + synth(pkg, "operator", "digits4")));
             rows.add(row("COUNTRY ISO", "US"));
             rows.add(row("ROAMING", "FALSE"));
+            rows.add(row("CARRIER ID", synth(pkg, "carrier_id", "digits5")));
             rows.add(row("EID", synth(pkg, "eid", "digits32")));
         } else if ("location".equals(c)) {
-            rows.add(row("LATITUDE", "37.4219983"));
-            rows.add(row("LONGITUDE", "-122.0840000"));
-            rows.add(row("ALTITUDE", "12.4 m"));
-            rows.add(row("ACCURACY", "5.0 m"));
+            rows.add(row("LATITUDE", config.preferences.getString("latitude:" + pkg, "37." + synth(pkg, "latitude", "digits8"))));
+            rows.add(row("LONGITUDE", config.preferences.getString("longitude:" + pkg, "-122." + synth(pkg, "longitude", "digits8"))));
+            rows.add(row("ALTITUDE", synth(pkg, "altitude", "digits4") + " m"));
+            rows.add(row("ACCURACY", (Integer.parseInt(synth(pkg, "accuracy", "hex4").substring(0,2),16)%20+3) + ".0 m"));
             rows.add(row("TIMEZONE", "Etc/UTC"));
             rows.add(row("LOCALE", "en-US"));
             rows.add(row("COUNTRY", "US"));
@@ -473,19 +491,26 @@ public final class MainActivity extends Activity {
             rows.add(row("APP SET ID", pref(pkg, "app_set_id", synth(pkg, "appset2", "hex32"))));
             rows.add(row("ANDROID USER", "0"));
             rows.add(row("PROCESS UID", synth(pkg, "uid", "digits5")));
+            rows.add(row("DRM / MEDIA ID", synth(pkg, "drm_id", "hex32").toUpperCase(Locale.ROOT)));
+            rows.add(row("WEBVIEW PROFILE ID", synth(pkg, "webview_id", "uuid")));
+            rows.add(row("INSTALL SESSION ID", synth(pkg, "install_session", "uuid")));
         } else if ("hardware".equals(c)) {
-            rows.add(row("BRAND", "Google"));
-            rows.add(row("MODEL", "Pixel 9 Pro"));
-            rows.add(row("MANUFACTURER", "Google"));
-            rows.add(row("DEVICE", "komodo"));
-            rows.add(row("PRODUCT", "komodo"));
+            rows.add(row("BRAND", "GhostViki"));
+            rows.add(row("MODEL", "GV-" + synth(pkg, "model", "hex4").toUpperCase(Locale.ROOT)));
+            rows.add(row("MANUFACTURER", "GhostViki Labs"));
+            rows.add(row("DEVICE", "gv_" + synth(pkg, "device", "hex4")));
+            rows.add(row("PRODUCT", "gv_" + synth(pkg, "product", "hex4")));
+            rows.add(row("BOARD", "board_" + synth(pkg, "board", "hex4")));
+            rows.add(row("BOOTLOADER", "GV" + synth(pkg, "bootloader", "hex14").toUpperCase(Locale.ROOT)));
             rows.add(row("PROCESSOR / SOC", "Google Tensor G4"));
             rows.add(row("ROM", "256 GB"));
             rows.add(row("ANDROID VERSION", "16"));
             rows.add(row("SECURITY PATCH", "2026-09-05"));
             rows.add(row("KERNEL", "6.1.99-android15"));
             rows.add(row("ABI", "arm64-v8a"));
-            rows.add(row("BUILD FINGERPRINT", "google/komodo/komodo:16/BP2A.260905.008/12345678:user/release-keys"));
+            rows.add(row("DISPLAY PROFILE", (1080 + Integer.parseInt(synth(pkg, "display", "hex4").substring(0,2),16)%400) + " × 2400"));
+            rows.add(row("MEMORY PROFILE", (6 + Integer.parseInt(synth(pkg, "memory", "hex4").substring(0,1),16)%7) + " GB"));
+            rows.add(row("BUILD FINGERPRINT", "ghostviki/gv/gv:16/GV" + synth(pkg, "fingerprint", "hex14").toUpperCase(Locale.ROOT) + "/" + synth(pkg, "build_number", "digits8") + ":user/release-keys"));
         }
         return rows;
     }
