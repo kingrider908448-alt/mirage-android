@@ -9,12 +9,27 @@
 - The GitHub Actions YAML parsed successfully and contains push, pull-request and manual triggers, read-only repository permissions, APK build and artifact steps.
 - Android API reference review identified API 33-only location methods; the code now guards those calls, and guards API 34-only location methods separately.
 
+## Completed in GitHub Actions
+
+- [Build #3](https://github.com/kingrider908448-alt/mirage-android/actions/runs/35722372858) succeeded for commit `2c1d685ab7a66aae0f4a48318813c22bf2427f5e`.
+- JDK 17, Gradle 8.13, AGP 8.13.2 and Android SDK 36 resolved and built the project.
+- `:core:check` passed, including all 3,015 core assertions.
+- Both `:app:lintDebug` and `:probe:lintDebug` passed. Warnings remain for the intentional identifier reader/shared-preference bridge, Android 16 target level, backup configuration, Probe icon and untranslated UI strings. Passing lint does not mean the app has been tested on a phone.
+- `:app:assembleDebug` and `:probe:assembleDebug` produced both signed debug APKs.
+- The initial SDK setup failure was fixed by removing the obsolete `tools` package from setup.
+- Modern back navigation uses the platform callback only on internal screens; Android handles back from the home screen. The Android 12/12L fallback has a documented, method-specific lint suppression. The build still aborts on other lint errors.
+- Downloaded artifact digest and both APK SHA-256 checksums were verified. Both APKs contain their manifest and DEX, and Mirage contains its expected Xposed module entry point.
+
+| APK | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Mirage-alpha.apk | 68,141 | `a9db202528076df2b0b9f13fbc477801996a6b0d540aa3df4a51061ede8b73fe` |
+| Mirage-Probe.apk | 21,969 | `27b02e78539746b9db38a2932ad7436a86890e0d1b141b1e224c5eefe70d1aca` |
+
 ## Not yet completed
 
-- Full Gradle dependency resolution, Android lint, resource linking and APK compilation. Android SDK/Gradle are not installed here; attempts to reach their official download endpoints timed out. The GitHub build has not run.
 - Runtime verification on OnePlus 15R / Android 16 / Vector 2.2.
 - Cross-process preference access, target scope, identity persistence, callback removal, and selected/unselected target isolation on a real device.
 - Duck Detector baseline and post-change comparison.
 - Visual and accessibility review on an Android device.
 
-There is no verified installable APK in this source bundle. An APK build or a detector pass must not be inferred from passing core checks.
+The APKs are verified build outputs, not a device-validated release. A detector pass must not be inferred from a successful build or passing core checks.

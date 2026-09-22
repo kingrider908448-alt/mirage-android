@@ -4,7 +4,11 @@ An early native Android app and Vector / LSPosed module with a green-and-black i
 
 ## Project status
 
-This is **0.1.0-alpha source**, not a device-validated release. The target test device is OnePlus 15R on Android 16 with Vector 2.2. Successful registration of hooks is not evidence that a detector passed. Do not label this module universal or undetectable.
+This is **0.1.0-alpha**, with a successful APK build and Android lint checks, but no device validation yet. The target test device is OnePlus 15R on Android 16 with Vector 2.2. Successful registration of hooks is not evidence that a detector passed. Do not label this module universal or undetectable.
+
+**[Download both APKs](https://github.com/kingrider908448-alt/mirage-android/actions/runs/35722372858/artifacts/10691986848)** · **[Successful build #3](https://github.com/kingrider908448-alt/mirage-android/actions/runs/35722372858)**
+
+The ZIP contains `Mirage-alpha.apk`, `Mirage-Probe.apk`, and `SHA256SUMS.txt`. Extract it and install both APKs. GitHub may ask you to sign in to download the artifact. This build was produced from commit `2c1d685ab7a66aae0f4a48318813c22bf2427f5e` on 2026-09-22. Its Actions download expires on 2026-10-06; the workflow can generate a new build afterward. See [VALIDATION.md](VALIDATION.md) for results and remaining checks.
 
 ## Current code coverage
 
