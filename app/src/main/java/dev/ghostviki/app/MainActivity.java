@@ -134,24 +134,41 @@ public final class MainActivity extends Activity {
     }
 
     private void identity() {
-        heading("Change Identity", "Generate one saved profile for each selected app.");
+        heading("Change Identity", "One profile, shown as a simple ID/value column.");
+        List<String> targets = new ArrayList<>(config.targets());
+        Collections.sort(targets);
+        if (targets.isEmpty()) {
+            text("Select at least one target app to create a profile.", 15, MUTED, false);
+            space(18);
+            button("Choose target apps", this::selectTargets, true);
+            return;
+        }
+
+        String pkg = targets.get(0);
         long generation = config.preferences.getLong("generation", 0);
-        text(generation == 0 ? "Ready for your first profile" : "Profile " + generation,
-                27, GREEN, true);
+        text(generation == 0 ? "PROFILE PREVIEW" : "PROFILE " + generation, 11, GREEN, true);
+        space(5);
+        text(label(pkg), 25, TEXT, true);
+        text(pkg, 12, MUTED, false);
+        space(22);
+
+        identityValue("Android ID / SSAID", config.preferences.getString("android_id:" + pkg, "Not generated"));
+        identityValue("Device Serial", config.preferences.getString("serial:" + pkg, "Not generated"));
+        identityValue("Advertising ID", config.preferences.getString("advertising_id:" + pkg, "Not generated"));
+        identityValue("App Set ID", config.preferences.getString("app_set_id:" + pkg, "Not generated"));
+        identityValue("Firebase Installation ID", config.preferences.getString("firebase_installation_id:" + pkg, "Not generated"));
+        identityValue("FCM Registration Token", config.preferences.getString("fcm_token:" + pkg, "Not generated"));
+        identityValue("GSF ID", config.preferences.getString("gsf_id:" + pkg, "Not generated"));
+        identityValue("Crashlytics Installation ID", config.preferences.getString("crashlytics_installation_id:" + pkg, "Not generated"));
+
         space(12);
-        text("Current adapters: Android ID and serial when the app has access.", 15, TEXT, false);
-        space(12);
-        text("Values stay the same until you change them again. There are no individual identifier settings.", 14, MUTED, false);
-        space(24);
-        button("Change Values", () -> {
-            if (config.targets().isEmpty()) { selectTargets(); return; }
-            save(config::rotateIdentity, "New profile saved. Restart the selected apps, then verify in Probe.");
-        }, true);
+        button("Change Values", () ->
+                save(config::rotateIdentity, "New synthetic test profile generated for the selected apps."), true);
         button("Use original values", () -> save(() -> config.setFlag("identity_enabled", false),
                 "Original values selected. Restart the target apps."), false);
         button("Open GhostViki Probe", () -> launch("dev.ghostviki.probe"), false);
         space(20);
-        note("Additional identifier adapters are planned. This alpha does not reset an account or all tracking signals.");
+        note("The values shown here are synthetic test-profile values. Current runtime adapters remain limited to the identifiers already supported by GhostViki.");
     }
 
     private void location() {
@@ -275,6 +292,21 @@ public final class MainActivity extends Activity {
         try { return getPackageManager().getApplicationLabel(getPackageManager().getApplicationInfo(pkg, 0)).toString(); }
         catch (android.content.pm.PackageManager.NameNotFoundException ignored) { return pkg; }
     }
+    private void identityValue(String title, String value) {
+        TextView name = labelView(title.toUpperCase(Locale.ROOT), 11, MUTED, true);
+        body.addView(name, new LinearLayout.LayoutParams(-1, -2));
+        TextView valueView = labelView(value, 15, GREEN, false);
+        valueView.setTypeface(Typeface.MONOSPACE);
+        valueView.setTextIsSelectable(true);
+        valueView.setPadding(0, dp(5), 0, dp(16));
+        body.addView(valueView, new LinearLayout.LayoutParams(-1, -2));
+        View divider = new View(this);
+        divider.setBackgroundColor(Color.rgb(35, 67, 48));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, dp(1));
+        params.bottomMargin = dp(18);
+        body.addView(divider, params);
+    }
+
     private void heading(String title, String description) {
         text(title, 32, TEXT, true); space(10); text(description, 15, MUTED, false); space(30);
     }

@@ -40,6 +40,7 @@ public final class ConfigStore {
         }
         preferences = selected;
         bridgeAvailable = ready;
+        backfillIdentityFields();
     }
 
     public Set<String> targets() {
@@ -63,8 +64,32 @@ public final class ConfigStore {
                 .putLong("changed_at", System.currentTimeMillis()).commit();
     }
 
+    private void backfillIdentityFields() {
+        SharedPreferences.Editor editor = preferences.edit();
+        boolean changed = false;
+        for (String pkg : targets()) {
+            Identity identity = Identity.generate();
+            if (!preferences.contains("android_id:" + pkg)) { editor.putString("android_id:" + pkg, identity.androidId); changed = true; }
+            if (!preferences.contains("serial:" + pkg)) { editor.putString("serial:" + pkg, identity.serial); changed = true; }
+            if (!preferences.contains("advertising_id:" + pkg)) { editor.putString("advertising_id:" + pkg, identity.advertisingId); changed = true; }
+            if (!preferences.contains("app_set_id:" + pkg)) { editor.putString("app_set_id:" + pkg, identity.appSetId); changed = true; }
+            if (!preferences.contains("firebase_installation_id:" + pkg)) { editor.putString("firebase_installation_id:" + pkg, identity.firebaseInstallationId); changed = true; }
+            if (!preferences.contains("fcm_token:" + pkg)) { editor.putString("fcm_token:" + pkg, identity.fcmToken); changed = true; }
+            if (!preferences.contains("gsf_id:" + pkg)) { editor.putString("gsf_id:" + pkg, identity.gsfId); changed = true; }
+            if (!preferences.contains("crashlytics_installation_id:" + pkg)) { editor.putString("crashlytics_installation_id:" + pkg, identity.crashlyticsInstallationId); changed = true; }
+        }
+        if (changed) editor.commit();
+    }
+
     private static void putIdentity(SharedPreferences.Editor editor, String pkg, Identity identity) {
-        editor.putString("android_id:" + pkg, identity.androidId).putString("serial:" + pkg, identity.serial);
+        editor.putString("android_id:" + pkg, identity.androidId)
+                .putString("serial:" + pkg, identity.serial)
+                .putString("advertising_id:" + pkg, identity.advertisingId)
+                .putString("app_set_id:" + pkg, identity.appSetId)
+                .putString("firebase_installation_id:" + pkg, identity.firebaseInstallationId)
+                .putString("fcm_token:" + pkg, identity.fcmToken)
+                .putString("gsf_id:" + pkg, identity.gsfId)
+                .putString("crashlytics_installation_id:" + pkg, identity.crashlyticsInstallationId);
     }
 
     public boolean setFlag(String name, boolean value) { return preferences.edit().putBoolean(name, value).commit(); }

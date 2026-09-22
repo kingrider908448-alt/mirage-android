@@ -11,6 +11,12 @@ public final class CoreChecks {
             Identity id = Identity.generate();
             check(id.androidId.matches("[0-9a-f]{16}"), "Android ID must be a 64-bit hex string");
             check(id.serial.matches("[0-9A-F]{16}"), "serial format");
+            check(id.advertisingId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"), "advertising ID format");
+            check(id.appSetId.matches("[0-9a-f]{32}"), "app set ID format");
+            check(id.firebaseInstallationId.matches("[A-Za-z0-9_-]{22}"), "FID format");
+            check(id.fcmToken.matches("[A-Za-z0-9_-]{22}:[A-Za-z0-9_-]{120}"), "FCM token format");
+            check(id.gsfId.matches("[0-9a-f]{16}"), "GSF ID format");
+            check(id.crashlyticsInstallationId.matches("[0-9a-f]{32}"), "Crashlytics ID format");
             check(seen.add(id.androidId), "unexpected identifier collision");
         }
         check(Coordinates.parse(" -90 ", "180").latitude == -90, "valid coordinate bounds");
