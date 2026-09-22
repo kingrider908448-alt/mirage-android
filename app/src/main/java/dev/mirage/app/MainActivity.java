@@ -30,6 +30,8 @@ public final class MainActivity extends Activity {
     private LinearLayout body;
     private String page = "home";
     private boolean saving;
+    private android.window.OnBackInvokedCallback backCallback;
+    private boolean backRegistered;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -40,9 +42,7 @@ public final class MainActivity extends Activity {
                 android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
                         | android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
         if (android.os.Build.VERSION.SDK_INT >= 33) {
-            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
-                    android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,
-                    () -> { if ("home".equals(page)) finish(); else show("home"); });
+            backCallback = () -> show("home");
         }
         render();
     }
@@ -50,13 +50,35 @@ public final class MainActivity extends Activity {
         super.onSaveInstanceState(out);
         out.putString("page", page);
     }
-    @Override protected void onDestroy() { worker.shutdown(); super.onDestroy(); }
+    @Override protected void onDestroy() {
+        if (android.os.Build.VERSION.SDK_INT >= 33 && backRegistered)
+            getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(backCallback);
+        worker.shutdown();
+        super.onDestroy();
+    }
+    // Android 12/12L fallback only. Android 13+ uses the platform callback below.
+    @android.annotation.SuppressLint("GestureBackNavigation")
     @Override @SuppressWarnings("deprecation") public void onBackPressed() {
         if (!"home".equals(page)) show("home"); else super.onBackPressed();
     }
 
+    private void updateBackCallback() {
+        if (android.os.Build.VERSION.SDK_INT < 33) return;
+        boolean needed = !"home".equals(page);
+        if (needed == backRegistered) return;
+        if (needed) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, backCallback);
+        } else {
+            // Let Android handle leaving the home screen, including its back animation.
+            getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(backCallback);
+        }
+        backRegistered = needed;
+    }
+
     private void show(String screen) { page = screen; render(); }
     private void render() {
+        updateBackCallback();
         ScrollView scroll = new ScrollView(this);
         scroll.setFillViewport(true);
         scroll.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,

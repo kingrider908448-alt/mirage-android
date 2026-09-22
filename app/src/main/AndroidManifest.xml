@@ -7,7 +7,8 @@
     </queries>
     <application android:label="Mirage" android:theme="@style/AppTheme"
         android:icon="@drawable/ic_mirage" android:allowBackup="false"
-        android:supportsRtl="true" android:usesCleartextTraffic="false">
+        android:supportsRtl="true" android:usesCleartextTraffic="false"
+        android:enableOnBackInvokedCallback="true">
         <meta-data android:name="xposedmodule" android:value="true" />
         <meta-data android:name="xposeddescription" android:value="Selected-app identity and location testing" />
         <meta-data android:name="xposedminversion" android:value="93" />
