@@ -1,4 +1,4 @@
-package dev.mirage.app;
+package dev.ghostviki.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,7 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.*;
-import dev.mirage.core.Coordinates;
+import dev.ghostviki.core.Coordinates;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -105,10 +105,10 @@ public final class MainActivity extends Activity {
     private void home() {
         text("ON-DEVICE WORKSPACE", 11, GREEN, true);
         space(5);
-        text("Mirage", 46, TEXT, true);
+        text("GhostViki", 46, TEXT, true);
         space(8);
         text(config.bridgeAvailable ? "Settings bridge ready · target verification pending"
-                : "Setup needed · enable Mirage in Vector, then reopen", 12, MUTED, false);
+                : "Setup needed · enable GhostViki in Vector, then reopen", 12, MUTED, false);
         space(18);
         button(config.targets().size() + " target apps  ·  Select apps", this::selectTargets, false);
         LinearLayout cards = column();
@@ -149,7 +149,7 @@ public final class MainActivity extends Activity {
         }, true);
         button("Use original values", () -> save(() -> config.setFlag("identity_enabled", false),
                 "Original values selected. Restart the target apps."), false);
-        button("Open Mirage Probe", () -> launch("dev.mirage.probe"), false);
+        button("Open GhostViki Probe", () -> launch("dev.ghostviki.probe"), false);
         space(20);
         note("Additional identifier adapters are planned. This alpha does not reset an account or all tracking signals.");
     }
@@ -225,7 +225,7 @@ public final class MainActivity extends Activity {
                             if (on) selected.add(packages.get(index)); else selected.remove(packages.get(index));
                         }).setNegativeButton("Cancel", null)
                         .setPositiveButton("Save", (dialog, which) -> save(() -> config.setTargets(selected),
-                                "Targets saved. Select the same apps in Vector's Mirage scope and restart them."))
+                                "Targets saved. Select the same apps in Vector's GhostViki scope and restart them."))
                         .show();
             });
         });
@@ -243,7 +243,7 @@ public final class MainActivity extends Activity {
             }
             catch (RuntimeException e) { result = "Could not save: " + e.getMessage(); }
             String completed = success && !config.bridgeAvailable
-                    ? "Draft saved. Enable Mirage in Vector and reopen it before testing." : result;
+                    ? "Draft saved. Enable GhostViki in Vector and reopen it before testing." : result;
             runOnUiThread(() -> {
                 saving = false;
                 if (!isFinishing() && !isDestroyed()) {
