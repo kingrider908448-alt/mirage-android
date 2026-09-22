@@ -17,26 +17,21 @@ public final class ConfigStore {
     @SuppressWarnings({"deprecation", "unchecked"})
     public ConfigStore(Context context) {
         SharedPreferences draft = context.getSharedPreferences("draft", Context.MODE_PRIVATE);
-        SharedPreferences selected;
-        boolean ready;
-        try {
-            selected = context.getSharedPreferences(PREFS, Context.MODE_WORLD_READABLE);
-            ready = true;
-            if (!selected.contains("schema")) {
-                SharedPreferences.Editor editor = selected.edit();
-                for (Map.Entry<String, ?> e : draft.getAll().entrySet()) {
-                    Object value = e.getValue();
-                    if (value instanceof String) editor.putString(e.getKey(), (String) value);
-                    else if (value instanceof Boolean) editor.putBoolean(e.getKey(), (Boolean) value);
-                    else if (value instanceof Long) editor.putLong(e.getKey(), (Long) value);
-                    else if (value instanceof Integer) editor.putInt(e.getKey(), (Integer) value);
-                    else if (value instanceof Set<?>) editor.putStringSet(e.getKey(), new HashSet<>((Set<String>) value));
-                }
-                if (!editor.putInt("schema", 1).commit()) ready = false;
+        // MODE_WORLD_READABLE throws on modern Android. LSPosed's xposedsharedprefs
+        // bridge reads this named private file on behalf of scoped target processes.
+        SharedPreferences selected = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        boolean ready = true;
+        if (!selected.contains("schema")) {
+            SharedPreferences.Editor editor = selected.edit();
+            for (Map.Entry<String, ?> e : draft.getAll().entrySet()) {
+                Object value = e.getValue();
+                if (value instanceof String) editor.putString(e.getKey(), (String) value);
+                else if (value instanceof Boolean) editor.putBoolean(e.getKey(), (Boolean) value);
+                else if (value instanceof Long) editor.putLong(e.getKey(), (Long) value);
+                else if (value instanceof Integer) editor.putInt(e.getKey(), (Integer) value);
+                else if (value instanceof Set<?>) editor.putStringSet(e.getKey(), new HashSet<>((Set<String>) value));
             }
-        } catch (SecurityException e) {
-            selected = draft;
-            ready = false;
+            ready = editor.putInt("schema", 2).commit();
         }
         preferences = selected;
         bridgeAvailable = ready;
