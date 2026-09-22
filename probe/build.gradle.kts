@@ -1,10 +1,10 @@
 plugins { id("com.android.application") }
 
 android {
-    namespace = "dev.mirage.probe"
+    namespace = "dev.ghostviki.probe"
     compileSdk = 36
     defaultConfig {
-        applicationId = "dev.mirage.probe"
+        applicationId = "dev.ghostviki.probe"
         minSdk = 31
         targetSdk = 36
         versionCode = 1
