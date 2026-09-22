@@ -1,15 +1,15 @@
-package dev.mirage.app;
+package dev.ghostviki.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import dev.mirage.core.Coordinates;
-import dev.mirage.core.Identity;
+import dev.ghostviki.core.Coordinates;
+import dev.ghostviki.core.Identity;
 
 public final class ConfigStore {
-    public static final String PACKAGE = "dev.mirage.app";
+    public static final String PACKAGE = "dev.ghostviki.app";
     public static final String PREFS = "runtime";
     public final SharedPreferences preferences;
     public final boolean bridgeAvailable;
