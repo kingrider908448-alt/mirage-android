@@ -1,14 +1,14 @@
-# Mirage for Android
+# GhostViki for Android
 
-An early native Android app and Vector / LSPosed module with a green-and-black interface and three controls: **Root Hide Methods**, **Change Identity**, and **Location**. A separate **Mirage Probe** app reads the actual results for comparison.
+An early native Android app and Vector / LSPosed module with a green-and-black interface and three controls: **Root Hide Methods**, **Change Identity**, and **Location**. A separate **GhostViki Probe** app reads the actual results for comparison.
 
 ## Project status
 
 This is **0.1.0-alpha**, with a successful APK build and Android lint checks, but no device validation yet. The target test device is OnePlus 15R on Android 16 with Vector 2.2. Successful registration of hooks is not evidence that a detector passed. Do not label this module universal or undetectable.
 
-**[Download both APKs](https://github.com/kingrider908448-alt/mirage-android/actions/runs/35722372858/artifacts/10691986848)** · **[Successful build #3](https://github.com/kingrider908448-alt/mirage-android/actions/runs/35722372858)**
+**[Download both APKs](https://github.com/kingrider908448-alt/ghostviki-android/actions/runs/35722372858/artifacts/10691986848)** · **[Successful build #3](https://github.com/kingrider908448-alt/ghostviki-android/actions/runs/35722372858)**
 
-The ZIP contains `Mirage-alpha.apk`, `Mirage-Probe.apk`, and `SHA256SUMS.txt`. Extract it and install both APKs. GitHub may ask you to sign in to download the artifact. This build was produced from commit `2c1d685ab7a66aae0f4a48318813c22bf2427f5e` on 2026-09-22. Its Actions download expires on 2026-10-06; the workflow can generate a new build afterward. See [VALIDATION.md](VALIDATION.md) for results and remaining checks.
+The ZIP contains `GhostViki-alpha.apk`, `GhostViki-Probe.apk`, and `SHA256SUMS.txt`. Extract it and install both APKs. GitHub may ask you to sign in to download the artifact. This build was produced from commit `2c1d685ab7a66aae0f4a48318813c22bf2427f5e` on 2026-09-22. Its Actions download expires on 2026-10-06; the workflow can generate a new build afterward. See [VALIDATION.md](VALIDATION.md) for results and remaining checks.
 
 ## Current code coverage
 
@@ -23,7 +23,7 @@ The UI contains a single Change Values action; no per-identifier editor. Android
 
 ## Build in GitHub
 
-The included workflow runs on push, pull request or manual dispatch. It installs JDK 17, Gradle 8.13 and Android SDK 36; checks the core; runs Android lint; and builds both debug APKs. It uploads `Mirage-alpha.apk`, `Mirage-Probe.apk` and checksums as an Actions artifact. No signing secret is required for a debug build. CI completion must be checked before treating the build as successful.
+The included workflow runs on push, pull request or manual dispatch. It installs JDK 17, Gradle 8.13 and Android SDK 36; checks the core; runs Android lint; and builds both debug APKs. It uploads `GhostViki-alpha.apk`, `GhostViki-Probe.apk` and checksums as an Actions artifact. No signing secret is required for a debug build. CI completion must be checked before treating the build as successful.
 
 This first source bundle uses the Gradle installation provided by CI, not a checked-in Gradle wrapper. For local development install Gradle 8.13 and SDK platform 36, then run:
 
@@ -36,18 +36,18 @@ Debug signing keys on fresh CI runners can differ between builds. A stable priva
 ## First device test
 
 1. Install both built APKs. Open Probe and save a baseline before enabling hooks.
-2. Enable Mirage in Vector. Scope it to Mirage Probe and the exact Duck Detector package installed on the phone. Reboot if Vector requests it.
-3. Open Mirage. Confirm that the settings bridge is ready. Choose the same target apps inside Mirage. Scope selection in Vector is still required.
+2. Enable GhostViki in Vector. Scope it to GhostViki Probe and the exact Duck Detector package installed on the phone. Reboot if Vector requests it.
+3. Open GhostViki. Confirm that the settings bridge is ready. Choose the same target apps inside GhostViki. Scope selection in Vector is still required.
 4. Tap Change Identity → Change Values. Fully stop and reopen Probe; compare with the saved baseline. Reopening and rebooting should preserve the new ID until the next explicit change.
 5. Test each root method independently in Duck Detector. Record its version and complete report, including unsupported checks.
 6. Set coordinates for Probe under Location. Allow location permission in Probe and run its location check with the real device location provider enabled. Check cached, current and streamed values separately.
 7. Disable changes and repeat. Confirm that the original values return after restarting the target. Confirm that an unselected app is unaffected.
 
-An adapter can affect only a process where Vector loads it and where Mirage's own target selection enables it. Clearing app data or resetting the phone is not required. This app never automatically clears another app's data.
+An adapter can affect only a process where Vector loads it and where GhostViki's own target selection enables it. Clearing app data or resetting the phone is not required. This app never automatically clears another app's data.
 
 ## Privacy and config
 
-Mirage has no Internet permission, telemetry or background upload. Synthetic IDs and user-entered test coordinates are stored through the framework's enhanced shared-preference bridge. These preferences are intentionally readable across processes and are not encrypted secret storage. Do not store credentials there. The UI uses a private draft when the bridge is unavailable and labels that state; drafts migrate once the bridge is ready. No root shell command is executed by this alpha.
+GhostViki has no Internet permission, telemetry or background upload. Synthetic IDs and user-entered test coordinates are stored through the framework's enhanced shared-preference bridge. These preferences are intentionally readable across processes and are not encrypted secret storage. Do not store credentials there. The UI uses a private draft when the bridge is unavailable and labels that state; drafts migrate once the bridge is ready. No root shell command is executed by this alpha.
 
 The architecture separates the app UI/config, hooks, reusable Java core and independent probe. Native UI widgets keep this initial build small. No detector checks or detector result screens are patched.
 
