@@ -125,7 +125,15 @@ public final class MainActivity extends Activity {
         TextView sub = text("CHANGE IDENTITY", 12, GREEN, true);
         sub.setGravity(Gravity.CENTER);
         sub.setLetterSpacing(0.28f);
-        space(24);
+        space(16);
+        boolean moduleLoaded = ModuleStatus.isLoaded();
+        TextView bridge = text(moduleLoaded && config.bridgeAvailable
+                ? "MODULE BRIDGE: READY"
+                : "MODULE BRIDGE: NOT ACTIVE  •  ENABLE GHOSTVIKI + THIS APP IN LSPOSED",
+                11, moduleLoaded && config.bridgeAvailable ? GREEN : Color.rgb(255, 184, 77), true);
+        bridge.setGravity(Gravity.CENTER);
+        bridge.setLetterSpacing(0.06f);
+        space(14);
 
         targetPanel();
         space(20);
