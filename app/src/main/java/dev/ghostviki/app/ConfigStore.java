@@ -17,25 +17,40 @@ public final class ConfigStore {
     @SuppressWarnings({"deprecation", "unchecked"})
     public ConfigStore(Context context) {
         SharedPreferences draft = context.getSharedPreferences("draft", Context.MODE_PRIVATE);
-        // MODE_WORLD_READABLE throws on modern Android. LSPosed's xposedsharedprefs
-        // bridge reads this named private file on behalf of scoped target processes.
-        SharedPreferences selected = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        boolean ready = true;
+        SharedPreferences privateRuntime = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        SharedPreferences selected;
+        boolean ready;
+        try {
+            // LSPosed API 93+ redirects this request to its shared preference bridge.
+            // The flag is required; MODE_PRIVATE is intentionally not bridge-readable.
+            selected = context.getSharedPreferences(PREFS, Context.MODE_WORLD_READABLE);
+            ready = true;
+        } catch (SecurityException notActive) {
+            selected = privateRuntime;
+            ready = false;
+        }
+
         if (!selected.contains("schema")) {
             SharedPreferences.Editor editor = selected.edit();
-            for (Map.Entry<String, ?> e : draft.getAll().entrySet()) {
-                Object value = e.getValue();
-                if (value instanceof String) editor.putString(e.getKey(), (String) value);
-                else if (value instanceof Boolean) editor.putBoolean(e.getKey(), (Boolean) value);
-                else if (value instanceof Long) editor.putLong(e.getKey(), (Long) value);
-                else if (value instanceof Integer) editor.putInt(e.getKey(), (Integer) value);
-                else if (value instanceof Set<?>) editor.putStringSet(e.getKey(), new HashSet<>((Set<String>) value));
-            }
-            ready = editor.putInt("schema", 2).commit();
+            copy(draft, editor);
+            if (selected != privateRuntime) copy(privateRuntime, editor);
+            ready = editor.putInt("schema", 3).commit() && ready;
         }
         preferences = selected;
         bridgeAvailable = ready;
         backfillIdentityFields();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void copy(SharedPreferences source, SharedPreferences.Editor editor) {
+        for (Map.Entry<String, ?> e : source.getAll().entrySet()) {
+            Object value = e.getValue();
+            if (value instanceof String) editor.putString(e.getKey(), (String) value);
+            else if (value instanceof Boolean) editor.putBoolean(e.getKey(), (Boolean) value);
+            else if (value instanceof Long) editor.putLong(e.getKey(), (Long) value);
+            else if (value instanceof Integer) editor.putInt(e.getKey(), (Integer) value);
+            else if (value instanceof Set<?>) editor.putStringSet(e.getKey(), new HashSet<>((Set<String>) value));
+        }
     }
 
     public Set<String> targets() {
