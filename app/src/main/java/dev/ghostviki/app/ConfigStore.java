@@ -30,7 +30,7 @@ public final class ConfigStore {
             ready = false;
         }
 
-        if (!selected.contains("schema")) {
+        if (selected.getInt("schema", 0) < 3) {
             SharedPreferences.Editor editor = selected.edit();
             copy(draft, editor);
             if (selected != privateRuntime) copy(privateRuntime, editor);
