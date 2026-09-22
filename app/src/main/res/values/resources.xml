@@ -8,6 +8,7 @@
         <item name="android:windowBackground">#070D0A</item>
     </style>
     <string-array name="module_scope">
+        <item>dev.ghostviki.app</item>
         <item>dev.ghostviki.probe</item>
         <item>com.eltavine.duckdetector</item>
     </string-array>
