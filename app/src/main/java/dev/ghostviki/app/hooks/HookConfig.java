@@ -6,6 +6,7 @@ import dev.ghostviki.core.Coordinates;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import java.util.Collections;
+import java.util.Set;
 
 final class HookConfig {
     private final String packageName;
@@ -13,6 +14,8 @@ final class HookConfig {
     private volatile Snapshot snapshot = Snapshot.OFF;
     private volatile long nextRefresh;
     private boolean loggedError;
+    private boolean loggedState;
+    private long loggedGeneration = Long.MIN_VALUE;
     private final ThreadLocal<Boolean> loading = ThreadLocal.withInitial(() -> false);
 
     HookConfig(String packageName) {
@@ -29,14 +32,26 @@ final class HookConfig {
             loading.set(true);
             try {
                 preferences.reload();
-                if (!preferences.getFile().canRead()
-                        || !preferences.getStringSet("targets", Collections.emptySet()).contains(packageName)) {
+                boolean readable = preferences.getFile().canRead();
+                Set<String> targets = preferences.getStringSet("targets", Collections.emptySet());
+                boolean selected = targets.contains(packageName);
+                long generation = preferences.getLong("generation", -1);
+                if (!readable || !selected) {
                     snapshot = Snapshot.OFF;
+                    if (!loggedState || generation != loggedGeneration) {
+                        XposedBridge.log("GhostViki: config OFF for " + packageName
+                                + " readable=" + readable + " selected=" + selected
+                                + " targets=" + targets.size() + " generation=" + generation);
+                        loggedState = true;
+                        loggedGeneration = generation;
+                    }
                 } else {
                     String id = preferences.getString("android_id:" + packageName, "");
                     String serial = preferences.getString("serial:" + packageName, "");
-                    boolean identity = preferences.getBoolean("identity_enabled", false)
-                            && id.matches("[0-9a-f]{16}") && serial.matches("[0-9A-F]{16}");
+                    boolean enabled = preferences.getBoolean("identity_enabled", false);
+                    boolean validId = id.matches("[0-9a-f]{16}");
+                    boolean validSerial = serial.matches("[0-9A-F]{16}");
+                    boolean identity = enabled && validId && validSerial;
                     Coordinates coordinates = null;
                     if (preferences.getBoolean("location:" + packageName, false)) {
                         try {
@@ -51,6 +66,14 @@ final class HookConfig {
                             value("manufacturer"), value("device"), value("product"), value("fingerprint"),
                             preferences.getBoolean("hide_files", false),
                             preferences.getBoolean("hide_packages", false), coordinates);
+                    if (!loggedState || generation != loggedGeneration) {
+                        XposedBridge.log("GhostViki: config ON for " + packageName
+                                + " identity=" + identity + " enabled=" + enabled
+                                + " validId=" + validId + " validSerial=" + validSerial
+                                + " generation=" + generation);
+                        loggedState = true;
+                        loggedGeneration = generation;
+                    }
                 }
             } catch (RuntimeException e) {
                 snapshot = Snapshot.OFF;
