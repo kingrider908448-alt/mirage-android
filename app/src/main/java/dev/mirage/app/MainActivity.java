@@ -38,9 +38,15 @@ public final class MainActivity extends Activity {
         config = new ConfigStore(this);
         if (state != null) page = state.getString("page", "home");
         getWindow().setDecorFitsSystemWindows(false);
-        getWindow().getInsetsController().setSystemBarsAppearance(0,
-                android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-                        | android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+        // Some Android 16 vendor builds can briefly expose no insets controller
+        // while the Activity window is being attached. The controller is cosmetic,
+        // so never let that race crash app startup.
+        android.view.WindowInsetsController insetsController = getWindow().getInsetsController();
+        if (insetsController != null) {
+            insetsController.setSystemBarsAppearance(0,
+                    android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                            | android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+        }
         if (android.os.Build.VERSION.SDK_INT >= 33) {
             backCallback = () -> show("home");
         }
