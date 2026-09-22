@@ -72,6 +72,23 @@ public final class ConfigStore {
             if (!preferences.contains("fcm_token:" + pkg)) { editor.putString("fcm_token:" + pkg, identity.fcmToken); changed = true; }
             if (!preferences.contains("gsf_id:" + pkg)) { editor.putString("gsf_id:" + pkg, identity.gsfId); changed = true; }
             if (!preferences.contains("crashlytics_installation_id:" + pkg)) { editor.putString("crashlytics_installation_id:" + pkg, identity.crashlyticsInstallationId); changed = true; }
+            if (!preferences.contains("profile_id:" + pkg)) { editor.putString("profile_id:" + pkg, identity.profileId); changed = true; }
+            if (!preferences.contains("device_id:" + pkg)) { editor.putString("device_id:" + pkg, identity.deviceId); changed = true; }
+            if (!preferences.contains("boot_id:" + pkg)) { editor.putString("boot_id:" + pkg, identity.bootId); changed = true; }
+            if (!preferences.contains("wifi_mac:" + pkg)) { editor.putString("wifi_mac:" + pkg, identity.wifiMac); changed = true; }
+            if (!preferences.contains("bluetooth_mac:" + pkg)) { editor.putString("bluetooth_mac:" + pkg, identity.bluetoothMac); changed = true; }
+            if (!preferences.contains("imei1:" + pkg)) { editor.putString("imei1:" + pkg, identity.imei1); changed = true; }
+            if (!preferences.contains("imei2:" + pkg)) { editor.putString("imei2:" + pkg, identity.imei2); changed = true; }
+            if (!preferences.contains("imsi:" + pkg)) { editor.putString("imsi:" + pkg, identity.imsi); changed = true; }
+            if (!preferences.contains("iccid:" + pkg)) { editor.putString("iccid:" + pkg, identity.iccid); changed = true; }
+            if (!preferences.contains("build_id:" + pkg)) { editor.putString("build_id:" + pkg, identity.buildId); changed = true; }
+            if (!preferences.contains("hardware:" + pkg)) { editor.putString("hardware:" + pkg, identity.hardware); changed = true; }
+            if (!preferences.contains("brand:" + pkg)) { editor.putString("brand:" + pkg, identity.brand); changed = true; }
+            if (!preferences.contains("model:" + pkg)) { editor.putString("model:" + pkg, identity.model); changed = true; }
+            if (!preferences.contains("manufacturer:" + pkg)) { editor.putString("manufacturer:" + pkg, identity.manufacturer); changed = true; }
+            if (!preferences.contains("device:" + pkg)) { editor.putString("device:" + pkg, identity.device); changed = true; }
+            if (!preferences.contains("product:" + pkg)) { editor.putString("product:" + pkg, identity.product); changed = true; }
+            if (!preferences.contains("fingerprint:" + pkg)) { editor.putString("fingerprint:" + pkg, identity.fingerprint); changed = true; }
         }
         if (changed) editor.commit();
     }
@@ -84,7 +101,24 @@ public final class ConfigStore {
                 .putString("firebase_installation_id:" + pkg, identity.firebaseInstallationId)
                 .putString("fcm_token:" + pkg, identity.fcmToken)
                 .putString("gsf_id:" + pkg, identity.gsfId)
-                .putString("crashlytics_installation_id:" + pkg, identity.crashlyticsInstallationId);
+                .putString("crashlytics_installation_id:" + pkg, identity.crashlyticsInstallationId)
+                .putString("profile_id:" + pkg, identity.profileId)
+                .putString("device_id:" + pkg, identity.deviceId)
+                .putString("boot_id:" + pkg, identity.bootId)
+                .putString("wifi_mac:" + pkg, identity.wifiMac)
+                .putString("bluetooth_mac:" + pkg, identity.bluetoothMac)
+                .putString("imei1:" + pkg, identity.imei1)
+                .putString("imei2:" + pkg, identity.imei2)
+                .putString("imsi:" + pkg, identity.imsi)
+                .putString("iccid:" + pkg, identity.iccid)
+                .putString("build_id:" + pkg, identity.buildId)
+                .putString("hardware:" + pkg, identity.hardware)
+                .putString("brand:" + pkg, identity.brand)
+                .putString("model:" + pkg, identity.model)
+                .putString("manufacturer:" + pkg, identity.manufacturer)
+                .putString("device:" + pkg, identity.device)
+                .putString("product:" + pkg, identity.product)
+                .putString("fingerprint:" + pkg, identity.fingerprint);
     }
 
     public boolean setFlag(String name, boolean value) { return preferences.edit().putBoolean(name, value).commit(); }
