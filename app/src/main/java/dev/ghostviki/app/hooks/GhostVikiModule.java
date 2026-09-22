@@ -22,6 +22,11 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
         if (param.appInfo == null || param.appInfo.uid % 100000 < 10000
                 || "android".equals(param.packageName)) return;
         HookConfig config = new HookConfig(param.packageName);
+        if ("dev.ghostviki.probe".equals(param.packageName)) {
+            install("probe marker", () -> XposedHelpers.findAndHookMethod(
+                    "dev.ghostviki.probe.ProbeActivity", param.classLoader,
+                    "ghostVikiHookActive", XC_MethodReplacement.returnConstant(true)));
+        }
         install("identity", () -> installIdentity(config, param.classLoader));
         install("root signals", () -> RootHooks.install(config));
         install("location", () -> LocationHooks.install(config, param.classLoader));
