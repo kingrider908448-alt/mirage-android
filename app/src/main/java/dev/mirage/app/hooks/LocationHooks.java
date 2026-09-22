@@ -1,4 +1,4 @@
-package dev.mirage.app.hooks;
+package dev.ghostviki.app.hooks;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -10,7 +10,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import dev.mirage.core.Coordinates;
+import dev.ghostviki.core.Coordinates;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -47,7 +47,7 @@ final class LocationHooks {
                             if (listeners.containsValue(original)) continue;
                             if (!listeners.containsKey(original)) {
                                 listeners.put(original, wrap(original, config));
-                                param.setObjectExtra("mirage_new_listener", original);
+                                param.setObjectExtra("ghostviki_new_listener", original);
                             }
                             param.args[i] = listeners.get(original);
                         }
@@ -56,7 +56,7 @@ final class LocationHooks {
             }
             @Override protected void afterHookedMethod(MethodHookParam param) {
                 if (param.hasThrowable()) {
-                    Object original = param.getObjectExtra("mirage_new_listener");
+                    Object original = param.getObjectExtra("ghostviki_new_listener");
                     if (original != null) synchronized (listeners) { listeners.remove(original); }
                 }
             }
@@ -70,14 +70,14 @@ final class LocationHooks {
                     LocationListener original = (LocationListener) param.args[0];
                     LocationListener wrapper = listeners.get(original);
                     if (wrapper != null) {
-                        param.setObjectExtra("mirage_remove_listener", original);
+                        param.setObjectExtra("ghostviki_remove_listener", original);
                         param.args[0] = wrapper;
                     }
                 }
             }
             @Override protected void afterHookedMethod(MethodHookParam param) {
                 if (!param.hasThrowable()) {
-                    Object original = param.getObjectExtra("mirage_remove_listener");
+                    Object original = param.getObjectExtra("ghostviki_remove_listener");
                     if (original != null) synchronized (listeners) { listeners.remove(original); }
                 }
             }
