@@ -11,39 +11,43 @@ import dev.ghostviki.core.Identity;
 public final class ConfigStore {
     public static final String PACKAGE = "dev.ghostviki.app";
     public static final String PREFS = "runtime";
+    public static final int SCHEMA = 4;
     public final SharedPreferences preferences;
     public final boolean bridgeAvailable;
 
     @SuppressWarnings({"deprecation", "unchecked"})
     public ConfigStore(Context context) {
         SharedPreferences draft = context.getSharedPreferences("draft", Context.MODE_PRIVATE);
-        SharedPreferences privateRuntime = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         SharedPreferences selected;
         boolean ready;
         try {
-            // LSPosed API 93+ redirects this request to its shared preference bridge.
-            // The flag is required; MODE_PRIVATE is intentionally not bridge-readable.
+            // This MUST be the first open of runtime in this process. ContextImpl caches
+            // by filename, and SharedPreferencesImpl keeps the FIRST opening mode.
+            // A private open followed by a world-readable open can falsely report success
+            // while all subsequent writes still use MODE_PRIVATE.
             selected = context.getSharedPreferences(PREFS, Context.MODE_WORLD_READABLE);
             ready = true;
         } catch (SecurityException notActive) {
-            selected = privateRuntime;
+            selected = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
             ready = false;
         }
 
-        if (selected.getInt("schema", 0) < 3) {
-            SharedPreferences.Editor editor = selected.edit();
-            copy(draft, editor);
-            if (selected != privateRuntime) copy(privateRuntime, editor);
-            ready = editor.putInt("schema", 3).commit() && ready;
-        }
+        SharedPreferences.Editor editor = selected.edit();
+        if (selected.getInt("schema", 0) < SCHEMA) copyMissing(draft, selected, editor);
+        // Force a real disk write after an upgrade or a private-mode fallback. Re-putting
+        // an unchanged schema alone may be optimized away without repairing file mode.
+        boolean committed = editor.putInt("schema", SCHEMA)
+                .putLong("writer_revision", selected.getLong("writer_revision", 0) + 1).commit();
         preferences = selected;
-        bridgeAvailable = ready;
-        backfillIdentityFields();
+        boolean backfilled = backfillIdentityFields();
+        bridgeAvailable = ready && committed && backfilled;
     }
 
     @SuppressWarnings("unchecked")
-    private static void copy(SharedPreferences source, SharedPreferences.Editor editor) {
+    private static void copyMissing(SharedPreferences source, SharedPreferences destination, SharedPreferences.Editor editor) {
         for (Map.Entry<String, ?> e : source.getAll().entrySet()) {
+            // A stale draft must never replace an existing runtime profile or selection.
+            if (destination.contains(e.getKey())) continue;
             Object value = e.getValue();
             if (value instanceof String) editor.putString(e.getKey(), (String) value);
             else if (value instanceof Boolean) editor.putBoolean(e.getKey(), (Boolean) value);
@@ -74,7 +78,7 @@ public final class ConfigStore {
                 .putLong("changed_at", System.currentTimeMillis()).commit();
     }
 
-    private void backfillIdentityFields() {
+    private boolean backfillIdentityFields() {
         SharedPreferences.Editor editor = preferences.edit();
         boolean changed = false;
         for (String pkg : targets()) {
@@ -91,6 +95,7 @@ public final class ConfigStore {
             if (!preferences.contains("device_id:" + pkg)) { editor.putString("device_id:" + pkg, identity.deviceId); changed = true; }
             if (!preferences.contains("boot_id:" + pkg)) { editor.putString("boot_id:" + pkg, identity.bootId); changed = true; }
             if (!preferences.contains("wifi_mac:" + pkg)) { editor.putString("wifi_mac:" + pkg, identity.wifiMac); changed = true; }
+            if (!preferences.contains("bssid:" + pkg)) { editor.putString("bssid:" + pkg, identity.bssid); changed = true; }
             if (!preferences.contains("bluetooth_mac:" + pkg)) { editor.putString("bluetooth_mac:" + pkg, identity.bluetoothMac); changed = true; }
             if (!preferences.contains("imei1:" + pkg)) { editor.putString("imei1:" + pkg, identity.imei1); changed = true; }
             if (!preferences.contains("imei2:" + pkg)) { editor.putString("imei2:" + pkg, identity.imei2); changed = true; }
@@ -105,7 +110,7 @@ public final class ConfigStore {
             if (!preferences.contains("product:" + pkg)) { editor.putString("product:" + pkg, identity.product); changed = true; }
             if (!preferences.contains("fingerprint:" + pkg)) { editor.putString("fingerprint:" + pkg, identity.fingerprint); changed = true; }
         }
-        if (changed) editor.commit();
+        return !changed || editor.commit();
     }
 
     private static void putIdentity(SharedPreferences.Editor editor, String pkg, Identity identity) {
@@ -121,6 +126,7 @@ public final class ConfigStore {
                 .putString("device_id:" + pkg, identity.deviceId)
                 .putString("boot_id:" + pkg, identity.bootId)
                 .putString("wifi_mac:" + pkg, identity.wifiMac)
+                .putString("bssid:" + pkg, identity.bssid)
                 .putString("bluetooth_mac:" + pkg, identity.bluetoothMac)
                 .putString("imei1:" + pkg, identity.imei1)
                 .putString("imei2:" + pkg, identity.imei2)

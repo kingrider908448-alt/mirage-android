@@ -39,6 +39,7 @@ public final class MainActivity extends Activity {
     private ConfigStore config;
     private LinearLayout body;
     private String page = "home";
+    private String identityTarget = "";
     private boolean saving;
     private android.window.OnBackInvokedCallback backCallback;
     private boolean backRegistered;
@@ -46,7 +47,10 @@ public final class MainActivity extends Activity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         config = new ConfigStore(this);
-        if (state != null) page = state.getString("page", "home");
+        if (state != null) {
+            page = state.getString("page", "home");
+            identityTarget = state.getString("identityTarget", "");
+        }
         getWindow().setDecorFitsSystemWindows(false);
         if (android.os.Build.VERSION.SDK_INT >= 33) backCallback = this::goBack;
         render();
@@ -55,6 +59,7 @@ public final class MainActivity extends Activity {
     @Override protected void onSaveInstanceState(Bundle out) {
         super.onSaveInstanceState(out);
         out.putString("page", page);
+        out.putString("identityTarget", identityTarget);
     }
 
     @Override protected void onDestroy() {
@@ -128,11 +133,13 @@ public final class MainActivity extends Activity {
         space(16);
         boolean moduleLoaded = ModuleStatus.isLoaded();
         TextView bridge = text(moduleLoaded && config.bridgeAvailable
-                ? "MODULE BRIDGE: READY"
-                : "MODULE BRIDGE: NOT ACTIVE  •  ENABLE GHOSTVIKI + THIS APP IN LSPOSED",
+                ? "LOCAL CONFIG WRITE: OK  •  TARGET CHECK STILL REQUIRED"
+                : "LOCAL-ONLY OR WRITE FAILED  •  CHECK VECTOR / LSPOSED",
                 11, moduleLoaded && config.bridgeAvailable ? GREEN : Color.rgb(255, 184, 77), true);
         bridge.setGravity(Gravity.CENTER);
         bridge.setLetterSpacing(0.06f);
+        TextView version = text("v" + BuildConfig.VERSION_NAME + "  •  Select targets here AND in Vector", 10, MUTED, false);
+        version.setGravity(Gravity.CENTER);
         space(14);
 
         targetPanel();
@@ -303,10 +310,13 @@ public final class MainActivity extends Activity {
         heading("IDENTITY PROFILE  #" + generation,
                 config.targets().isEmpty() ? "SELECT A TARGET APP TO GENERATE VALUES"
                         : (changedAt == 0 ? "READY TO GENERATE A SAVED PROFILE"
-                        : "ACTIVE SAVED PROFILE  •  " + config.targets().size() + " TARGET APP(S)"));
-        button("CHANGE ALL VALUES NOW", () -> {
+                        : "SAVED PROFILE  •  " + config.targets().size() + " TARGET APP(S)"));
+        text("For any selected app, not just Probe. Only fields with implemented adapters can affect target API reads. Preview fields do not.", 12, MUTED, false);
+        text("After changing values, force-stop and reopen each target. Build fields are applied at process startup. No app data needs clearing.", 12, MUTED, false);
+        toggle("IDENTITY ADAPTERS", "Applies to selected targets. Restart them after disabling to restore Build fields.", "identity_enabled");
+        button("ROTATE ALL SELECTED PROFILES", () -> {
             if (config.targets().isEmpty()) { selectTargets(); return; }
-            save(config::rotateIdentity, "All profile values changed.");
+            save(config::rotateIdentity, "Profiles saved. Restart targets and verify their values.");
         }, true);
         space(18);
 
@@ -385,7 +395,13 @@ public final class MainActivity extends Activity {
         subHeader("CHANGE IDENTITY");
         List<String> targets = new ArrayList<>(config.targets());
         Collections.sort(targets);
-        String pkg = targets.isEmpty() ? getPackageName() : targets.get(0);
+        if (targets.isEmpty()) {
+            heading("NO TARGET SELECTED", "Select an app to view its saved profile.");
+            button("SELECT TARGET APPS", this::selectTargets, true);
+            return;
+        }
+        if (!targets.contains(identityTarget)) identityTarget = targets.get(0);
+        String pkg = identityTarget;
 
         String title = categoryTitle(category);
         TextView t = text(title, 24, TEXT, true);
@@ -393,14 +409,22 @@ public final class MainActivity extends Activity {
         t.setLetterSpacing(0.05f);
         TextView desc = text(categoryDescription(category), 11, GREEN, true);
         desc.setLetterSpacing(0.08f);
+        button("VIEW PROFILE: " + pkg, () -> new AlertDialog.Builder(this)
+                .setTitle("View saved profile for")
+                .setSingleChoiceItems(targets.toArray(new String[0]), targets.indexOf(identityTarget), (dialog, which) -> {
+                    identityTarget = targets.get(which);
+                    dialog.dismiss();
+                    render();
+                }).setNegativeButton("Cancel", null).show(), false);
+        text("These are saved inputs, not values read from the target. An adapter label describes code coverage, not a successful device test.", 12, MUTED, false);
         space(16);
 
         for (String[] row : categoryRows(category, pkg)) valueCard(row[0], row[1]);
 
         space(8);
-        button("GENERATE NEW VALUES", () -> {
+        button("ROTATE ALL SELECTED PROFILES", () -> {
             if (config.targets().isEmpty()) { selectTargets(); return; }
-            save(config::rotateIdentity, "New values generated.");
+            save(config::rotateIdentity, "Profiles saved. Restart targets and verify their values.");
         }, true);
     }
 
@@ -456,7 +480,7 @@ public final class MainActivity extends Activity {
             rows.add(row("WIFI MAC", pref(pkg, "wifi_mac", synth(pkg, "wifi_mac", "mac"))));
             rows.add(row("BLUETOOTH MAC", pref(pkg, "bluetooth_mac", synth(pkg, "bt_mac", "mac"))));
             rows.add(row("SSID", "GHOSTVIKI_" + synth(pkg, "ssid", "hex4").toUpperCase(Locale.ROOT)));
-            rows.add(row("BSSID", synth(pkg, "bssid", "mac")));
+            rows.add(row("BSSID", pref(pkg, "bssid", "NOT SAVED")));
             rows.add(row("IPV4", synth(pkg, "ipv4", "ipv4")));
             rows.add(row("IPV6", synth(pkg, "ipv6", "ipv6")));
             rows.add(row("DHCP SERVER", "10.42.0.1"));
@@ -477,8 +501,8 @@ public final class MainActivity extends Activity {
             rows.add(row("CARRIER ID", synth(pkg, "carrier_id", "digits5")));
             rows.add(row("EID", synth(pkg, "eid", "digits32")));
         } else if ("location".equals(c)) {
-            rows.add(row("LATITUDE", config.preferences.getString("latitude:" + pkg, "37." + synth(pkg, "latitude", "digits8"))));
-            rows.add(row("LONGITUDE", config.preferences.getString("longitude:" + pkg, "-122." + synth(pkg, "longitude", "digits8"))));
+            rows.add(row("LATITUDE", config.preferences.getString("latitude:" + pkg, "NOT SET — use Location")));
+            rows.add(row("LONGITUDE", config.preferences.getString("longitude:" + pkg, "NOT SET — use Location")));
             rows.add(row("ALTITUDE", synth(pkg, "altitude", "digits4") + " m"));
             rows.add(row("ACCURACY", (Integer.parseInt(synth(pkg, "accuracy", "hex4").substring(0,2),16)%20+3) + ".0 m"));
             rows.add(row("TIMEZONE", "Etc/UTC"));
@@ -538,6 +562,10 @@ public final class MainActivity extends Activity {
         name.setLetterSpacing(0.04f);
         card.addView(name);
 
+        TextView coverage = labelView(coverage(title), 10, MUTED, false);
+        coverage.setPadding(0, dp(4), 0, 0);
+        card.addView(coverage);
+
         TextView val = labelView(value, 13, GREEN, false);
         val.setTypeface(Typeface.MONOSPACE);
         val.setTextIsSelectable(true);
@@ -548,6 +576,24 @@ public final class MainActivity extends Activity {
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(-1, -2);
         p.bottomMargin = dp(8);
         body.addView(card, p);
+    }
+
+    private String coverage(String title) {
+        switch (title) {
+            case "ANDROID ID (SSAID)": return "ADAPTER: Settings.Secure.getString • verify in target";
+            case "DEVICE SERIAL": return "ADAPTER: Build fields / readable getSerial • permission limits apply";
+            case "BUILD ID": case "HARDWARE": case "BRAND": case "MODEL":
+            case "MANUFACTURER": case "DEVICE": case "PRODUCT": case "BUILD FINGERPRINT":
+                return "ADAPTER: Java Build field • restart target • native reads not covered";
+            case "WIFI MAC": case "BLUETOOTH MAC": case "BSSID":
+                return "ADAPTER: readable Java API • redacted / denied values stay unchanged";
+            case "IMEI (SIM 1)": case "IMEI (SIM 2)": case "IMSI": case "ICCID":
+                return "ADAPTER: readable TelephonyManager API • permission limits apply";
+            case "LATITUDE": case "LONGITUDE":
+                return "Separate Location setting • must be set and enabled there";
+            case "PACKAGE NAME": return "TARGET LABEL • package identity is not changed";
+            default: return "PREVIEW ONLY • no target adapter implemented";
+        }
     }
 
     private String synth(String pkg, String key, String format) {

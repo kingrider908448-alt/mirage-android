@@ -26,16 +26,24 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
             install("probe marker", () -> XposedHelpers.findAndHookMethod(
                     "dev.ghostviki.probe.ProbeActivity", param.classLoader,
                     "ghostVikiHookActive", XC_MethodReplacement.returnConstant(true)));
+            // Diagnostics only: all observed identity values still come from Android APIs.
+            install("probe config diagnostic", () -> XposedHelpers.findAndHookMethod(
+                    "dev.ghostviki.probe.ProbeActivity", param.classLoader,
+                    "ghostVikiConfigStatus", new XC_MethodReplacement() {
+                        @Override protected Object replaceHookedMethod(MethodHookParam ignored) {
+                            return config.diagnostics();
+                        }
+                    }));
         }
         install("identity", () -> installIdentity(config, param.classLoader));
         install("root signals", () -> RootHooks.install(config));
         install("location", () -> LocationHooks.install(config, param.classLoader));
-        XposedBridge.log("GhostViki: adapters registered for " + param.packageName
-                + "; verify results in the target app (registration is not a passing detector result)");
+        XposedBridge.log("GhostViki: adapter registration attempted for " + param.packageName
+                + "; check per-adapter errors and actual target values (not a passing test)");
     }
 
     private void installIdentity(HookConfig config, ClassLoader classLoader) {
-        XposedBridge.hookAllMethods(Settings.Secure.class, "getString", new XC_MethodHook() {
+        install("Settings.Secure.getString", () -> XposedBridge.hookAllMethods(Settings.Secure.class, "getString", new XC_MethodHook() {
             @Override protected void afterHookedMethod(MethodHookParam param) {
                 HookConfig.Snapshot state = config.get();
                 if (state.identity && !param.hasThrowable() && param.args.length > 1
@@ -43,31 +51,34 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
                     param.setResult(state.androidId);
                 }
             }
-        });
+        }));
         // Keep platform permission errors intact: this does not grant serial-number access.
-        XposedBridge.hookAllMethods(Build.class, "getSerial", new XC_MethodHook() {
+        install("Build.getSerial", () -> XposedBridge.hookAllMethods(Build.class, "getSerial", new XC_MethodHook() {
             @Override protected void afterHookedMethod(MethodHookParam param) {
                 HookConfig.Snapshot state = config.get();
                 if (state.identity && !param.hasThrowable() && param.getResult() != null
                         && !Build.UNKNOWN.equals(param.getResult())) param.setResult(state.serial);
             }
-        });
+        }));
 
-        hookString(TelephonyManager.class, "getDeviceId", config, s -> s.deviceId);
-        hookString(TelephonyManager.class, "getImei", config, s -> {
-            if (s.imei2.isEmpty() || paramSlot.get() == 0) return s.imei1;
-            return s.imei2;
-        });
+        // Legacy getDeviceId returns an IMEI or MEID, not the UI's synthetic hex device ID.
+        // Replace only readable IMEI-shaped results; leave CDMA/unknown results untouched.
+        hookString(TelephonyManager.class, "getDeviceId", config, GhostVikiModule::imeiForSlot);
+        hookString(TelephonyManager.class, "getImei", config, GhostVikiModule::imeiForSlot);
         hookString(TelephonyManager.class, "getSubscriberId", config, s -> s.imsi);
         hookString(TelephonyManager.class, "getSimSerialNumber", config, s -> s.iccid);
 
-        Class<?> wifiInfo = XposedHelpers.findClassIfExists("android.net.wifi.WifiInfo", classLoader);
-        if (wifiInfo != null) {
-            hookString(wifiInfo, "getMacAddress", config, s -> s.wifiMac);
-            hookString(wifiInfo, "getBSSID", config, s -> s.wifiMac);
-        }
-        Class<?> bluetooth = XposedHelpers.findClassIfExists("android.bluetooth.BluetoothAdapter", classLoader);
-        if (bluetooth != null) hookString(bluetooth, "getAddress", config, s -> s.bluetoothMac);
+        install("Wi-Fi class", () -> {
+            Class<?> wifiInfo = XposedHelpers.findClassIfExists("android.net.wifi.WifiInfo", classLoader);
+            if (wifiInfo != null) {
+                hookString(wifiInfo, "getMacAddress", config, s -> s.wifiMac);
+                hookString(wifiInfo, "getBSSID", config, s -> s.bssid);
+            }
+        });
+        install("Bluetooth class", () -> {
+            Class<?> bluetooth = XposedHelpers.findClassIfExists("android.bluetooth.BluetoothAdapter", classLoader);
+            if (bluetooth != null) hookString(bluetooth, "getAddress", config, s -> s.bluetoothMac);
+        });
 
         HookConfig.Snapshot state = config.get();
         if (state.identity) {
@@ -85,24 +96,33 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
 
     private static final ThreadLocal<Integer> paramSlot = ThreadLocal.withInitial(() -> 0);
 
+    private static String imeiForSlot(HookConfig.Snapshot state) {
+        int slot = paramSlot.get();
+        return slot == 0 ? state.imei1 : slot == 1 ? state.imei2 : null;
+    }
+
     private interface Value {
         String get(HookConfig.Snapshot state);
     }
 
     private static void hookString(Class<?> type, String method, HookConfig config, Value value) {
-        XposedBridge.hookAllMethods(type, method, new XC_MethodHook() {
+        install(type.getSimpleName() + "." + method, () -> XposedBridge.hookAllMethods(type, method, new XC_MethodHook() {
             @Override protected void afterHookedMethod(MethodHookParam param) {
                 HookConfig.Snapshot state = config.get();
-                if (!state.identity || param.hasThrowable() || param.getResult() == null) return;
+                if (!state.identity || param.hasThrowable() || !(param.getResult() instanceof String)) return;
+                String original = (String) param.getResult();
+                if (original.isEmpty() || Build.UNKNOWN.equals(original) || "02:00:00:00:00:00".equals(original)) return;
+                if ("getDeviceId".equals(method) && !original.matches("[0-9]{15}")) return;
                 int slot = 0;
                 if (param.args.length > 0 && param.args[0] instanceof Integer)
                     slot = (Integer) param.args[0];
                 paramSlot.set(slot);
-                String replacement = value.get(state);
-                paramSlot.remove();
-                if (replacement != null && !replacement.isEmpty()) param.setResult(replacement);
+                try {
+                    String replacement = value.get(state);
+                    if (replacement != null && !replacement.isEmpty()) param.setResult(replacement);
+                } finally { paramSlot.remove(); }
             }
-        });
+        }));
     }
 
     private static void setBuild(String field, String value) {

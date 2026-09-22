@@ -23,6 +23,7 @@ import org.json.JSONObject;
 /** An independent reader: no dependency on the module, its config or its hook API. */
 public final class ProbeActivity extends Activity {
     private TextView report;
+    private TextView diagnostics;
     private TextView locationReport;
     private CancellationSignal pending;
     private LocationListener listener;
@@ -50,6 +51,10 @@ public final class ProbeActivity extends Activity {
         TextView title = new TextView(this);
         title.setText("GhostViki Probe"); title.setTextSize(28); title.setTextColor(Color.rgb(106, 255, 183));
         body.addView(title);
+        diagnostics = new TextView(this);
+        diagnostics.setTextColor(Color.LTGRAY);
+        diagnostics.setTextIsSelectable(true);
+        body.addView(diagnostics);
         report = new TextView(this);
         report.setTextSize(14); report.setTextColor(Color.WHITE); report.setTextIsSelectable(true);
         Button refresh = button(body, "Read current values");
@@ -79,11 +84,16 @@ public final class ProbeActivity extends Activity {
     }
 
     public static boolean ghostVikiHookActive() { return false; }
+    public static String ghostVikiConfigStatus() { return "MODULE_NOT_LOADED"; }
 
     @SuppressWarnings("deprecation")
     private void read() {
         values.clear();
-        values.put("GhostViki hook status", ghostVikiHookActive() ? "ACTIVE" : "NOT ACTIVE");
+        // Keep module diagnostics OUT of the observed values and baseline comparison.
+        // Changing the marker alone must never count as a changed identity.
+        diagnostics.setText("v" + BuildConfig.VERSION_NAME + "\nModule loaded: " + ghostVikiHookActive()
+                + "\nConfig: " + ghostVikiConfigStatus()
+                + "\nDiagnostics are not proof of changed values. Compare Android API reads below.\n");
         values.put("Android ID", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
         values.put("Manufacturer", Build.MANUFACTURER);
         values.put("Brand", Build.BRAND);

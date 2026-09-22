@@ -21,6 +21,7 @@ public final class Identity {
     public final String deviceId;
     public final String bootId;
     public final String wifiMac;
+    public final String bssid;
     public final String bluetoothMac;
     public final String imei1;
     public final String imei2;
@@ -38,7 +39,7 @@ public final class Identity {
     private Identity(String androidId, String serial, String advertisingId, String appSetId,
                      String firebaseInstallationId, String fcmToken, String gsfId,
                      String crashlyticsInstallationId, String profileId, String deviceId,
-                     String bootId, String wifiMac, String bluetoothMac, String imei1,
+                     String bootId, String wifiMac, String bssid, String bluetoothMac, String imei1,
                      String imei2, String imsi, String iccid, String buildId, String hardware,
                      String brand, String model, String manufacturer, String device,
                      String product, String fingerprint) {
@@ -54,6 +55,7 @@ public final class Identity {
         this.deviceId = deviceId;
         this.bootId = bootId;
         this.wifiMac = wifiMac;
+        this.bssid = bssid;
         this.bluetoothMac = bluetoothMac;
         this.imei1 = imei1;
         this.imei2 = imei2;
@@ -82,6 +84,7 @@ public final class Identity {
                 randomUuid(),
                 randomHex(8),
                 randomUuid(),
+                randomMac(),
                 randomMac(),
                 randomMac(),
                 randomDigits(15),

@@ -1,5 +1,19 @@
 # Validation record — 2026-09-22
 
+## Current revision: 0.1.1-configfix (version code 2)
+
+- Audited source against baseline commit `e2ae5f58a1a6493aaec996aa10b848fc651e06e5`.
+- Before editing production code, the new host regression harness reported **11 passing / 9 failing** config checks. Failures included private-first opening, false bridge acceptance in the cached-mode fixture, direct-file gating of a service-readable snapshot, and stale-draft migration overwrites.
+- After the fix: core checks pass **20,015 assertions**, including dedicated BSSID shape/address tests. Extended config checks cover writer opening order, fallback, two arbitrary non-Probe targets, persistence, profile rotation, per-target isolation, refresh, distinct diagnostic reasons, commit failure reporting, schema upgrade and migration without overwriting existing profiles.
+- Every Android Java source syntax-parses with JDK 17. Full Android API type checking, lint and APK assembly are performed in the associated GitHub Actions run; see that run's conclusion rather than assuming success from this source record.
+- General identity registration is independent of the Probe-only diagnostic branch. BSSID now reads the same saved field displayed in the UI. Optional adapter registration failures are isolated. Readable legacy telephony device IDs use the appropriate IMEI profile rather than an unrelated hex string.
+- Probe diagnostics no longer participate in the baseline comparison: changing an injection marker alone cannot count as changing an identity.
+- These are **host-fixture tests**, not Android/SELinux/framework integration tests. No phone is attached to the development environment. On-device effects of this revision remain unverified.
+
+Reproduce with `java scripts/RunConfigChecks.java`, then run the Android Gradle command in README. The prior user screenshots prove injection into Probe, but do not prove config delivery. The private-first defect is reproducible in the code; whether it fully explains the user's device failure still needs the targeted test in README.
+
+## Historical initial-build record (not results for 0.1.1-configfix)
+
 ## Completed locally
 
 - Java 17 compiled the production core and its checks.

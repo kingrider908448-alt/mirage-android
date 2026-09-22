@@ -6,6 +6,7 @@ import dev.ghostviki.core.Coordinates;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 final class HookConfig {
@@ -13,9 +14,8 @@ final class HookConfig {
     private final XSharedPreferences preferences;
     private volatile Snapshot snapshot = Snapshot.OFF;
     private volatile long nextRefresh;
-    private boolean loggedError;
-    private boolean loggedState;
-    private long loggedGeneration = Long.MIN_VALUE;
+    private volatile String status = "CONFIG_NOT_READ";
+    private String loggedStatus = "";
     private final ThreadLocal<Boolean> loading = ThreadLocal.withInitial(() -> false);
 
     HookConfig(String packageName) {
@@ -32,55 +32,44 @@ final class HookConfig {
             loading.set(true);
             try {
                 preferences.reload();
-                boolean readable = preferences.getFile().canRead();
-                Set<String> targets = preferences.getStringSet("targets", Collections.emptySet());
+                // Read one immutable view, through XSharedPreferences' file service.
+                // getFile().canRead() is NOT authoritative for a service-backed reader.
+                Map<String, ?> data = preferences.getAll();
+                Object configuredTargets = data.get("targets");
+                Set<?> targets = configuredTargets instanceof Set<?> ? (Set<?>) configuredTargets : Collections.emptySet();
                 boolean selected = targets.contains(packageName);
-                long generation = preferences.getLong("generation", -1);
-                if (!readable || !selected) {
+                int schema = data.get("schema") instanceof Integer ? (Integer) data.get("schema") : 0;
+                long generation = data.get("generation") instanceof Long ? (Long) data.get("generation") : -1;
+                boolean available = schema >= 3 && schema <= ConfigStore.SCHEMA;
+                String reason;
+                if (!available || !selected) {
                     snapshot = Snapshot.OFF;
-                    if (!loggedState || generation != loggedGeneration) {
-                        XposedBridge.log("GhostViki: config OFF for " + packageName
-                                + " readable=" + readable + " selected=" + selected
-                                + " targets=" + targets.size() + " generation=" + generation);
-                        loggedState = true;
-                        loggedGeneration = generation;
-                    }
+                    reason = !available ? "CONFIG_UNAVAILABLE" : "NOT_SELECTED";
                 } else {
-                    String id = preferences.getString("android_id:" + packageName, "");
-                    String serial = preferences.getString("serial:" + packageName, "");
-                    boolean enabled = preferences.getBoolean("identity_enabled", false);
+                    String id = value(data, "android_id");
+                    String serial = value(data, "serial");
+                    boolean enabled = flag(data, "identity_enabled");
                     boolean validId = id.matches("[0-9a-f]{16}");
                     boolean validSerial = serial.matches("[0-9A-F]{16}");
                     boolean identity = enabled && validId && validSerial;
+                    reason = !enabled ? "IDENTITY_DISABLED" : !identity ? "INVALID_PROFILE" : "PROFILE_READY";
                     Coordinates coordinates = null;
-                    if (preferences.getBoolean("location:" + packageName, false)) {
+                    if (flag(data, "location:" + packageName)) {
                         try {
-                            coordinates = Coordinates.parse(preferences.getString("latitude:" + packageName, ""),
-                                    preferences.getString("longitude:" + packageName, ""));
+                            coordinates = Coordinates.parse(value(data, "latitude"), value(data, "longitude"));
                         } catch (IllegalArgumentException ignored) { /* Invalid settings disable replacement. */ }
                     }
                     snapshot = new Snapshot(identity, id, serial,
-                            value("device_id"), value("wifi_mac"), value("bluetooth_mac"),
-                            value("imei1"), value("imei2"), value("imsi"), value("iccid"),
-                            value("build_id"), value("hardware"), value("brand"), value("model"),
-                            value("manufacturer"), value("device"), value("product"), value("fingerprint"),
-                            preferences.getBoolean("hide_files", false),
-                            preferences.getBoolean("hide_packages", false), coordinates);
-                    if (!loggedState || generation != loggedGeneration) {
-                        XposedBridge.log("GhostViki: config ON for " + packageName
-                                + " identity=" + identity + " enabled=" + enabled
-                                + " validId=" + validId + " validSerial=" + validSerial
-                                + " generation=" + generation);
-                        loggedState = true;
-                        loggedGeneration = generation;
-                    }
+                            value(data, "device_id"), value(data, "wifi_mac"), value(data, "bssid"), value(data, "bluetooth_mac"),
+                            value(data, "imei1"), value(data, "imei2"), value(data, "imsi"), value(data, "iccid"),
+                            value(data, "build_id"), value(data, "hardware"), value(data, "brand"), value(data, "model"),
+                            value(data, "manufacturer"), value(data, "device"), value(data, "product"), value(data, "fingerprint"),
+                            flag(data, "hide_files"), flag(data, "hide_packages"), coordinates);
                 }
+                report(reason + " schema=" + schema + " generation=" + generation + " targets=" + targets.size());
             } catch (RuntimeException e) {
                 snapshot = Snapshot.OFF;
-                if (!loggedError) {
-                    loggedError = true;
-                    XposedBridge.log("GhostViki: settings unavailable in " + packageName + ": " + e.getClass().getSimpleName());
-                }
+                report("CONFIG_READ_ERROR " + e.getClass().getSimpleName());
             } finally {
                 nextRefresh = now + 1000;
                 loading.set(false);
@@ -89,20 +78,38 @@ final class HookConfig {
         return snapshot;
     }
 
-    private String value(String key) {
-        return preferences.getString(key + ":" + packageName, "");
+    String diagnostics() {
+        get();
+        return status;
+    }
+
+    private void report(String message) {
+        status = message;
+        if (!message.equals(loggedStatus)) {
+            loggedStatus = message;
+            XposedBridge.log("GhostViki: config for " + packageName + " " + message);
+        }
+    }
+
+    private static boolean flag(Map<String, ?> data, String key) {
+        return Boolean.TRUE.equals(data.get(key));
+    }
+
+    private String value(Map<String, ?> data, String key) {
+        Object value = data.get(key + ":" + packageName);
+        return value instanceof String ? (String) value : "";
     }
 
     static final class Snapshot {
-        static final Snapshot OFF = new Snapshot(false, "", "", "", "", "", "", "", "", "",
+        static final Snapshot OFF = new Snapshot(false, "", "", "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", false, false, null);
         final boolean identity, hideFiles, hidePackages;
-        final String androidId, serial, deviceId, wifiMac, bluetoothMac;
+        final String androidId, serial, deviceId, wifiMac, bssid, bluetoothMac;
         final String imei1, imei2, imsi, iccid;
         final String buildId, hardware, brand, model, manufacturer, device, product, fingerprint;
         final Coordinates coordinates;
         Snapshot(boolean identity, String androidId, String serial, String deviceId,
-                 String wifiMac, String bluetoothMac, String imei1, String imei2,
+                 String wifiMac, String bssid, String bluetoothMac, String imei1, String imei2,
                  String imsi, String iccid, String buildId, String hardware, String brand,
                  String model, String manufacturer, String device, String product,
                  String fingerprint, boolean hideFiles, boolean hidePackages,
@@ -112,6 +119,7 @@ final class HookConfig {
             this.serial = serial;
             this.deviceId = deviceId;
             this.wifiMac = wifiMac;
+            this.bssid = bssid;
             this.bluetoothMac = bluetoothMac;
             this.imei1 = imei1;
             this.imei2 = imei2;

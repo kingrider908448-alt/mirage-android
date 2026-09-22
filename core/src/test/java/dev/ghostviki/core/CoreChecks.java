@@ -20,6 +20,9 @@ public final class CoreChecks {
             check(id.profileId.matches("[0-9a-f-]{36}"), "profile ID format");
             check(id.deviceId.matches("[0-9a-f]{16}"), "device ID format");
             check(id.wifiMac.matches("([0-9A-F]{2}:){5}[0-9A-F]{2}"), "Wi-Fi MAC format");
+            check(id.bssid.matches("([0-9A-F]{2}:){5}[0-9A-F]{2}"), "BSSID format");
+            check((Integer.parseInt(id.bssid.substring(0, 2), 16) & 3) == 2, "BSSID is local and unicast");
+            check(!id.bssid.equals(id.wifiMac), "BSSID is not the client Wi-Fi MAC");
             check(id.bluetoothMac.matches("([0-9A-F]{2}:){5}[0-9A-F]{2}"), "Bluetooth MAC format");
             check(id.imei1.matches("[0-9]{15}") && id.imei2.matches("[0-9]{15}"), "IMEI format");
             check(id.imsi.matches("[0-9]{15}"), "IMSI format");
