@@ -1,8 +1,8 @@
-package dev.mirage.app.hooks;
+package dev.ghostviki.app.hooks;
 
 import android.os.SystemClock;
-import dev.mirage.app.ConfigStore;
-import dev.mirage.core.Coordinates;
+import dev.ghostviki.app.ConfigStore;
+import dev.ghostviki.core.Coordinates;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import java.util.Collections;
@@ -51,7 +51,7 @@ final class HookConfig {
                 snapshot = Snapshot.OFF;
                 if (!loggedError) {
                     loggedError = true;
-                    XposedBridge.log("Mirage: settings unavailable in " + packageName + ": " + e.getClass().getSimpleName());
+                    XposedBridge.log("GhostViki: settings unavailable in " + packageName + ": " + e.getClass().getSimpleName());
                 }
             } finally {
                 nextRefresh = now + 1000;
