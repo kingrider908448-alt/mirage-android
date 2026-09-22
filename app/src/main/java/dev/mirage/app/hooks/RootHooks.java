@@ -1,4 +1,4 @@
-package dev.mirage.app.hooks;
+package dev.ghostviki.app.hooks;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import dev.mirage.core.RootSignals;
+import dev.ghostviki.core.RootSignals;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
