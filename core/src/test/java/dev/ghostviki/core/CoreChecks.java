@@ -17,6 +17,14 @@ public final class CoreChecks {
             check(id.fcmToken.matches("[A-Za-z0-9_-]{22}:[A-Za-z0-9_-]{120}"), "FCM token format");
             check(id.gsfId.matches("[0-9a-f]{16}"), "GSF ID format");
             check(id.crashlyticsInstallationId.matches("[0-9a-f]{32}"), "Crashlytics ID format");
+            check(id.profileId.matches("[0-9a-f-]{36}"), "profile ID format");
+            check(id.deviceId.matches("[0-9a-f]{16}"), "device ID format");
+            check(id.wifiMac.matches("([0-9A-F]{2}:){5}[0-9A-F]{2}"), "Wi-Fi MAC format");
+            check(id.bluetoothMac.matches("([0-9A-F]{2}:){5}[0-9A-F]{2}"), "Bluetooth MAC format");
+            check(id.imei1.matches("[0-9]{15}") && id.imei2.matches("[0-9]{15}"), "IMEI format");
+            check(id.imsi.matches("[0-9]{15}"), "IMSI format");
+            check(id.iccid.matches("[0-9]{20}"), "ICCID format");
+            check(id.fingerprint.endsWith(":user/release-keys"), "fingerprint format");
             check(seen.add(id.androidId), "unexpected identifier collision");
         }
         check(Coordinates.parse(" -90 ", "180").latitude == -90, "valid coordinate bounds");
