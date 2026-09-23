@@ -5,6 +5,7 @@ import dev.ghostviki.app.ConfigStore;
 import dev.ghostviki.core.Coordinates;
 import dev.ghostviki.core.DeviceCatalog;
 import dev.ghostviki.core.DeviceProfile;
+import dev.ghostviki.core.ProfileConsistency;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import java.util.Collections;
@@ -54,13 +55,28 @@ final class HookConfig {
                     boolean validId = id.matches("[0-9a-f]{16}");
                     boolean validSerial = serial.matches("[0-9A-F]{16}");
                     DeviceProfile profile = DeviceCatalog.find(value(data, "device_profile_key"));
-                    boolean validProfile = schema < 5 || (profile != null
-                            && profile.name.equals(value(data, "device_name"))
-                            && profile.brand.equals(value(data, "brand"))
-                            && profile.model.equals(value(data, "model"))
-                            && profile.manufacturer.equals(value(data, "manufacturer"))
-                            && profile.device.equals(value(data, "device")));
-                    boolean identity = enabled && validId && validSerial && validProfile;
+                    boolean validProfile = schema < 5 || ProfileConsistency.validStoredDeviceProfile(
+                            profile,
+                            value(data, "device_profile_key"),
+                            value(data, "device_name"),
+                            value(data, "brand"),
+                            value(data, "model"),
+                            value(data, "manufacturer"),
+                            value(data, "device"));
+                    boolean validAdapters = mac(value(data, "wifi_mac"))
+                            && mac(value(data, "bssid"))
+                            && mac(value(data, "bluetooth_mac"))
+                            && !value(data, "wifi_mac").equals(value(data, "bssid"))
+                            && value(data, "imei1").matches("[0-9]{15}")
+                            && value(data, "imei2").matches("[0-9]{15}")
+                            && value(data, "imsi").matches("[0-9]{15}")
+                            && value(data, "iccid").matches("[0-9]{20}");
+                    boolean cleanFirmware = value(data, "build_id").isEmpty()
+                            && value(data, "hardware").isEmpty()
+                            && value(data, "product").isEmpty()
+                            && value(data, "fingerprint").isEmpty();
+                    boolean identity = enabled && validId && validSerial && validProfile
+                            && validAdapters && cleanFirmware;
                     reason = !enabled ? "IDENTITY_DISABLED" : !identity ? "INVALID_PROFILE" : "PROFILE_READY";
                     Coordinates coordinates = null;
                     if (flag(data, "location:" + packageName)) {
@@ -99,6 +115,12 @@ final class HookConfig {
             loggedStatus = message;
             XposedBridge.log("GhostViki: config for " + packageName + " " + message);
         }
+    }
+
+    private static boolean mac(String value) {
+        if (value == null || !value.matches("([0-9A-F]{2}:){5}[0-9A-F]{2}")) return false;
+        int first = Integer.parseInt(value.substring(0, 2), 16);
+        return (first & 3) == 2;
     }
 
     private static boolean flag(Map<String, ?> data, String key) {

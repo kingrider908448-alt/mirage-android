@@ -9,6 +9,7 @@ import dev.ghostviki.core.Coordinates;
 import dev.ghostviki.core.Identity;
 import dev.ghostviki.core.DeviceCatalog;
 import dev.ghostviki.core.DeviceProfile;
+import dev.ghostviki.core.ProfileConsistency;
 
 public final class ConfigStore {
     public static final String PACKAGE = "dev.ghostviki.app";
@@ -67,15 +68,15 @@ public final class ConfigStore {
         SharedPreferences.Editor editor = preferences.edit().putStringSet("targets", new HashSet<>(packages));
         // A newly selected app gets its own independently generated values.
         for (String pkg : packages) {
-            if (!preferences.contains("android_id:" + pkg)) putIdentity(editor, pkg, Identity.generate());
+            if (!preferences.contains("android_id:" + pkg)) putIdentity(editor, pkg, checked(Identity.generate()));
         }
         return editor.commit();
     }
 
     public boolean rotateIdentity() {
         SharedPreferences.Editor editor = preferences.edit();
-        for (String pkg : targets()) putIdentity(editor, pkg, Identity.generate(
-                DeviceCatalog.next(preferences.getString("device_profile_key:" + pkg, ""))));
+        for (String pkg : targets()) putIdentity(editor, pkg, checked(Identity.generate(
+                DeviceCatalog.next(preferences.getString("device_profile_key:" + pkg, "")))));
         return editor.putBoolean("identity_enabled", true)
                 .putLong("generation", preferences.getLong("generation", 0) + 1)
                 .putLong("changed_at", System.currentTimeMillis()).commit();
@@ -86,7 +87,7 @@ public final class ConfigStore {
         DeviceProfile profile = DeviceCatalog.find(key);
         if (profile == null) throw new IllegalArgumentException("Unknown device profile");
         SharedPreferences.Editor editor = preferences.edit();
-        putIdentity(editor, pkg, Identity.generate(profile));
+        putIdentity(editor, pkg, checked(Identity.generate(profile)));
         return editor.putBoolean("identity_enabled", true)
                 .putLong("generation", preferences.getLong("generation", 0) + 1)
                 .putLong("changed_at", System.currentTimeMillis()).commit();
@@ -96,7 +97,7 @@ public final class ConfigStore {
         SharedPreferences.Editor editor = preferences.edit();
         boolean changed = false;
         for (String pkg : targets()) {
-            Identity identity = Identity.generate();
+            Identity identity = checked(Identity.generate());
             if (!preferences.contains("device_profile_key:" + pkg)) {
                 // Upgrade only the device profile atomically; keep existing per-app IDs.
                 putDeviceProfile(editor, pkg, identity);
@@ -130,6 +131,38 @@ public final class ConfigStore {
             if (!preferences.contains("fingerprint:" + pkg)) { editor.putString("fingerprint:" + pkg, identity.fingerprint); changed = true; }
         }
         return !changed || editor.commit();
+    }
+
+    private static Identity checked(Identity identity) {
+        ProfileConsistency.Result result = ProfileConsistency.check(identity);
+        if (!result.ok) throw new IllegalStateException("Generated profile is inconsistent: " + result.reason);
+        return identity;
+    }
+
+    public String profileConsistencyStatus(String pkg) {
+        DeviceProfile profile = DeviceCatalog.find(preferences.getString("device_profile_key:" + pkg, ""));
+        boolean device = ProfileConsistency.validStoredDeviceProfile(
+                profile,
+                preferences.getString("device_profile_key:" + pkg, ""),
+                preferences.getString("device_name:" + pkg, ""),
+                preferences.getString("brand:" + pkg, ""),
+                preferences.getString("model:" + pkg, ""),
+                preferences.getString("manufacturer:" + pkg, ""),
+                preferences.getString("device:" + pkg, ""));
+        boolean ids = preferences.getString("android_id:" + pkg, "").matches("[0-9a-f]{16}")
+                && preferences.getString("serial:" + pkg, "").matches("[0-9A-F]{16}")
+                && preferences.getString("wifi_mac:" + pkg, "").matches("([0-9A-F]{2}:){5}[0-9A-F]{2}")
+                && preferences.getString("bssid:" + pkg, "").matches("([0-9A-F]{2}:){5}[0-9A-F]{2}")
+                && preferences.getString("bluetooth_mac:" + pkg, "").matches("([0-9A-F]{2}:){5}[0-9A-F]{2}")
+                && preferences.getString("imei1:" + pkg, "").matches("[0-9]{15}")
+                && preferences.getString("imei2:" + pkg, "").matches("[0-9]{15}")
+                && preferences.getString("imsi:" + pkg, "").matches("[0-9]{15}")
+                && preferences.getString("iccid:" + pkg, "").matches("[0-9]{20}");
+        boolean firmwareClean = preferences.getString("build_id:" + pkg, "").isEmpty()
+                && preferences.getString("hardware:" + pkg, "").isEmpty()
+                && preferences.getString("product:" + pkg, "").isEmpty()
+                && preferences.getString("fingerprint:" + pkg, "").isEmpty();
+        return device && ids && firmwareClean ? "READY" : "CHECK PROFILE";
     }
 
     private static void putIdentity(SharedPreferences.Editor editor, String pkg, Identity identity) {

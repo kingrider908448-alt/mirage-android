@@ -419,6 +419,9 @@ public final class MainActivity extends Activity {
                     render();
                 }).setNegativeButton("Cancel", null).show(), false);
         text("These are saved inputs, not values read from the target. An adapter label describes code coverage, not a successful device test.", 12, MUTED, false);
+        TextView consistency = text("PROFILE CONSISTENCY: " + config.profileConsistencyStatus(pkg), 11,
+                "READY".equals(config.profileConsistencyStatus(pkg)) ? GREEN : Color.rgb(255, 184, 77), true);
+        consistency.setLetterSpacing(0.08f);
         if ("hardware".equals(category)) {
             button("CHOOSE DEVICE MODEL • " + DeviceCatalog.all().size(), () -> chooseDeviceProfile(pkg), true);
             text("Model names and codes come from the device catalog. Specs follow the chosen model where sourced. Firmware and platform rows marked unchanged are retained.", 12, MUTED, false);
@@ -509,6 +512,8 @@ public final class MainActivity extends Activity {
             rows.add(row("ANDROID DEVICE ID", pref(pkg, "device_id", synth(pkg, "device_id", "hex16"))));
             rows.add(row("BOOT ID", pref(pkg, "boot_id", synth(pkg, "boot_id", "uuid"))));
             rows.add(row("BOOT COUNT", synth(pkg, "boot_count", "digits4")));
+            rows.add(row("PROFILE CONSISTENCY", config.profileConsistencyStatus(pkg),
+                    "LOCAL VALIDATION • catalog + saved adapter values must agree before hooks activate"));
             rows.add(row("DEVICE NAME", pref(pkg, "device_name", "Select a device profile")));
             rows.add(row("BUILD ID", android.os.Build.ID, "UNCHANGED • original firmware build"));
             rows.add(row("HARDWARE", android.os.Build.HARDWARE, "UNCHANGED • no verified board properties in catalog"));
@@ -529,22 +534,25 @@ public final class MainActivity extends Activity {
             rows.add(row("MEID", synth(pkg, "meid", "hex14").toUpperCase(Locale.ROOT)));
             rows.add(row("IMSI", pref(pkg, "imsi", synth(pkg, "imsi", "digits15"))));
             rows.add(row("ICCID", pref(pkg, "iccid", synth(pkg, "iccid", "digits20"))));
-            rows.add(row("MSISDN", "+1 202 555 " + synth(pkg, "msisdn", "digits4")));
-            rows.add(row("MCC / MNC", "310 / 260"));
-            rows.add(row("OPERATOR", "GHOST MOBILE " + synth(pkg, "operator", "digits4")));
-            rows.add(row("COUNTRY ISO", "US"));
-            rows.add(row("ROAMING", "FALSE"));
+            rows.add(row("MSISDN", "NOT OVERRIDDEN", "PREVIEW ONLY • no phone-number adapter"));
+            rows.add(row("MCC / MNC", "NOT OVERRIDDEN", "PREVIEW ONLY • carrier configuration stays original"));
+            rows.add(row("OPERATOR", "NOT OVERRIDDEN", "PREVIEW ONLY • carrier name stays original"));
+            rows.add(row("COUNTRY ISO", "NOT OVERRIDDEN", "PREVIEW ONLY • network/SIM country stays original"));
+            rows.add(row("ROAMING", "NOT OVERRIDDEN", "PREVIEW ONLY • roaming state stays original"));
             rows.add(row("CARRIER ID", synth(pkg, "carrier_id", "digits5")));
             rows.add(row("EID", synth(pkg, "eid", "digits32")));
         } else if ("location".equals(c)) {
-            rows.add(row("LATITUDE", config.preferences.getString("latitude:" + pkg, "NOT SET — use Location")));
-            rows.add(row("LONGITUDE", config.preferences.getString("longitude:" + pkg, "NOT SET — use Location")));
-            rows.add(row("ALTITUDE", synth(pkg, "altitude", "digits4") + " m"));
-            rows.add(row("ACCURACY", (Integer.parseInt(synth(pkg, "accuracy", "hex4").substring(0,2),16)%20+3) + ".0 m"));
-            rows.add(row("TIMEZONE", "Etc/UTC"));
-            rows.add(row("LOCALE", "en-US"));
-            rows.add(row("COUNTRY", "US"));
-            rows.add(row("CITY", "TEST CITY"));
+            boolean systemLocation = config.preferences.getBoolean("system_location_enabled", false);
+            rows.add(row("SYSTEM LOCATION", systemLocation ? "ENABLED" : "OFF",
+                    "FRAMEWORK TEST ADAPTER • Vector System Framework scope required"));
+            rows.add(row("LATITUDE", config.preferences.getString("system_latitude", "NOT SET — use Location")));
+            rows.add(row("LONGITUDE", config.preferences.getString("system_longitude", "NOT SET — use Location")));
+            rows.add(row("PLACE LABEL", config.preferences.getString("system_location_label", "NOT SET")));
+            rows.add(row("ALTITUDE", "UNCHANGED", "FRAMEWORK TEST MODE changes coordinates only"));
+            rows.add(row("ACCURACY", "UNCHANGED", "FRAMEWORK TEST MODE preserves provider accuracy"));
+            rows.add(row("TIMEZONE", "UNCHANGED", "LOCATION DOES NOT CHANGE DEVICE TIMEZONE"));
+            rows.add(row("LOCALE", "UNCHANGED", "LOCATION DOES NOT CHANGE DEVICE LOCALE"));
+            rows.add(row("COUNTRY / CITY", "DERIVED BY TARGET", "No fabricated geocoder identity is injected"));
         } else if ("accounts".equals(c)) {
             rows.add(row("GOOGLE ACCOUNT", "test.user@example.com"));
             rows.add(row("EMAIL", "test.user@example.com"));
@@ -564,6 +572,8 @@ public final class MainActivity extends Activity {
             rows.add(row("INSTALL SESSION ID", synth(pkg, "install_session", "uuid")));
         } else if ("hardware".equals(c)) {
             DeviceProfile p = DeviceCatalog.find(pref(pkg, "device_profile_key", ""));
+            rows.add(row("PROFILE CONSISTENCY", config.profileConsistencyStatus(pkg),
+                    "LOCAL VALIDATION • device catalog + supported saved identifiers"));
             rows.add(row("DEVICE NAME", pref(pkg, "device_name", "Choose a profile")));
             rows.add(row("BRAND", pref(pkg, "brand", "Not set")));
             rows.add(row("MODEL", pref(pkg, "model", "Not set")));
@@ -637,15 +647,16 @@ public final class MainActivity extends Activity {
             case "DEVICE NAME": return "ADAPTER: Settings device_name / readable local Bluetooth name • target only";
             case "ANDROID ID (SSAID)": return "ADAPTER: Settings.Secure.getString • verify in target";
             case "DEVICE SERIAL": return "ADAPTER: Build fields / readable getSerial • permission limits apply";
-            case "BUILD ID": case "HARDWARE": case "BRAND": case "MODEL":
-            case "MANUFACTURER": case "DEVICE": case "PRODUCT": case "BUILD FINGERPRINT":
-                return "ADAPTER: Java Build field • restart target • native reads not covered";
+            case "BRAND": case "MODEL": case "MANUFACTURER": case "DEVICE":
+                return "ADAPTER: sourced catalog identity in target process • restart target";
+            case "BUILD ID": case "HARDWARE": case "PRODUCT": case "BUILD FINGERPRINT":
+                return "UNCHANGED • no verified stock-firmware value in catalog";
             case "WIFI MAC": case "BLUETOOTH MAC": case "BSSID":
                 return "ADAPTER: readable Java API • redacted / denied values stay unchanged";
             case "IMEI (SIM 1)": case "IMEI (SIM 2)": case "IMSI": case "ICCID":
                 return "ADAPTER: readable TelephonyManager API • permission limits apply";
             case "LATITUDE": case "LONGITUDE":
-                return "Separate Location setting • must be set and enabled there";
+                return "SYSTEM FRAMEWORK LOCATION TEST • saved in Location screen • simulated flag retained";
             case "PACKAGE NAME": return "TARGET LABEL • package identity is not changed";
             default: return "PREVIEW ONLY • no target adapter implemented";
         }

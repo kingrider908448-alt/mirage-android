@@ -29,7 +29,12 @@ public final class CoreChecks {
             check(id.iccid.matches("[0-9]{20}"), "ICCID format");
             check(id.fingerprint.isEmpty() && id.buildId.isEmpty() && id.hardware.isEmpty(), "Unverified factory metadata is not fabricated");
             check(id.model.equals(id.deviceProfile.model) && id.deviceName.equals(id.deviceProfile.name), "Model and friendly name share one catalog entry");
+            check(ProfileConsistency.check(id).ok, "generated profile must be internally consistent");
             check(seen.add(id.androidId), "unexpected identifier collision");
+        }
+        for (DeviceProfile profile : DeviceCatalog.all()) {
+            Identity catalogIdentity = Identity.generate(profile);
+            check(ProfileConsistency.check(catalogIdentity).ok, "catalog profile consistency: " + profile.key);
         }
         check(Coordinates.parse(" -90 ", "180").latitude == -90, "valid coordinate bounds");
         check(Coordinates.parse("0", "0").longitude == 0, "zero is a valid location");
