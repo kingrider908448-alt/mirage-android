@@ -147,7 +147,7 @@ public final class MainActivity extends Activity {
 
         homeCard("ROOT HIDE", "BYPASS  •  MASK  •  PROTECT", null, "◆", () -> show("root"));
         homeCard("CHANGE IDENTITY", "SPOOF  •  MODIFY  •  RESET", R.drawable.ic_fingerprint, null, () -> show("identity"));
-        homeCard("LOCATION", "FAKE  •  CUSTOM  •  CONTROL", null, "●", () -> show("location"));
+        homeCard("LOCATION", "SYSTEM  •  SEARCH  •  CONTROL", null, "●", () -> startActivity(new Intent(this, SystemLocationActivity.class)));
 
         space(24);
         TextView footer = text("STAY PRIVATE  STAY AHEAD", 10, GREEN, true);
