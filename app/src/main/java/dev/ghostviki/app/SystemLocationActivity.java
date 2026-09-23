@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.Settings;
@@ -176,22 +177,36 @@ public final class SystemLocationActivity extends Activity {
         }
 
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        geocoder.getFromLocationName(text, 5, new Geocoder.GeocodeListener() {
-            @Override public void onGeocode(List<Address> addresses) {
-                runOnUiThread(() -> showResults(addresses));
-            }
+        if (Build.VERSION.SDK_INT >= 33) {
+            geocoder.getFromLocationName(text, 5, new Geocoder.GeocodeListener() {
+                @Override public void onGeocode(List<Address> addresses) {
+                    runOnUiThread(() -> showResults(addresses));
+                }
 
-            @Override public void onError(String errorMessage) {
-                runOnUiThread(() -> {
-                    results.removeAllViews();
-                    results.addView(label(
-                            errorMessage == null || errorMessage.isBlank()
-                                    ? "PLACE SEARCH FAILED."
-                                    : "PLACE SEARCH FAILED: " + errorMessage.toUpperCase(Locale.ROOT),
-                            12, ORANGE, true));
-                });
-            }
-        });
+                @Override public void onError(String errorMessage) {
+                    runOnUiThread(() -> showSearchError(errorMessage));
+                }
+            });
+        } else {
+            new Thread(() -> {
+                try {
+                    @SuppressWarnings("deprecation")
+                    List<Address> addresses = geocoder.getFromLocationName(text, 5);
+                    runOnUiThread(() -> showResults(addresses));
+                } catch (Exception e) {
+                    runOnUiThread(() -> showSearchError(e.getMessage()));
+                }
+            }, "GhostViki-Geocoder").start();
+        }
+    }
+
+    private void showSearchError(String errorMessage) {
+        results.removeAllViews();
+        results.addView(label(
+                errorMessage == null || errorMessage.isBlank()
+                        ? "PLACE SEARCH FAILED."
+                        : "PLACE SEARCH FAILED: " + errorMessage.toUpperCase(Locale.ROOT),
+                12, ORANGE, true));
     }
 
     private void showResults(List<Address> addresses) {
