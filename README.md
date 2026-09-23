@@ -1,8 +1,18 @@
 # GhostViki for Android
 
-An experimental Android app and Vector / LSPosed module for synthetic identity and location testing in **selected app processes**. GhostViki Probe is an independent reader, not the only supported target.
+An experimental Android app and Vector / LSPosed module for synthetic identity testing in **selected app processes**, plus the existing framework location test mode. GhostViki Probe is an independent reader, not the only supported target.
 
-## 0.1.1-configfix
+## 0.2.0-profiles100
+
+Device Profile now contains a searchable catalog of **100 real India-market models**, with pinned Google Play model/device codes and separately sourced hardware specifications. Choose a model for the displayed target, or rotate all selected profiles. A rotation chooses a different model and prefers a different manufacturer. Selecting a model updates that target's saved name/build identity and refreshes its synthetic identifiers atomically; other targets keep their profiles.
+
+The previously preview-only Device Name now has general Settings and local Bluetooth adapters. SoC, selected Java product-property getters and sourced RAM/storage/display readouts have adapters too. [Catalog and sources](catalog/README.md) · [All 100 profiles](catalog/DEVICES.md).
+
+**This is not a complete firmware or hardware impersonation.** Unsourced specs stay unchanged. The previous random build ID, hardware, product and fingerprint values are cleared on upgrade; they were not genuine factory values. The UI now shows the original firmware/OS values with explicit unchanged labels instead of fixed Tensor/Android/256 GB placeholders. Android version, SDK, ABI, kernel and security patch are preserved. Shared specifications between real models can legitimately remain the same.
+
+The existing System Location update from `3fb3f2b` is retained. Its framework scope is separate from selected-app identity scope. No new identity adapter is installed into System Framework.
+
+The earlier configuration repair is retained:
 
 This revision fixes a reproducible configuration bug: runtime preferences were opened privately before requesting world-readable mode. Android caches the first preferences object and its write mode, so later requests could apparently succeed while writes remained private.
 
@@ -10,7 +20,7 @@ The writer now requests world-readable mode first, falls back privately on rejec
 
 **[Builds and APK downloads](https://github.com/kingrider908448-alt/mirage-android/actions/workflows/android.yml)**
 
-Choose a successful run for the desired commit and download its GhostViki-debug-* artifact. The ZIP contains GhostViki-alpha.apk, GhostViki-Probe.apk and SHA256SUMS.txt. GitHub may require sign-in; artifacts expire after 14 days. Both apps now display **0.1.1-configfix**, version code 2, unlike earlier builds that all shared version code 1.
+Choose a successful run for the desired commit and download its GhostViki-debug-* artifact. The ZIP contains GhostViki-alpha.apk, GhostViki-Probe.apk and SHA256SUMS.txt. GitHub may require sign-in; artifacts expire after 14 days. Both apps display **0.2.0-profiles100**, version code 3.
 
 Passing tests, lint or a build is not a verified phone result. The supplied Vector screenshots establish that GhostViki loaded into Probe, not that its configuration or API replacements worked. See [VALIDATION.md](VALIDATION.md).
 
@@ -21,11 +31,16 @@ Select the same target in **both Vector and GhostViki**. Each selected package h
 | Surface | Implemented path | Limits |
 | --- | --- | --- |
 | Android ID | Settings.Secure.getString for ANDROID_ID | Java getter only; no direct provider/Binder, native or previously cached reads. |
-| Device build | Build.ID, HARDWARE, BRAND, MODEL, MANUFACTURER, DEVICE, PRODUCT, FINGERPRINT, SERIAL | Process-local Java fields at startup; restart targets after changing or disabling. Native/system properties and actual hardware stay unchanged. |
+| Device name | Settings.Global/System/Secure getString/getStringForUser for device_name; Secure bluetooth_name; local BluetoothAdapter.getName | Target-process reads only. Bluetooth permission errors and unavailable adapter results are preserved. Does not rename the phone in unselected system Settings or change Bluetooth broadcasts/remote-device names. |
+| Device build | Build.BRAND, MODEL, MANUFACTURER, DEVICE, SERIAL; sourced SOC_MODEL/SOC_MANUFACTURER | Process-local Java fields at startup; restart targets after changing or disabling. No fabricated stock firmware metadata. |
+| Java product properties | Exact ro.product brand/manufacturer/model/device aliases, marketing-name aliases and sourced ro.soc fields | Java SystemProperties.get only. Shell getprop, native reads, boot/security properties and actual system properties remain unchanged. |
+| RAM | ActivityManager.getMemoryInfo totalMem and bounded available/threshold fields | Sourced advertised capacity. Does not change physical RAM, native/proc reads or allocation limits. |
+| Storage | StorageStatsManager total/free bytes for UUID_DEFAULT | Sourced advertised internal capacity, bounded free value. External volumes and filesystem/File/StatFs reads unchanged. |
+| Display | Display getSize/getRealSize/getMetrics/getRealMetrics on default display | Sourced panel pixels, preserves orientation. Does not alter native display, Resources metrics, density, Display.Mode or WindowMetrics. May affect apps that use these getters for layout. |
 | Serial API | Readable Build.getSerial | Permission errors, null and UNKNOWN remain unchanged. |
 | Telephony | Readable getImei, IMEI-shaped getDeviceId, getSubscriberId, getSimSerialNumber | No permission bypass; slots 0/1 only; no MEID adapter. Synthetic numbers are not provisioned modem/SIM identities. |
 | Network | Readable Wi-Fi MAC/BSSID and Bluetooth address getters | BSSID now has a dedicated saved value. Null, denied and standard redacted MAC results stay unchanged. No change to packets, router state or public IP. |
-| Location | Existing LocationManager adapters and optional Google LocationResult callbacks | Set and enable separately in Location. Not all location API paths are covered. |
+| Location | Existing framework LocationManagerService and delivery adapters | Enable separately in Location and Vector System Framework scope. Framework-wide effect, not tied to the identity target list. Simulated locations retain the mock flag. OEM and fused-provider paths need device validation. |
 | Root signals | Existing exact Java SU file/path and selected package-manager adapters | No native syscalls, mounts, kernel or hardware-attestation coverage. |
 
 The UI labels implemented adapters separately from **PREVIEW ONLY** fields. AAID, App Set ID, FID/FCM, GSF, accounts, signatures, DRM, IP, boot IDs and other preview fields have no target adapter in this revision. Preview strings are not service registrations. Rotation does not change fixed labels, accounts, Android version, installed package identity, app data, server history, physical identifiers or attestation. This is not a universal all-identity or undetectable module.
@@ -35,17 +50,17 @@ The profile viewer now lets you choose the selected package being displayed; pre
 - PROFILE_READY: selected identity profile loaded and validated; compare actual API reads to verify effects.
 - NOT_SELECTED: package is missing from GhostViki's saved targets.
 - IDENTITY_DISABLED: replacements switched off.
-- INVALID_PROFILE: malformed or missing Android ID/serial.
+- INVALID_PROFILE: malformed/missing Android ID/serial, or an inconsistent schema-5 catalog name/model/code combination.
 - CONFIG_UNAVAILABLE / CONFIG_READ_ERROR: settings absent, unsupported or unreadable.
 - MODULE_NOT_LOADED: Probe's diagnostic method was not replaced. An older module may also lack that adapter; confirm matching versions.
 
 ## Focused device test
 
-1. Install matching APKs. Enable GhostViki in Vector and scope it to a test app such as DevInfo and optionally Probe. Do not use System Framework scope. Restart if Vector requests it.
+1. Install matching APKs. Enable GhostViki in Vector and scope it to a test app such as DevInfo and optionally Probe. System Framework scope is only needed for the separate Location feature. Restart if Vector requests it.
 2. If the older Mirage module is scoped to the same target, temporarily disable it for that target to isolate the test. Prior logs showed both module packages: a possible conflict, not a proven cause.
-3. Force-stop and reopen **GhostViki itself once after updating**, so the old process cannot keep a private-mode preferences object cached. Confirm v0.1.1-configfix.
-4. Select the same target inside GhostViki. Tap **Rotate all selected profiles**. In Android / Device Identifiers, choose that exact package with **View profile** and note its saved Android ID.
-5. Force-stop and reopen the target. Compare its **Android ID** against that exact package's saved ID. A serial permission error is not evidence that Android ID failed. Build fields require a fresh process.
+3. Force-stop and reopen **GhostViki itself once after updating**, so the old process cannot keep a private-mode preferences object cached. Confirm v0.2.0-profiles100.
+4. Select the same target inside GhostViki. In Device Profile choose that exact package with **View profile**, then **Choose device model**. Note the saved name and model. Android ID is available in Android / Device Identifiers.
+5. Force-stop and reopen the target. Compare **Model, Device name and Android ID** against that package's saved values. A serial permission error is not evidence that Android ID failed. Build fields require a fresh process. Probe now independently reads Settings device name, local Bluetooth name (with permission), SoC, RAM, storage and display. New fields absent from an old baseline never count as a successful identity change.
 6. Rotate again, restart and repeat. Confirm an unselected app remains unchanged. To test disabling, switch off Identity Adapters and restart the target.
 
 Windows **CMD**, one command per line (not PowerShell Start-Sleep):
@@ -73,7 +88,7 @@ java scripts/RunConfigChecks.java
 gradle --no-daemon :core:check :app:lintDebug :probe:lintDebug :app:assembleDebug :probe:assembleDebug
 ~~~
 
-The first command runs production core/config code against explicit **JVM fixtures**, covering first-open caching, migration, commit failure, refresh, isolation and service-readable maps. It also syntax-parses all Android Java sources. It does not emulate Android, SELinux, real Vector IPC or hook installation. Fixtures live outside Android source sets and are never packaged in APKs.
+The first command runs production core/config code and the new name/hardware callbacks against explicit **JVM fixtures**. It checks 100 unique models, no-repeat rotations, persistence, migration, per-target isolation, getter results, error preservation and disabled/unselected targets, and syntax-parses all Android Java sources. It does not emulate Android, SELinux, real Vector IPC or hook installation. Fixtures live outside Android source sets. CI also checks that the exact tested catalog is packaged inside the module APK.
 
 Fresh CI runners can use different debug signing keys. If an update-signature error occurs, do not automatically uninstall or clear data: that erases profiles/baselines. A stable signing workflow is needed for routine updates. No private key belongs in this repository.
 

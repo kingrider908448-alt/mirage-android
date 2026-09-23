@@ -9,6 +9,14 @@ import javax.tools.ToolProvider;
 class RunConfigChecks {
     public static void main(String[] args) throws Exception {
         Path output = Files.createTempDirectory("ghostviki-config-checks-");
+        Path resources = Path.of("core/src/main/resources");
+        try (var files = Files.walk(resources)) {
+            for (Path source : files.filter(Files::isRegularFile).toList()) {
+                Path target = output.resolve(resources.relativize(source));
+                Files.createDirectories(target.getParent());
+                Files.copy(source, target);
+            }
+        }
         List<String> compilerArgs = new ArrayList<>(List.of("-d", output.toString(), "-Xlint:unchecked"));
         for (String directory : List.of("core/src/main/java", "core/src/test/java", "scripts/config-checks")) {
             try (var sources = Files.walk(Path.of(directory))) {
@@ -17,6 +25,8 @@ class RunConfigChecks {
         }
         compilerArgs.add("app/src/main/java/dev/ghostviki/app/ConfigStore.java");
         compilerArgs.add("app/src/main/java/dev/ghostviki/app/hooks/HookConfig.java");
+        compilerArgs.add("app/src/main/java/dev/ghostviki/app/hooks/DeviceNameHooks.java");
+        compilerArgs.add("app/src/main/java/dev/ghostviki/app/hooks/HardwareProfileHooks.java");
         var compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null) throw new IllegalStateException("A full JDK is required");
         if (compiler.run(null, System.out, System.err, compilerArgs.toArray(String[]::new)) != 0)
@@ -38,7 +48,7 @@ class RunConfigChecks {
             System.out.println("PASS: parsed all Android Java sources (syntax only)");
         }
         try (var loader = new URLClassLoader(new java.net.URL[]{output.toUri().toURL()}, ClassLoader.getPlatformClassLoader())) {
-            for (String main : List.of("dev.ghostviki.core.CoreChecks", "dev.ghostviki.app.hooks.ConfigChecks"))
+            for (String main : List.of("dev.ghostviki.core.CoreChecks", "dev.ghostviki.app.hooks.ConfigChecks", "dev.ghostviki.app.hooks.ProfileChecks"))
                 loader.loadClass(main).getMethod("main", String[].class).invoke(null, (Object) new String[0]);
         }
     }

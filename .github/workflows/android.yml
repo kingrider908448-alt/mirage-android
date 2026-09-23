@@ -32,8 +32,12 @@ jobs:
         run: sdkmanager 'platforms;android-36' 'build-tools;35.0.0'
       - name: Verify core and build both apps
         run: |
+          python scripts/import_device_catalog.py --pinned
+          git diff --exit-code -- catalog/source-records.json catalog/DEVICES.md core/src/main/resources/dev/ghostviki/core/device-profiles.tsv
           java scripts/RunConfigChecks.java
           gradle --no-daemon :core:check :app:lintDebug :probe:lintDebug :app:assembleDebug :probe:assembleDebug
+      - name: Verify catalog packaged in module APK
+        run: python scripts/check_apk_catalog.py app/build/outputs/apk/debug/app-debug.apk
       - name: Collect APKs and checksums
         run: |
           mkdir -p artifacts

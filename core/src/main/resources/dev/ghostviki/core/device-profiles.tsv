@@ -1,0 +1,101 @@
+# id|name|brand|manufacturer|model|device|soc|soc_maker|ram_gib|storage_gb|width|height|spec_source
+samsung-galaxy-s25-ultra|Samsung Galaxy S25 Ultra|samsung|samsung|SM-S938B|pa3q|Snapdragon 8 Elite for Galaxy|Qualcomm|12|256|0|0|https://news.samsung.com/in/samsung-galaxy-s25-series-sets-the-standard-of-ai-phone-as-a-true-ai-companion
+samsung-galaxy-s25-plus|Samsung Galaxy S25+|samsung|samsung|SM-S936B|pa2q|Snapdragon 8 Elite for Galaxy|Qualcomm|12|256|0|0|https://news.samsung.com/in/samsung-galaxy-s25-series-sets-the-standard-of-ai-phone-as-a-true-ai-companion
+samsung-galaxy-s25|Samsung Galaxy S25|samsung|samsung|SM-S931B|pa1q|Snapdragon 8 Elite for Galaxy|Qualcomm|12|256|0|0|https://news.samsung.com/in/samsung-galaxy-s25-series-sets-the-standard-of-ai-phone-as-a-true-ai-companion
+samsung-galaxy-s24-ultra|Samsung Galaxy S24 Ultra|samsung|samsung|SM-S928B|e3q|Snapdragon 8 Gen 3 for Galaxy|Qualcomm|12|256|0|0|https://news.samsung.com/in/enter-the-new-era-of-mobile-ai-with-samsung-galaxy-s24-series
+samsung-galaxy-s24-plus|Samsung Galaxy S24+|samsung|samsung|SM-S926B|e2s|Exynos 2400|Samsung|12|256|0|0|https://news.samsung.com/in/enter-the-new-era-of-mobile-ai-with-samsung-galaxy-s24-series
+samsung-galaxy-s24|Samsung Galaxy S24|samsung|samsung|SM-S921B|e1s|Exynos 2400|Samsung|8|256|0|0|https://news.samsung.com/in/enter-the-new-era-of-mobile-ai-with-samsung-galaxy-s24-series
+samsung-galaxy-s23-ultra|Samsung Galaxy S23 Ultra|samsung|samsung|SM-S918B|dm3q|Snapdragon 8 Gen 2 for Galaxy|Qualcomm|12|256|0|0|https://news.samsung.com/in/samsung-launches-galaxy-s23-series-in-india-pre-book-now-for-exciting-offers
+samsung-galaxy-s23-plus|Samsung Galaxy S23+|samsung|samsung|SM-S916B|dm2q|Snapdragon 8 Gen 2 for Galaxy|Qualcomm|8|256|0|0|https://news.samsung.com/in/samsung-launches-galaxy-s23-series-in-india-pre-book-now-for-exciting-offers
+samsung-galaxy-s23|Samsung Galaxy S23|samsung|samsung|SM-S911B|dm1q|Snapdragon 8 Gen 2 for Galaxy|Qualcomm|8|128|0|0|https://news.samsung.com/in/samsung-launches-galaxy-s23-series-in-india-pre-book-now-for-exciting-offers
+samsung-galaxy-s23-fe|Samsung Galaxy S23 FE|samsung|samsung|SM-S711B|r11s|Exynos 2200|Samsung|0|128|1080|2340|https://www.samsung.com/in/support/mobile-devices/specifications-for-the-new-galaxy-s23-fe/
+samsung-galaxy-s24-fe|Samsung Galaxy S24 FE|samsung|samsung|SM-S721B|r12s|Exynos 2400e|Samsung|8|128|0|0|https://news.samsung.com/in/galaxy-s24-series-expands-with-s24-fe-a-premium-experience-that-makes-full-galaxy-ai-capabilities-attainable-for-more-users
+samsung-galaxy-a56-5g|Samsung Galaxy A56 5G|samsung|samsung|SM-A566E|a56x|Exynos 1580|Samsung|8|128|0|0|https://news.samsung.com/in/samsung-india-launches-galaxy-a56-5g-galaxy-a36-5g-featuring-awesome-intelligence-all-new-design-and-enhanced-durability
+samsung-galaxy-a55-5g|Samsung Galaxy A55 5G|samsung|samsung|SM-A556E|a55x|Exynos 1480|Samsung|0|0|0|0|https://www.samsung.com/in/smartphones/galaxy-a55/
+samsung-galaxy-a54-5g|Samsung Galaxy A54 5G|samsung|samsung|SM-A546E|a54x|Exynos 1380|Samsung|8|128|0|0|https://news.samsung.com/in/samsung-launches-all-new-galaxy-a54-5g-and-a34-5g-with-stunning-design-and-trendy-colours;https://www.samsung.com/us/support/answer/ANS10003688/
+samsung-galaxy-a36-5g|Samsung Galaxy A36 5G|samsung|samsung|SM-A366E|a36xq|Snapdragon 6 Gen 3|Qualcomm|8|128|0|0|https://news.samsung.com/in/samsung-india-launches-galaxy-a56-5g-galaxy-a36-5g-featuring-awesome-intelligence-all-new-design-and-enhanced-durability
+samsung-galaxy-a35-5g|Samsung Galaxy A35 5G|samsung|samsung|SM-A356E|a35x|Exynos 1380|Samsung|8|128|1080|2340|https://www.samsung.com/in/smartphones/galaxy-a/galaxy-a35-5g-awesome-iceblue-128gb-sm-a356elbjins/
+samsung-galaxy-a34-5g|Samsung Galaxy A34 5G|samsung|samsung|SM-A346E|a34x|Dimensity 1080|MediaTek|8|128|0|0|https://news.samsung.com/in/samsung-launches-all-new-galaxy-a54-5g-and-a34-5g-with-stunning-design-and-trendy-colours;https://news.samsung.com/id/unjuk-kebolehan-di-samsung-galaxy-gaming-academy-dapatkan-tips-untuk-level-up-pengalaman-gaming-mu
+samsung-galaxy-m55-5g|Samsung Galaxy M55 5G|samsung|samsung|SM-M556B|m55xq|Snapdragon 7 Gen 1|Qualcomm|8|128|0|0|https://news.samsung.com/in/samsung-unveils-galaxy-m55-5g-galaxy-m15-5g-with-segment-leading-super-amoled-plus-display-powerful-processor-and-stylish-design-in-india
+samsung-galaxy-m35-5g|Samsung Galaxy M35 5G|samsung|samsung|SM-M356B|m35x|Exynos 1380|Samsung|6|128|0|0|https://news.samsung.com/in/samsung-unveils-galaxy-m35-5g-with-segment-leading-monster-features-in-india
+samsung-galaxy-m34-5g|Samsung Galaxy M34 5G|samsung|samsung|SM-M346B|m34x|Exynos 1280|Samsung|6|128|0|0|https://news.samsung.com/in/samsung-launches-galaxy-m34-5g-in-india-with-monster-display-camera-and-battery-at-just-inr-16999
+samsung-galaxy-m15-5g|Samsung Galaxy M15 5G|samsung|samsung|SM-M156B|m15x|Dimensity 6100+|MediaTek|4|128|0|0|https://news.samsung.com/in/samsung-unveils-galaxy-m55-5g-galaxy-m15-5g-with-segment-leading-super-amoled-plus-display-powerful-processor-and-stylish-design-in-india
+samsung-galaxy-f55-5g|Samsung Galaxy F55 5G|samsung|samsung|SM-E556B|m55xq|Snapdragon 7 Gen 1|Qualcomm|8|128|0|0|https://news.samsung.com/in/samsung-unveils-galaxy-f55-5g-with-classy-vegan-leather-design-super-amoled-display-and-powerful-snapdragon-processor-in-india
+samsung-galaxy-f54-5g|Samsung Galaxy F54 5G|samsung|samsung|SM-E546B|m54x|Exynos 1380|Samsung|8|256|0|0|https://news.samsung.com/in/samsung-unveils-galaxy-f54-5g
+samsung-galaxy-f15-5g|Samsung Galaxy F15 5G|samsung|samsung|SM-E156B|m15x|Dimensity 6100+|MediaTek|4|128|0|0|https://news.samsung.com/in/samsung-unveils-galaxy-f15-5g-with-segment-best-samoled-display-4-generations-of-android-upgrades-5-years-of-security-updates-and-6000mah-battery
+oneplus-13|OnePlus 13|OnePlus|OnePlus|CPH2649|OP5D55L1|Snapdragon 8 Elite|Qualcomm|12|256|1440|3168|https://www.oneplus.in/13/specs
+oneplus-13r|OnePlus 13R|OnePlus|OnePlus|CPH2691|OP5D3BL1|Snapdragon 8 Gen 3|Qualcomm|12|256|1264|2780|https://www.oneplus.in/13r/specs
+oneplus-12|OnePlus 12|OnePlus|OnePlus|CPH2573|OP595DL1|Snapdragon 8 Gen 3|Qualcomm|12|256|1440|3168|https://www.oneplus.in/12/specs
+oneplus-12r|OnePlus 12R|OnePlus|OnePlus|CPH2585|OP5D35L1|Snapdragon 8 Gen 2|Qualcomm|8|128|1264|2780|https://www.oneplus.in/12r/specs
+oneplus-11-5g|OnePlus 11 5G|OnePlus|OnePlus|CPH2447|OP594DL1|Snapdragon 8 Gen 2|Qualcomm|8|128|1440|3216|https://www.oneplus.in/11/specs
+oneplus-11r-5g|OnePlus 11R 5G|OnePlus|OnePlus|CPH2487|OP5961L1|Snapdragon 8+ Gen 1|Qualcomm|8|128|1240|2772|https://www.oneplus.in/11r/specs
+oneplus-10-pro-5g|OnePlus 10 Pro 5G|OnePlus|OnePlus|NE2211|OP516FL1|Snapdragon 8 Gen 1|Qualcomm|8|128|1440|3216|https://www.oneplus.in/10-pro/specs
+oneplus-10r-5g|OnePlus 10R 5G|OnePlus|OnePlus|CPH2411|OP5566L1|Dimensity 8100-MAX|MediaTek|8|128|1080|2412|https://www.oneplus.in/10r/specs
+oneplus-10t-5g|OnePlus 10T 5G|OnePlus|OnePlus|CPH2413|OP5552L1|Snapdragon 8+ Gen 1|Qualcomm|8|128|1080|2412|https://www.oneplus.in/10t/specs
+oneplus-nord-4|OnePlus Nord 4|OnePlus|OnePlus|CPH2661|OP5E93L1|Snapdragon 7+ Gen 3|Qualcomm|8|128|1240|2772|https://www.oneplus.in/nord-4/specs
+oneplus-nord-3-5g|OnePlus Nord 3 5G|OnePlus|OnePlus|CPH2491|OP556FL1|Dimensity 9000|MediaTek|8|128|1240|2772|https://www.oneplus.in/nord-3-5g/specs
+oneplus-nord-ce4|OnePlus Nord CE4|OnePlus|OnePlus|CPH2613|OP5D3FL1|Snapdragon 7 Gen 3|Qualcomm|8|128|1080|2412|https://www.oneplus.in/nord-ce4-5g/specs
+oneplus-nord-ce4-lite-5g|OnePlus Nord CE4 Lite 5G|OnePlus|OnePlus|CPH2619|OP5D49L1|Snapdragon 695 5G|Qualcomm|8|128|1080|2400|https://www.oneplus.in/nord-ce4-lite-5g/specs
+oneplus-nord-2t-5g|OnePlus Nord 2T 5G|OnePlus|OnePlus|CPH2401|OP557AL1|Dimensity 1300|MediaTek|8|128|1080|2400|https://www.oneplus.in/nord-2t-5g/specs
+xiaomi-15|Xiaomi 15|Xiaomi|Xiaomi|24129PN74I|dada|Snapdragon 8 Elite|Qualcomm|12|512|1200|2670|https://www.mi.com/in/product/xiaomi-15/specs/
+xiaomi-14|Xiaomi 14|Xiaomi|Xiaomi|23127PN0CG|houji|Snapdragon 8 Gen 3|Qualcomm|12|512|1200|2670|https://www.mi.com/in/product/xiaomi-14/specs/
+xiaomi-14-civi|Xiaomi 14 Civi|Xiaomi|Xiaomi|24053PY09I|chenfeng|Snapdragon 8s Gen 3|Qualcomm|8|256|0|0|https://www.mi.com/in/product/xiaomi-14-civi/specs/
+xiaomi-13-pro|Xiaomi 13 Pro|Xiaomi|Xiaomi|2210132G|nuwa|Snapdragon 8 Gen 2|Qualcomm|12|256|1440|3200|https://www.mi.com/global/product/xiaomi-13-pro/specs/
+xiaomi-12-pro|Xiaomi 12 Pro|Xiaomi|Xiaomi|2201122G|zeus|Snapdragon 8 Gen 1|Qualcomm|8|256|1440|3200|https://www.mi.com/global/product/xiaomi-12-pro/specs/
+xiaomi-11i|Xiaomi 11i|Xiaomi|Xiaomi|21091116I|pissarroin|Dimensity 920|MediaTek|6|128|1080|2400|https://www.mi.com/in/product/xiaomi-11i-5g/specs/
+redmi-note-14-pro-plus-5g|Redmi Note 14 Pro+ 5G|Redmi|Xiaomi|24115RA8EI|amethyst|Snapdragon 7s Gen 3|Qualcomm|8|128|1220|2712|https://www.mi.com/in/product/redmi-note-14-pro-plus-5g/specs/
+redmi-note-14-pro-5g|Redmi Note 14 Pro 5G|Redmi|Xiaomi|24090RA29I|malachite|Dimensity 7300-Ultra|MediaTek|8|128|1220|2712|https://www.mi.com/in/product/redmi-note-14-pro-5g/specs/
+redmi-note-14-5g|Redmi Note 14 5G|Redmi|Xiaomi|24094RAD4I|beryl|Dimensity 7025-Ultra|MediaTek|8|128|1080|2400|https://www.mi.com/in/product/redmi-note-14-5g/specs/
+redmi-note-13-pro-plus-5g|Redmi Note 13 Pro+ 5G|Redmi|Xiaomi|23090RA98I|zircon|Dimensity 7200-Ultra|MediaTek|0|0|1220|2712|https://www.mi.com/in/product/redmi-note-13-pro-plus-5g/specs/
+redmi-note-13-pro-5g|Redmi Note 13 Pro 5G|Redmi|Xiaomi|2312DRA50I|garnet|Snapdragon 7s Gen 2|Qualcomm|8|128|1220|2712|https://www.mi.com/in/product/redmi-note-13-pro-5g/specs/
+redmi-note-13-5g|Redmi Note 13 5G|Redmi|Xiaomi|2312DRAABI|gold|Dimensity 6080|MediaTek|0|0|0|0|https://www.mi.com/in/product/redmi-note-13-5g/specs/
+redmi-note-12-pro-plus-5g|Redmi Note 12 Pro+ 5G|Redmi|Xiaomi|22101316UP|rubypro|Dimensity 1080|MediaTek|8|256|0|0|https://www.mi.com/in/product/redmi-note-12-pro-plus-5g/specs/
+redmi-note-12-pro-5g|Redmi Note 12 Pro 5G|Redmi|Xiaomi|22101316I|ruby|Dimensity 1080|MediaTek|6|128|0|0|https://www.mi.com/in/product/redmi-note-12-pro-5g/specs/
+redmi-note-12|Redmi Note 12|Redmi|Xiaomi|23027RAD4I|tapas|Snapdragon 685|Qualcomm|6|128|0|0|https://www.mi.com/in/product/redmi-note-12/specs/
+poco-f6|POCO F6|POCO|Xiaomi|24069PC21I|peridot|Snapdragon 8s Gen 3|Qualcomm|8|256|1220|2712|https://www.po.co/global/product/poco-f6/specs/
+poco-x6-pro-5g|POCO X6 Pro 5G|POCO|Xiaomi|2311DRK48I|duchamp|Dimensity 8300-Ultra|MediaTek|8|256|1220|2712|https://www.po.co/global/product/poco-x6-pro/specs/
+poco-x6-5g|POCO X6 5G|POCO|Xiaomi|23122PCD1I|garnet|Snapdragon 7s Gen 2|Qualcomm|8|256|1220|2712|https://www.po.co/global/product/poco-x6/specs/
+poco-m6-pro-5g|POCO M6 Pro 5G|POCO|Xiaomi|23076PC4BI|sky|||0|0|0|0|
+poco-x5-pro-5g|POCO X5 Pro 5G|POCO|Xiaomi|22101320I|redwoodin|Snapdragon 778G|Qualcomm|6|128|1080|2400|https://www.po.co/global/product/poco-x5-pro-5g/specs/
+motorola-edge-50-fusion|Motorola edge 50 fusion|motorola|motorola|motorola edge 50 fusion|cuscoi|Snapdragon 7s Gen 2|Qualcomm|12|256|1080|2400|https://en-in.support.motorola.com/app/answers/detail/a_id/187370/
+motorola-edge-50-pro|Motorola edge 50 pro|motorola|motorola|motorola edge 50 pro|eqe|Snapdragon 7 Gen 3|Qualcomm|8|256|1220|2712|https://en-in.support.motorola.com/app/answers/detail/a_id/178982/
+motorola-edge-50-ultra|Motorola edge 50 ultra|motorola|motorola|motorola edge 50 ultra|ctwo|Snapdragon 8s Gen 3|Qualcomm|0|0|1220|2712|https://en-in.support.motorola.com/app/answers/detail/a_id/187368/
+motorola-edge-50|Motorola edge 50|motorola|motorola|motorola edge 50|tank|Snapdragon 7 Gen 1 Accelerated Edition|Qualcomm|0|0|1220|2712|https://en-in.support.motorola.com/app/answers/detail/a_id/183654/
+motorola-edge-50-neo|Motorola edge 50 neo|motorola|motorola|motorola edge 50 neo|vienna|Dimensity 7300|MediaTek|8|256|1220|2670|https://en-in.support.motorola.com/app/answers/detail/a_id/183718/
+motorola-edge-40|Motorola edge 40|motorola|motorola|motorola edge 40|lyriq|Dimensity 8020|MediaTek|8|256|1080|2400|https://en-us.support.motorola.com/app/answers/detail/a_id/175796/
+motorola-edge-40-neo|Motorola edge 40 neo|motorola|motorola|motorola edge 40 neo|manaus|Dimensity 7030|MediaTek|12|256|1080|2400|https://en-apac.support.motorola.com/app/answers/detail/a_id/176257/
+motorola-moto-g85-5g|Motorola moto g85 5G|motorola|motorola|moto g85 5G|malmo|Snapdragon 6s Gen 3|Qualcomm|8|128|1080|2400|https://en-in.support.motorola.com/app/answers/detail/a_id/187380/
+motorola-moto-g84-5g|Motorola moto g84 5G|motorola|motorola|moto g84 5G|bangkk|Snapdragon 695|Qualcomm|12|256|1080|2400|https://wiki.lineageos.org/devices/bangkk/
+motorola-moto-g64-5g|Motorola moto g64 5G|motorola|motorola|moto g64 5G|cancunf|Dimensity 7025|MediaTek|8|128|1080|2400|https://en-in.support.motorola.com/app/answers/detail/a_id/187382/
+realme-14-pro-plus-5g|realme 14 Pro+ 5G|realme|realme|RMX5051|RE6079L1|Snapdragon 7s Gen 3|Qualcomm|0|0|0|0|https://www.realme.com/in/realme-14-pro-plus-5g/specs
+realme-14-pro-5g|realme 14 Pro 5G|realme|realme|RMX5056|RE6081L1|Dimensity 7300 Energy|MediaTek|8|128|1080|2392|https://www.realme.com/in/realme-14-pro-5g/specs
+realme-13-pro-plus-5g|realme 13 Pro+ 5G|realme|realme|RMX3921|RE5CA3L1|Snapdragon 7s Gen 2|Qualcomm|8|256|1080|2412|https://www.realme.com/in/realme-13-pro-plus-5g/specs
+realme-13-pro-5g|realme 13 Pro 5G|realme|realme|RMX3988|RE5CA3L1|Snapdragon 7s Gen 2|Qualcomm|8|128|1080|2412|https://www.realme.com/in/realme-13-pro-5g/specs
+realme-12-pro-plus-5g|realme 12 Pro+ 5G|realme|realme|RMX3840|RE5C82L1|Snapdragon 7s Gen 2|Qualcomm|8|128|1080|2412|https://www.realme.com/in/realme-12-pro-plus/specs
+realme-12-pro-5g|realme 12 Pro 5G|realme|realme|RMX3842|RE5C84L1|Snapdragon 6 Gen 1|Qualcomm|8|128|1080|2412|https://www.realme.com/in/realme-12-pro/specs
+realme-gt-6|realme GT 6|realme|realme|RMX3851|RE5CA6L1|Snapdragon 8s Gen 3|Qualcomm|8|256|1264|2780|https://www.realme.com/in/realme-gt-6/specs
+realme-gt-6t|realme GT 6T|realme|realme|RMX3853|RE606FL1|Snapdragon 7+ Gen 3|Qualcomm|8|128|1264|2780|https://www.realme.com/in/realme-gt-6t/specs
+realme-narzo-70-5g|realme NARZO 70 5G|realme|realme|RMX3869|RE5C86L1|Dimensity 7050|MediaTek|8|128|1080|2400|https://www.realme.com/in/realme-narzo-70-5g/specs
+realme-p3-5g|realme P3 5G|realme|realme|RMX5070|RE608EL1|Snapdragon 6 Gen 4|Qualcomm|8|256|1080|2400|https://www.realme.com/in/realme-p3-5g/specs
+vivo-v30|vivo V30|vivo|vivo|V2318|V2318|Snapdragon 7 Gen 3|Qualcomm|8|128|1260|2800|https://www.vivo.com/in/products/param/v30
+vivo-v30-pro|vivo V30 Pro|vivo|vivo|V2319|V2319|Dimensity 8200|MediaTek|8|256|1260|2800|https://www.vivo.com/in/products/param/v30-pro
+vivo-v40|vivo V40|vivo|vivo|V2348|V2348|Snapdragon 7 Gen 3|Qualcomm|8|128|1260|2800|https://www.vivo.com/in/products/param/v40
+vivo-v40-pro|vivo V40 Pro|vivo|vivo|V2347|V2347|Dimensity 9200+|MediaTek|8|256|1260|2800|https://www.vivo.com/in/products/param/v40-pro
+vivo-t3-5g|vivo T3 5G|vivo|vivo|V2334|V2334|Dimensity 7200|MediaTek|8|128|1080|2400|https://www.vivo.com/in/products/param/t3-5g
+vivo-t3-pro-5g|vivo T3 Pro 5G|vivo|vivo|V2404|V2404|Snapdragon 7 Gen 3|Qualcomm|8|128|1080|2392|https://www.vivo.com/in/products/param/t3-pro-5g
+oppo-reno11-5g|OPPO Reno11 5G|OPPO|OPPO|CPH2599|OP5ABFL1|Dimensity 7050|MediaTek|8|128|1080|2412|https://www.oppo.com/in/smartphones/series-reno/reno11/specs/
+oppo-reno11-pro-5g|OPPO Reno11 Pro 5G|OPPO|OPPO|CPH2607|OP5AD3L1|Dimensity 8200|MediaTek|12|256|1080|2412|https://www.oppo.com/in/smartphones/series-reno/reno11-pro/specs/
+oppo-reno12-5g|OPPO Reno12 5G|OPPO|OPPO|CPH2625|OP5ADDL1|Dimensity 7300-Energy|MediaTek|8|256|1080|2412|https://www.oppo.com/in/smartphones/series-reno/reno12/specs/
+oppo-reno12-pro-5g|OPPO Reno12 Pro 5G|OPPO|OPPO|CPH2629|OP5AE1L1|Dimensity 7300-Energy|MediaTek|12|256|1080|2412|https://www.oppo.com/in/smartphones/series-reno/reno12-pro/specs/
+nothing-phone-1|Nothing Phone (1)|Nothing|Nothing|A063|Spacewar|||0|0|0|0|
+nothing-phone-2|Nothing Phone (2)|Nothing|Nothing|AIN065|Pong|||0|0|0|0|
+nothing-phone-2a|Nothing Phone (2a)|Nothing|Nothing|A142|Pacman|Dimensity 7200 Pro|MediaTek|8|128|1080|2412|https://checkout.nothing.tech/pages/phone-2a;https://support.nothing.tech/hc/en-us/articles/22960522709265-What-s-the-screen-parameter-information-of-Phone-2a
+nothing-phone-2a-plus|Nothing Phone (2a) Plus|Nothing|Nothing|A142P|PacmanPro|Dimensity 7350 Pro|MediaTek|8|256|1080|2412|https://in.nothing.tech/pages/beta-program;https://support.nothing.tech/hc/en-us/articles/26184896907153-What-are-the-screen-parameters-of-Phone-2a-Plus
+google-pixel-8|Google Pixel 8|Google|Google|Pixel 8|shiba|Tensor G3|Google|8|128|1080|2400|https://support.google.com/pixelphone/answer/7158570?hl=en
+google-pixel-8a|Google Pixel 8a|Google|Google|Pixel 8a|akita|Tensor G3|Google|8|128|1080|2400|https://support.google.com/pixelphone/answer/7158570?hl=en
+google-pixel-9|Google Pixel 9|Google|Google|Pixel 9|tokay|Tensor G4|Google|12|256|1080|2424|https://support.google.com/pixelphone/answer/7158570?hl=en
+google-pixel-9-pro|Google Pixel 9 Pro|Google|Google|Pixel 9 Pro|caiman|Tensor G4|Google|16|256|1280|2856|https://support.google.com/pixelphone/answer/7158570?hl=en
+lava-agni-2-5g|Lava Agni 2 5G|LAVA|LAVA|LAVA LXX504|LXX504|Dimensity 7050|MediaTek|8|256|1080|2400|https://www.lavamobiles.com/agni-2/index.html
+lava-agni-3|Lava Agni 3|LAVA|LAVA|LXX518|LXX518|Dimensity 7300X|MediaTek|8|128|1200|2652|https://www.lavamobiles.com/agni-3/index.html
+iqoo-12|iQOO 12|iQOO|vivo|I2220|I2220|Snapdragon 8 Gen 3|Qualcomm|12|256|1260|2800|https://www.iqoo.com/in/products/param/iqoo12
+iqoo-neo9-pro|iQOO Neo9 Pro|iQOO|vivo|I2304|I2304|Snapdragon 8 Gen 2|Qualcomm|8|256|1260|2800|https://www.iqoo.com/in/products/param/neo9pro

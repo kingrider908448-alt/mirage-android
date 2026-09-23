@@ -39,6 +39,8 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
                     }));
         }
         install("identity", () -> installIdentity(config, param.classLoader));
+        install("device names and properties", () -> DeviceNameHooks.install(config, param.classLoader));
+        install("hardware readouts", () -> HardwareProfileHooks.install(config));
         install("root signals", () -> RootHooks.install(config));
         XposedBridge.log("GhostViki: adapter registration attempted for " + param.packageName
                 + "; check per-adapter errors and actual target values (not a passing test)");
@@ -93,6 +95,10 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
             setBuild("PRODUCT", state.product);
             setBuild("FINGERPRINT", state.fingerprint);
             setBuild("SERIAL", state.serial);
+            if (state.deviceProfile != null) {
+                setBuild("SOC_MODEL", state.deviceProfile.socModel);
+                setBuild("SOC_MANUFACTURER", state.deviceProfile.socManufacturer);
+            }
         }
     }
 

@@ -27,7 +27,8 @@ public final class CoreChecks {
             check(id.imei1.matches("[0-9]{15}") && id.imei2.matches("[0-9]{15}"), "IMEI format");
             check(id.imsi.matches("[0-9]{15}"), "IMSI format");
             check(id.iccid.matches("[0-9]{20}"), "ICCID format");
-            check(id.fingerprint.endsWith(":user/release-keys"), "fingerprint format");
+            check(id.fingerprint.isEmpty() && id.buildId.isEmpty() && id.hardware.isEmpty(), "Unverified factory metadata is not fabricated");
+            check(id.model.equals(id.deviceProfile.model) && id.deviceName.equals(id.deviceProfile.name), "Model and friendly name share one catalog entry");
             check(seen.add(id.androidId), "unexpected identifier collision");
         }
         check(Coordinates.parse(" -90 ", "180").latitude == -90, "valid coordinate bounds");

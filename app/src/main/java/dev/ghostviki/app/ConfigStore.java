@@ -7,11 +7,13 @@ import java.util.Map;
 import java.util.Set;
 import dev.ghostviki.core.Coordinates;
 import dev.ghostviki.core.Identity;
+import dev.ghostviki.core.DeviceCatalog;
+import dev.ghostviki.core.DeviceProfile;
 
 public final class ConfigStore {
     public static final String PACKAGE = "dev.ghostviki.app";
     public static final String PREFS = "runtime";
-    public static final int SCHEMA = 4;
+    public static final int SCHEMA = 5;
     public final SharedPreferences preferences;
     public final boolean bridgeAvailable;
 
@@ -72,7 +74,19 @@ public final class ConfigStore {
 
     public boolean rotateIdentity() {
         SharedPreferences.Editor editor = preferences.edit();
-        for (String pkg : targets()) putIdentity(editor, pkg, Identity.generate());
+        for (String pkg : targets()) putIdentity(editor, pkg, Identity.generate(
+                DeviceCatalog.next(preferences.getString("device_profile_key:" + pkg, ""))));
+        return editor.putBoolean("identity_enabled", true)
+                .putLong("generation", preferences.getLong("generation", 0) + 1)
+                .putLong("changed_at", System.currentTimeMillis()).commit();
+    }
+
+    public boolean selectDeviceProfile(String pkg, String key) {
+        if (!targets().contains(pkg)) throw new IllegalArgumentException("Select this target app first.");
+        DeviceProfile profile = DeviceCatalog.find(key);
+        if (profile == null) throw new IllegalArgumentException("Unknown device profile");
+        SharedPreferences.Editor editor = preferences.edit();
+        putIdentity(editor, pkg, Identity.generate(profile));
         return editor.putBoolean("identity_enabled", true)
                 .putLong("generation", preferences.getLong("generation", 0) + 1)
                 .putLong("changed_at", System.currentTimeMillis()).commit();
@@ -83,6 +97,11 @@ public final class ConfigStore {
         boolean changed = false;
         for (String pkg : targets()) {
             Identity identity = Identity.generate();
+            if (!preferences.contains("device_profile_key:" + pkg)) {
+                // Upgrade only the device profile atomically; keep existing per-app IDs.
+                putDeviceProfile(editor, pkg, identity);
+                changed = true;
+            }
             if (!preferences.contains("android_id:" + pkg)) { editor.putString("android_id:" + pkg, identity.androidId); changed = true; }
             if (!preferences.contains("serial:" + pkg)) { editor.putString("serial:" + pkg, identity.serial); changed = true; }
             if (!preferences.contains("advertising_id:" + pkg)) { editor.putString("advertising_id:" + pkg, identity.advertisingId); changed = true; }
@@ -114,6 +133,7 @@ public final class ConfigStore {
     }
 
     private static void putIdentity(SharedPreferences.Editor editor, String pkg, Identity identity) {
+        putDeviceProfile(editor, pkg, identity);
         editor.putString("android_id:" + pkg, identity.androidId)
                 .putString("serial:" + pkg, identity.serial)
                 .putString("advertising_id:" + pkg, identity.advertisingId)
@@ -140,6 +160,21 @@ public final class ConfigStore {
                 .putString("device:" + pkg, identity.device)
                 .putString("product:" + pkg, identity.product)
                 .putString("fingerprint:" + pkg, identity.fingerprint);
+    }
+
+    private static void putDeviceProfile(SharedPreferences.Editor editor, String pkg, Identity identity) {
+        DeviceProfile profile = identity.deviceProfile;
+        editor.putString("device_profile_key:" + pkg, profile.key)
+                .putString("device_name:" + pkg, profile.name)
+                .putString("brand:" + pkg, profile.brand)
+                .putString("manufacturer:" + pkg, profile.manufacturer)
+                .putString("model:" + pkg, profile.model)
+                .putString("device:" + pkg, profile.device)
+                // Clear the previous fake firmware inputs. Empty means retain the host value.
+                .putString("product:" + pkg, "")
+                .putString("hardware:" + pkg, "")
+                .putString("build_id:" + pkg, "")
+                .putString("fingerprint:" + pkg, "");
     }
 
     public boolean setFlag(String name, boolean value) { return preferences.edit().putBoolean(name, value).commit(); }

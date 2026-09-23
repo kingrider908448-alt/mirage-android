@@ -35,6 +35,8 @@ public final class Identity {
     public final String device;
     public final String product;
     public final String fingerprint;
+    public final DeviceProfile deviceProfile;
+    public final String deviceName;
 
     private Identity(String androidId, String serial, String advertisingId, String appSetId,
                      String firebaseInstallationId, String fcmToken, String gsfId,
@@ -42,7 +44,7 @@ public final class Identity {
                      String bootId, String wifiMac, String bssid, String bluetoothMac, String imei1,
                      String imei2, String imsi, String iccid, String buildId, String hardware,
                      String brand, String model, String manufacturer, String device,
-                     String product, String fingerprint) {
+                     String product, String fingerprint, DeviceProfile deviceProfile) {
         this.androidId = androidId;
         this.serial = serial;
         this.advertisingId = advertisingId;
@@ -69,9 +71,16 @@ public final class Identity {
         this.device = device;
         this.product = product;
         this.fingerprint = fingerprint;
+        this.deviceProfile = deviceProfile;
+        this.deviceName = deviceProfile.name;
     }
 
     public static Identity generate() {
+        return generate(DeviceCatalog.next(""));
+    }
+
+    public static Identity generate(DeviceProfile profile) {
+        if (profile == null) throw new IllegalArgumentException("Choose a catalog device");
         return new Identity(
                 randomHex(8),
                 randomHex(8).toUpperCase(Locale.ROOT),
@@ -91,15 +100,15 @@ public final class Identity {
                 randomDigits(15),
                 randomDigits(15),
                 randomDigits(20),
-                "GV" + randomHex(7).toUpperCase(Locale.ROOT),
-                "gv_" + randomHex(2),
-                "GhostViki",
-                "GV-" + randomHex(2).toUpperCase(Locale.ROOT),
-                "GhostViki Labs",
-                "gv_" + randomHex(2),
-                "gv_" + randomHex(2),
-                "ghostviki/gv/gv:16/GV" + randomHex(7).toUpperCase(Locale.ROOT)
-                        + "/" + randomDigits(8) + ":user/release-keys");
+                "", // No invented factory build ID, board or stock firmware fingerprint.
+                "",
+                profile.brand,
+                profile.model,
+                profile.manufacturer,
+                profile.device,
+                "", // Google catalog's Device is not proof of Build.PRODUCT.
+                "",
+                profile);
     }
 
     private static String randomUuid() {

@@ -3,14 +3,20 @@ package dev.ghostviki.probe;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.usage.StorageStatsManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.storage.StorageManager;
 import android.provider.Settings;
 import android.view.WindowInsets;
 import android.widget.*;
@@ -59,6 +65,8 @@ public final class ProbeActivity extends Activity {
         report.setTextSize(14); report.setTextColor(Color.WHITE); report.setTextIsSelectable(true);
         Button refresh = button(body, "Read current values");
         refresh.setOnClickListener(v -> read());
+        button(body, "Allow local Bluetooth name reading").setOnClickListener(v ->
+                requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 2));
         Button save = button(body, "Save this as baseline");
         save.setOnClickListener(v -> {
             read();
@@ -95,10 +103,15 @@ public final class ProbeActivity extends Activity {
                 + "\nConfig: " + ghostVikiConfigStatus()
                 + "\nDiagnostics are not proof of changed values. Compare Android API reads below.\n");
         values.put("Android ID", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+        try { values.put("Device name (Settings.Global)", displayValue(Settings.Global.getString(getContentResolver(), Settings.Global.DEVICE_NAME))); }
+        catch (SecurityException e) { values.put("Device name (Settings.Global)", "Access denied by Android"); }
+        values.put("Local Bluetooth name", bluetoothName());
         values.put("Manufacturer", Build.MANUFACTURER);
         values.put("Brand", Build.BRAND);
         values.put("Model", Build.MODEL);
         values.put("Device", Build.DEVICE);
+        values.put("SoC model", Build.SOC_MODEL);
+        values.put("SoC manufacturer", Build.SOC_MANUFACTURER);
         values.put("Product", Build.PRODUCT);
         values.put("Build fingerprint", Build.FINGERPRINT);
         values.put("Build ID", Build.ID);
@@ -106,6 +119,7 @@ public final class ProbeActivity extends Activity {
         values.put("SDK", Integer.toString(Build.VERSION.SDK_INT));
         values.put("Build.SERIAL", Build.SERIAL);
         values.put("Build.getSerial", serial());
+        readHardware();
         for (String path : new String[]{"/system/bin/su", "/system/xbin/su", "/sbin/su"})
             values.put("File.exists " + path, Boolean.toString(new File(path).exists()));
         for (String pkg : new String[]{"com.topjohnwu.magisk", "me.weishu.kernelsu", "me.bmax.apatch"}) {
@@ -115,6 +129,37 @@ public final class ProbeActivity extends Activity {
         StringBuilder text = new StringBuilder("\nObserved values (not a root verdict)\n\n");
         values.forEach((key, value) -> text.append(key).append(":\n").append(value).append("\n\n"));
         report.setText(text);
+    }
+
+    private static String displayValue(String value) { return value == null || value.isEmpty() ? "Unavailable" : value; }
+
+    @SuppressLint("MissingPermission")
+    private String bluetoothName() {
+        if (checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED)
+            return "Bluetooth permission not granted";
+        try {
+            BluetoothManager manager = getSystemService(BluetoothManager.class);
+            BluetoothAdapter adapter = manager == null ? null : manager.getAdapter();
+            return adapter == null ? "Bluetooth unavailable" : displayValue(adapter.getName());
+        } catch (SecurityException e) { return "Access denied by Android"; }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void readHardware() {
+        try {
+            ActivityManager.MemoryInfo memory = new ActivityManager.MemoryInfo();
+            getSystemService(ActivityManager.class).getMemoryInfo(memory);
+            values.put("RAM total bytes (ActivityManager)", Long.toString(memory.totalMem));
+        } catch (RuntimeException e) { values.put("RAM total bytes (ActivityManager)", "Unavailable: " + e.getClass().getSimpleName()); }
+        try {
+            long capacity = getSystemService(StorageStatsManager.class).getTotalBytes(StorageManager.UUID_DEFAULT);
+            values.put("Storage total bytes (StorageStatsManager)", Long.toString(capacity));
+        } catch (java.io.IOException | RuntimeException e) { values.put("Storage total bytes (StorageStatsManager)", "Unavailable: " + e.getClass().getSimpleName()); }
+        Point size = new Point();
+        if (getDisplay() != null) {
+            getDisplay().getRealSize(size);
+            values.put("Display pixels (Display.getRealSize)", size.x + " × " + size.y);
+        }
     }
 
     @SuppressLint({"HardwareIds", "MissingPermission"})
@@ -132,6 +177,10 @@ public final class ProbeActivity extends Activity {
             StringBuilder text = new StringBuilder("Changes since baseline\n\n");
             int changes = 0;
             for (Map.Entry<String, String> item : values.entrySet()) {
+                if (!baseline.has(item.getKey())) {
+                    text.append(item.getKey()).append(": no baseline for this field; not counted as a change.\n\n");
+                    continue;
+                }
                 String old = baseline.optString(item.getKey(), "");
                 if (!Objects.equals(old, item.getValue())) {
                     text.append(item.getKey()).append("\nBefore: ").append(old)
@@ -155,6 +204,7 @@ public final class ProbeActivity extends Activity {
 
     @Override public void onRequestPermissionsResult(int code, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(code, permissions, results);
+        if (code == 2) { read(); return; }
         if (code == 1 && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) requestLocation();
         else locationReport.setText("Location permission not granted.");
     }

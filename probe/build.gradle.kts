@@ -7,8 +7,8 @@ android {
         applicationId = "dev.ghostviki.probe"
         minSdk = 31
         targetSdk = 36
-        versionCode = 2
-        versionName = "0.1.1-configfix"
+        versionCode = 3
+        versionName = "0.2.0-profiles100"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

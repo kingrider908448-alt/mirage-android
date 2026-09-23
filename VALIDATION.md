@@ -1,6 +1,16 @@
-# Validation record — 2026-09-22
+# Validation record — 2026-09-23
 
-## Current revision: 0.1.1-configfix (version code 2)
+## Current revision: 0.2.0-profiles100 (version code 3)
+
+- Merged the existing System Location work through upstream `3fb3f2b652d736c8e1b00e519630bfcafdd418e5`; retained its framework-only branch and separate settings.
+- Added 100 catalog profiles, schema-5 persistence/migration, a searchable per-target selector, and general name, product-property, SoC and sourced hardware-readout adapters.
+- Host harness passes 21,015 core assertions, 34 configuration regression checks and 2,648 catalog/persistence/callback checks. The callbacks tested are the production DeviceNameHooks and HardwareProfileHooks, invoked by explicit Xposed/Android fixtures. All 100 selections survive writer recreation, match the hook reader, and preserve another selected package's profile. One thousand seeded rotations avoid the previous model/manufacturer.
+- Focused callback checks cover settings and per-user device names, local Bluetooth names, whitelisted properties, unknown keys, permission exceptions, unset settings, unavailable adapters, bounded memory/storage, external volumes/displays, orientation, disable/removal and inconsistent saved profiles.
+- Probe independently reads the new API surfaces; a field absent from an older baseline is explicitly excluded from its changed-value count.
+- CI regenerates the catalog from pinned factual inputs, type-checks/lints/builds both Android apps, and checks the APK's catalog bytes and Xposed entry point. Consult the actual run conclusion for build results.
+- No phone is attached here. Android/Vector runtime effects, OEM getter coverage and screen layout remain **unverified on a phone**. Host checks do not establish a passing detector result or universal hardware impersonation.
+
+## Previous revision: 0.1.1-configfix (version code 2)
 
 - Audited source against baseline commit `e2ae5f58a1a6493aaec996aa10b848fc651e06e5`.
 - Before editing production code, the new host regression harness reported **11 passing / 9 failing** config checks. Failures included private-first opening, false bridge acceptance in the cached-mode fixture, direct-file gating of a service-readable snapshot, and stale-draft migration overwrites.

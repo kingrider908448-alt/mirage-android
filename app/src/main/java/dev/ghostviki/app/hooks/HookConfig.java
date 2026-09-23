@@ -3,6 +3,8 @@ package dev.ghostviki.app.hooks;
 import android.os.SystemClock;
 import dev.ghostviki.app.ConfigStore;
 import dev.ghostviki.core.Coordinates;
+import dev.ghostviki.core.DeviceCatalog;
+import dev.ghostviki.core.DeviceProfile;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import java.util.Collections;
@@ -51,7 +53,14 @@ final class HookConfig {
                     boolean enabled = flag(data, "identity_enabled");
                     boolean validId = id.matches("[0-9a-f]{16}");
                     boolean validSerial = serial.matches("[0-9A-F]{16}");
-                    boolean identity = enabled && validId && validSerial;
+                    DeviceProfile profile = DeviceCatalog.find(value(data, "device_profile_key"));
+                    boolean validProfile = schema < 5 || (profile != null
+                            && profile.name.equals(value(data, "device_name"))
+                            && profile.brand.equals(value(data, "brand"))
+                            && profile.model.equals(value(data, "model"))
+                            && profile.manufacturer.equals(value(data, "manufacturer"))
+                            && profile.device.equals(value(data, "device")));
+                    boolean identity = enabled && validId && validSerial && validProfile;
                     reason = !enabled ? "IDENTITY_DISABLED" : !identity ? "INVALID_PROFILE" : "PROFILE_READY";
                     Coordinates coordinates = null;
                     if (flag(data, "location:" + packageName)) {
@@ -64,7 +73,8 @@ final class HookConfig {
                             value(data, "imei1"), value(data, "imei2"), value(data, "imsi"), value(data, "iccid"),
                             value(data, "build_id"), value(data, "hardware"), value(data, "brand"), value(data, "model"),
                             value(data, "manufacturer"), value(data, "device"), value(data, "product"), value(data, "fingerprint"),
-                            flag(data, "hide_files"), flag(data, "hide_packages"), coordinates);
+                            flag(data, "hide_files"), flag(data, "hide_packages"), coordinates,
+                            profile, value(data, "device_name"));
                 }
                 report(reason + " schema=" + schema + " generation=" + generation + " targets=" + targets.size());
             } catch (RuntimeException e) {
@@ -102,18 +112,20 @@ final class HookConfig {
 
     static final class Snapshot {
         static final Snapshot OFF = new Snapshot(false, "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", false, false, null);
+                "", "", "", "", "", "", "", "", false, false, null, null, "");
         final boolean identity, hideFiles, hidePackages;
         final String androidId, serial, deviceId, wifiMac, bssid, bluetoothMac;
         final String imei1, imei2, imsi, iccid;
         final String buildId, hardware, brand, model, manufacturer, device, product, fingerprint;
         final Coordinates coordinates;
+        final DeviceProfile deviceProfile;
+        final String deviceName;
         Snapshot(boolean identity, String androidId, String serial, String deviceId,
                  String wifiMac, String bssid, String bluetoothMac, String imei1, String imei2,
                  String imsi, String iccid, String buildId, String hardware, String brand,
                  String model, String manufacturer, String device, String product,
                  String fingerprint, boolean hideFiles, boolean hidePackages,
-                 Coordinates coordinates) {
+                 Coordinates coordinates, DeviceProfile deviceProfile, String deviceName) {
             this.identity = identity;
             this.androidId = androidId;
             this.serial = serial;
@@ -136,6 +148,8 @@ final class HookConfig {
             this.hideFiles = hideFiles;
             this.hidePackages = hidePackages;
             this.coordinates = coordinates;
+            this.deviceProfile = deviceProfile;
+            this.deviceName = deviceName;
         }
     }
 }

@@ -1,0 +1,101 @@
+# Marketing name | Google Play model | Google Play device (optional disambiguation) | Manufacturer India reference
+Samsung Galaxy S25 Ultra|SM-S938B||https://www.samsung.com/in/smartphones/galaxy-s25-ultra/specs/
+Samsung Galaxy S25+|SM-S936B||https://www.samsung.com/in/smartphones/galaxy-s25/specs/
+Samsung Galaxy S25|SM-S931B||https://www.samsung.com/in/smartphones/galaxy-s25/specs/
+Samsung Galaxy S24 Ultra|SM-S928B||https://www.samsung.com/in/smartphones/galaxy-s24-ultra/specs/
+Samsung Galaxy S24+|SM-S926B||https://www.samsung.com/in/smartphones/galaxy-s24/specs/
+Samsung Galaxy S24|SM-S921B||https://www.samsung.com/in/smartphones/galaxy-s24/specs/
+Samsung Galaxy S23 Ultra|SM-S918B||https://www.samsung.com/in/smartphones/galaxy-s23-ultra/specs/
+Samsung Galaxy S23+|SM-S916B||https://www.samsung.com/in/smartphones/galaxy-s23/specs/
+Samsung Galaxy S23|SM-S911B||https://www.samsung.com/in/smartphones/galaxy-s23/specs/
+Samsung Galaxy S23 FE|SM-S711B||https://www.samsung.com/in/smartphones/galaxy-s23-fe/
+Samsung Galaxy S24 FE|SM-S721B||https://www.samsung.com/in/smartphones/galaxy-s24-fe/
+Samsung Galaxy A56 5G|SM-A566E||https://www.samsung.com/in/smartphones/galaxy-a56-5g/
+Samsung Galaxy A55 5G|SM-A556E||https://www.samsung.com/in/smartphones/galaxy-a55/
+Samsung Galaxy A54 5G|SM-A546E||https://www.samsung.com/in/smartphones/galaxy-a54-5g/
+Samsung Galaxy A36 5G|SM-A366E||https://www.samsung.com/in/smartphones/galaxy-a36-5g/
+Samsung Galaxy A35 5G|SM-A356E||https://www.samsung.com/in/smartphones/galaxy-a35/
+Samsung Galaxy A34 5G|SM-A346E||https://www.samsung.com/in/smartphones/galaxy-a34-5g/
+Samsung Galaxy M55 5G|SM-M556B||https://news.samsung.com/in/samsung-unveils-galaxy-m55-5g-galaxy-m15-5g-with-segment-leading-super-amoled-plus-display-powerful-processor-and-stylish-design-in-india
+Samsung Galaxy M35 5G|SM-M356B||https://news.samsung.com/in/samsung-unveils-galaxy-m35-5g-with-segment-leading-monster-features-in-india
+Samsung Galaxy M34 5G|SM-M346B||https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m34-5g-midnight-blue-128gb-sm-m346bzbhins/
+Samsung Galaxy M15 5G|SM-M156B||https://news.samsung.com/in/samsung-unveils-galaxy-m55-5g-galaxy-m15-5g-with-segment-leading-super-amoled-plus-display-powerful-processor-and-stylish-design-in-india
+Samsung Galaxy F55 5G|SM-E556B||https://news.samsung.com/in/samsung-unveils-galaxy-f55-5g-with-classy-vegan-leather-design-super-amoled-display-and-powerful-snapdragon-processor-in-india
+Samsung Galaxy F54 5G|SM-E546B||https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f54-5g-stardust-silver-256gb-sm-e546bzshins/
+Samsung Galaxy F15 5G|SM-E156B||https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f15-5g-ash-black-128gb-sm-e156bzkhins/
+OnePlus 13|CPH2649||https://www.oneplus.in/13/specs
+OnePlus 13R|CPH2691||https://www.oneplus.in/13r/specs
+OnePlus 12|CPH2573||https://www.oneplus.in/12/specs
+OnePlus 12R|CPH2585||https://www.oneplus.in/12r/specs
+OnePlus 11 5G|CPH2447||https://www.oneplus.in/11/specs
+OnePlus 11R 5G|CPH2487||https://www.oneplus.in/11r/specs
+OnePlus 10 Pro 5G|NE2211||https://www.oneplus.in/10-pro/specs
+OnePlus 10R 5G|CPH2411||https://www.oneplus.in/10r/specs
+OnePlus 10T 5G|CPH2413||https://www.oneplus.in/10t/specs
+OnePlus Nord 4|CPH2661||https://www.oneplus.in/nord-4/specs
+OnePlus Nord 3 5G|CPH2491||https://www.oneplus.in/nord-3-5g/specs
+OnePlus Nord CE4|CPH2613||https://www.oneplus.in/nord-ce4-5g/specs
+OnePlus Nord CE4 Lite 5G|CPH2619||https://www.oneplus.in/nord-ce4-lite-5g/specs
+OnePlus Nord 2T 5G|CPH2401||https://www.oneplus.in/nord-2t-5g/specs
+Xiaomi 15|24129PN74I||https://www.mi.com/in/product/xiaomi-15/specs/
+Xiaomi 14|23127PN0CG||https://www.mi.com/in/product/xiaomi-14/specs/
+Xiaomi 14 Civi|24053PY09I||https://www.mi.com/in/product/xiaomi-14-civi/specs/
+Xiaomi 13 Pro|2210132G||https://www.mi.com/in/product/xiaomi-13-pro/specs/
+Xiaomi 12 Pro|2201122G||https://www.mi.com/in/product/xiaomi-12-pro/specs/
+Xiaomi 11i|21091116I||https://www.mi.com/in/product/xiaomi-11i/specs/
+Redmi Note 14 Pro+ 5G|24115RA8EI||https://www.mi.com/in/product/redmi-note-14-pro-plus-5g/specs/
+Redmi Note 14 Pro 5G|24090RA29I||https://www.mi.com/in/product/redmi-note-14-pro-5g/specs/
+Redmi Note 14 5G|24094RAD4I||https://www.mi.com/in/product/redmi-note-14-5g/specs/
+Redmi Note 13 Pro+ 5G|23090RA98I||https://www.mi.com/in/product/redmi-note-13-pro-plus-5g/specs/
+Redmi Note 13 Pro 5G|2312DRA50I||https://www.mi.com/in/product/redmi-note-13-pro-5g/specs/
+Redmi Note 13 5G|2312DRAABI||https://www.mi.com/in/product/redmi-note-13-5g/specs/
+Redmi Note 12 Pro+ 5G|22101316UP||https://www.mi.com/in/product/redmi-note-12-pro-plus-5g/specs/
+Redmi Note 12 Pro 5G|22101316I||https://www.mi.com/in/product/redmi-note-12-pro-5g/specs/
+Redmi Note 12|23027RAD4I||https://www.mi.com/in/product/redmi-note-12/specs/
+POCO F6|24069PC21I||https://www.po.co/in/product/poco-f6/specs/
+POCO X6 Pro 5G|2311DRK48I||https://www.po.co/in/product/poco-x6-pro/specs/
+POCO X6 5G|23122PCD1I||https://www.po.co/in/product/poco-x6/specs/
+POCO M6 Pro 5G|23076PC4BI||https://www.po.co/in/product/poco-m6-pro-5g/
+POCO X5 Pro 5G|22101320I||https://www.po.co/in/product/poco-x5-pro-5g/specs/
+Motorola edge 50 fusion|motorola edge 50 fusion|cuscoi|https://en-in.support.motorola.com/app/product_support/p/11871/motorola_edge_50_fusion
+Motorola edge 50 pro|motorola edge 50 pro|eqe|https://www.motorola.in/smartphones-motorola-edge-50-pro/p
+Motorola edge 50 ultra|motorola edge 50 ultra|ctwo|https://www.motorola.in/smartphones-motorola-edge-50-ultra/p
+Motorola edge 50|motorola edge 50|tank|https://www.motorola.in/smartphones-motorola-edge-50/p
+Motorola edge 50 neo|motorola edge 50 neo|vienna|https://www.motorola.in/smartphones-motorola-edge-50-neo/p
+Motorola edge 40|motorola edge 40|lyriq|https://www.motorola.in/smartphones-motorola-edge-40/p
+Motorola edge 40 neo|motorola edge 40 neo|manaus|https://www.motorola.in/smartphones-motorola-edge-40-neo/p
+Motorola moto g85 5G|moto g85 5G|malmo|https://www.motorola.in/smartphones-moto-g85-5g/p
+Motorola moto g84 5G|moto g84 5G|bangkk|https://www.motorola.in/smartphones-moto-g84-5g/p
+Motorola moto g64 5G|moto g64 5G|cancunf|https://www.motorola.in/smartphones-moto-g64-5g/p
+realme 14 Pro+ 5G|RMX5051||https://www.realme.com/in/realme-14-pro-plus-5g/specs
+realme 14 Pro 5G|RMX5056||https://www.realme.com/in/realme-14-pro-5g/specs
+realme 13 Pro+ 5G|RMX3921||https://www.realme.com/in/realme-13-pro-plus-5g/specs
+realme 13 Pro 5G|RMX3988||https://www.realme.com/in/realme-13-pro-5g/specs
+realme 12 Pro+ 5G|RMX3840||https://www.realme.com/in/realme-12-pro-plus/specs
+realme 12 Pro 5G|RMX3842||https://www.realme.com/in/realme-12-pro/specs
+realme GT 6|RMX3851||https://www.realme.com/in/realme-gt-6/specs
+realme GT 6T|RMX3853||https://www.realme.com/in/realme-gt-6t/specs
+realme NARZO 70 5G|RMX3869||https://www.realme.com/in/realme-narzo-70-5g/specs
+realme P3 5G|RMX5070||https://www.realme.com/in/realme-p3-5g/specs
+vivo V30|V2318||https://www.vivo.com/in/products/param/v30
+vivo V30 Pro|V2319||https://www.vivo.com/in/products/param/v30-pro
+vivo V40|V2348||https://www.vivo.com/in/products/param/v40
+vivo V40 Pro|V2347||https://www.vivo.com/in/products/param/v40-pro
+vivo T3 5G|V2334||https://www.vivo.com/in/products/param/t3-5g
+vivo T3 Pro 5G|V2404||https://www.vivo.com/in/products/param/t3-pro-5g
+OPPO Reno11 5G|CPH2599||https://www.oppo.com/in/smartphones/series-reno/reno11/specs/
+OPPO Reno11 Pro 5G|CPH2607||https://www.oppo.com/in/smartphones/series-reno/reno11-pro/specs/
+OPPO Reno12 5G|CPH2625||https://www.oppo.com/in/smartphones/series-reno/reno12/specs/
+OPPO Reno12 Pro 5G|CPH2629||https://www.oppo.com/in/smartphones/series-reno/reno12-pro/specs/
+Nothing Phone (1)|A063||https://in.nothing.tech/pages/phone-1
+Nothing Phone (2)|AIN065||https://in.nothing.tech/pages/phone-2
+Nothing Phone (2a)|A142||https://in.nothing.tech/pages/phone-2a
+Nothing Phone (2a) Plus|A142P||https://in.nothing.tech/pages/phone-2a-plus
+Google Pixel 8|Pixel 8||https://store.google.com/in/product/pixel_8_specs
+Google Pixel 8a|Pixel 8a||https://store.google.com/in/product/pixel_8a_specs
+Google Pixel 9|Pixel 9||https://store.google.com/in/product/pixel_9_specs
+Google Pixel 9 Pro|Pixel 9 Pro||https://store.google.com/in/product/pixel_9_pro_specs
+Lava Agni 2 5G|LAVA LXX504||https://www.lavamobiles.com/agni-2/index.html
+Lava Agni 3|LXX518||https://www.lavamobiles.com/agni-3/index.html
+iQOO 12|I2220||https://www.iqoo.com/in/products/param/iqoo12
+iQOO Neo9 Pro|I2304||https://www.iqoo.com/in/products/param/neo9pro

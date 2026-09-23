@@ -1,0 +1,1208 @@
+{
+  "retrieved_utc": "2026-09-23",
+  "google_source": "https://storage.googleapis.com/play_public/supported_devices.csv",
+  "google_sha256": "cc8b63616d5dc93688b19a53e1cc18ce0b971b7dbdb15c39589dba9ea0f29ef5",
+  "notes": "India-market marketing models. Google rows identify model/device pairs; they do not certify a stock firmware or every regional SKU. India references are discovery links, not firmware dumps. Missing specs remain unset.",
+  "entries": [
+    {
+      "id": "samsung-galaxy-s25-ultra",
+      "name": "Samsung Galaxy S25 Ultra",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S25 Ultra",
+        "Device": "pa3q",
+        "Model": "SM-S938B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s25-ultra/specs/",
+      "spec_source": "https://news.samsung.com/in/samsung-galaxy-s25-series-sets-the-standard-of-ai-phone-as-a-true-ai-companion"
+    },
+    {
+      "id": "samsung-galaxy-s25-plus",
+      "name": "Samsung Galaxy S25+",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S25+",
+        "Device": "pa2q",
+        "Model": "SM-S936B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s25/specs/",
+      "spec_source": "https://news.samsung.com/in/samsung-galaxy-s25-series-sets-the-standard-of-ai-phone-as-a-true-ai-companion"
+    },
+    {
+      "id": "samsung-galaxy-s25",
+      "name": "Samsung Galaxy S25",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S25",
+        "Device": "pa1q",
+        "Model": "SM-S931B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s25/specs/",
+      "spec_source": "https://news.samsung.com/in/samsung-galaxy-s25-series-sets-the-standard-of-ai-phone-as-a-true-ai-companion"
+    },
+    {
+      "id": "samsung-galaxy-s24-ultra",
+      "name": "Samsung Galaxy S24 Ultra",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S24 Ultra",
+        "Device": "e3q",
+        "Model": "SM-S928B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s24-ultra/specs/",
+      "spec_source": "https://news.samsung.com/in/enter-the-new-era-of-mobile-ai-with-samsung-galaxy-s24-series"
+    },
+    {
+      "id": "samsung-galaxy-s24-plus",
+      "name": "Samsung Galaxy S24+",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S24+",
+        "Device": "e2s",
+        "Model": "SM-S926B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s24/specs/",
+      "spec_source": "https://news.samsung.com/in/enter-the-new-era-of-mobile-ai-with-samsung-galaxy-s24-series"
+    },
+    {
+      "id": "samsung-galaxy-s24",
+      "name": "Samsung Galaxy S24",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S24",
+        "Device": "e1s",
+        "Model": "SM-S921B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s24/specs/",
+      "spec_source": "https://news.samsung.com/in/enter-the-new-era-of-mobile-ai-with-samsung-galaxy-s24-series"
+    },
+    {
+      "id": "samsung-galaxy-s23-ultra",
+      "name": "Samsung Galaxy S23 Ultra",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S23 Ultra",
+        "Device": "dm3q",
+        "Model": "SM-S918B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s23-ultra/specs/",
+      "spec_source": "https://news.samsung.com/in/samsung-launches-galaxy-s23-series-in-india-pre-book-now-for-exciting-offers"
+    },
+    {
+      "id": "samsung-galaxy-s23-plus",
+      "name": "Samsung Galaxy S23+",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S23+",
+        "Device": "dm2q",
+        "Model": "SM-S916B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s23/specs/",
+      "spec_source": "https://news.samsung.com/in/samsung-launches-galaxy-s23-series-in-india-pre-book-now-for-exciting-offers"
+    },
+    {
+      "id": "samsung-galaxy-s23",
+      "name": "Samsung Galaxy S23",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S23",
+        "Device": "dm1q",
+        "Model": "SM-S911B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s23/specs/",
+      "spec_source": "https://news.samsung.com/in/samsung-launches-galaxy-s23-series-in-india-pre-book-now-for-exciting-offers"
+    },
+    {
+      "id": "samsung-galaxy-s23-fe",
+      "name": "Samsung Galaxy S23 FE",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S23 FE",
+        "Device": "r11s",
+        "Model": "SM-S711B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s23-fe/",
+      "spec_source": "https://www.samsung.com/in/support/mobile-devices/specifications-for-the-new-galaxy-s23-fe/"
+    },
+    {
+      "id": "samsung-galaxy-s24-fe",
+      "name": "Samsung Galaxy S24 FE",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy S24 FE",
+        "Device": "r12s",
+        "Model": "SM-S721B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-s24-fe/",
+      "spec_source": "https://news.samsung.com/in/galaxy-s24-series-expands-with-s24-fe-a-premium-experience-that-makes-full-galaxy-ai-capabilities-attainable-for-more-users"
+    },
+    {
+      "id": "samsung-galaxy-a56-5g",
+      "name": "Samsung Galaxy A56 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy A56 5G",
+        "Device": "a56x",
+        "Model": "SM-A566E"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-a56-5g/",
+      "spec_source": "https://news.samsung.com/in/samsung-india-launches-galaxy-a56-5g-galaxy-a36-5g-featuring-awesome-intelligence-all-new-design-and-enhanced-durability"
+    },
+    {
+      "id": "samsung-galaxy-a55-5g",
+      "name": "Samsung Galaxy A55 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy A55 5G",
+        "Device": "a55x",
+        "Model": "SM-A556E"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-a55/",
+      "spec_source": "https://www.samsung.com/in/smartphones/galaxy-a55/"
+    },
+    {
+      "id": "samsung-galaxy-a54-5g",
+      "name": "Samsung Galaxy A54 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy A54 5G",
+        "Device": "a54x",
+        "Model": "SM-A546E"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-a54-5g/",
+      "spec_source": "https://news.samsung.com/in/samsung-launches-all-new-galaxy-a54-5g-and-a34-5g-with-stunning-design-and-trendy-colours;https://www.samsung.com/us/support/answer/ANS10003688/"
+    },
+    {
+      "id": "samsung-galaxy-a36-5g",
+      "name": "Samsung Galaxy A36 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy A36 5G",
+        "Device": "a36xq",
+        "Model": "SM-A366E"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-a36-5g/",
+      "spec_source": "https://news.samsung.com/in/samsung-india-launches-galaxy-a56-5g-galaxy-a36-5g-featuring-awesome-intelligence-all-new-design-and-enhanced-durability"
+    },
+    {
+      "id": "samsung-galaxy-a35-5g",
+      "name": "Samsung Galaxy A35 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy A35 5G",
+        "Device": "a35x",
+        "Model": "SM-A356E"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-a35/",
+      "spec_source": "https://www.samsung.com/in/smartphones/galaxy-a/galaxy-a35-5g-awesome-iceblue-128gb-sm-a356elbjins/"
+    },
+    {
+      "id": "samsung-galaxy-a34-5g",
+      "name": "Samsung Galaxy A34 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy A34 5G",
+        "Device": "a34x",
+        "Model": "SM-A346E"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-a34-5g/",
+      "spec_source": "https://news.samsung.com/in/samsung-launches-all-new-galaxy-a54-5g-and-a34-5g-with-stunning-design-and-trendy-colours;https://news.samsung.com/id/unjuk-kebolehan-di-samsung-galaxy-gaming-academy-dapatkan-tips-untuk-level-up-pengalaman-gaming-mu"
+    },
+    {
+      "id": "samsung-galaxy-m55-5g",
+      "name": "Samsung Galaxy M55 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy M55 5G",
+        "Device": "m55xq",
+        "Model": "SM-M556B"
+      },
+      "india_reference": "https://news.samsung.com/in/samsung-unveils-galaxy-m55-5g-galaxy-m15-5g-with-segment-leading-super-amoled-plus-display-powerful-processor-and-stylish-design-in-india",
+      "spec_source": "https://news.samsung.com/in/samsung-unveils-galaxy-m55-5g-galaxy-m15-5g-with-segment-leading-super-amoled-plus-display-powerful-processor-and-stylish-design-in-india"
+    },
+    {
+      "id": "samsung-galaxy-m35-5g",
+      "name": "Samsung Galaxy M35 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy M35 5G",
+        "Device": "m35x",
+        "Model": "SM-M356B"
+      },
+      "india_reference": "https://news.samsung.com/in/samsung-unveils-galaxy-m35-5g-with-segment-leading-monster-features-in-india",
+      "spec_source": "https://news.samsung.com/in/samsung-unveils-galaxy-m35-5g-with-segment-leading-monster-features-in-india"
+    },
+    {
+      "id": "samsung-galaxy-m34-5g",
+      "name": "Samsung Galaxy M34 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy M34 5G",
+        "Device": "m34x",
+        "Model": "SM-M346B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m34-5g-midnight-blue-128gb-sm-m346bzbhins/",
+      "spec_source": "https://news.samsung.com/in/samsung-launches-galaxy-m34-5g-in-india-with-monster-display-camera-and-battery-at-just-inr-16999"
+    },
+    {
+      "id": "samsung-galaxy-m15-5g",
+      "name": "Samsung Galaxy M15 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy M15 5G",
+        "Device": "m15x",
+        "Model": "SM-M156B"
+      },
+      "india_reference": "https://news.samsung.com/in/samsung-unveils-galaxy-m55-5g-galaxy-m15-5g-with-segment-leading-super-amoled-plus-display-powerful-processor-and-stylish-design-in-india",
+      "spec_source": "https://news.samsung.com/in/samsung-unveils-galaxy-m55-5g-galaxy-m15-5g-with-segment-leading-super-amoled-plus-display-powerful-processor-and-stylish-design-in-india"
+    },
+    {
+      "id": "samsung-galaxy-f55-5g",
+      "name": "Samsung Galaxy F55 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy F55 5G",
+        "Device": "m55xq",
+        "Model": "SM-E556B"
+      },
+      "india_reference": "https://news.samsung.com/in/samsung-unveils-galaxy-f55-5g-with-classy-vegan-leather-design-super-amoled-display-and-powerful-snapdragon-processor-in-india",
+      "spec_source": "https://news.samsung.com/in/samsung-unveils-galaxy-f55-5g-with-classy-vegan-leather-design-super-amoled-display-and-powerful-snapdragon-processor-in-india"
+    },
+    {
+      "id": "samsung-galaxy-f54-5g",
+      "name": "Samsung Galaxy F54 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy F54 5G",
+        "Device": "m54x",
+        "Model": "SM-E546B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f54-5g-stardust-silver-256gb-sm-e546bzshins/",
+      "spec_source": "https://news.samsung.com/in/samsung-unveils-galaxy-f54-5g"
+    },
+    {
+      "id": "samsung-galaxy-f15-5g",
+      "name": "Samsung Galaxy F15 5G",
+      "google_row": {
+        "Retail Branding": "Samsung",
+        "Marketing Name": "Galaxy F15 5G",
+        "Device": "m15x",
+        "Model": "SM-E156B"
+      },
+      "india_reference": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f15-5g-ash-black-128gb-sm-e156bzkhins/",
+      "spec_source": "https://news.samsung.com/in/samsung-unveils-galaxy-f15-5g-with-segment-best-samoled-display-4-generations-of-android-upgrades-5-years-of-security-updates-and-6000mah-battery"
+    },
+    {
+      "id": "oneplus-13",
+      "name": "OnePlus 13",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus 13",
+        "Device": "OP5D55L1",
+        "Model": "CPH2649"
+      },
+      "india_reference": "https://www.oneplus.in/13/specs",
+      "spec_source": "https://www.oneplus.in/13/specs"
+    },
+    {
+      "id": "oneplus-13r",
+      "name": "OnePlus 13R",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus 13R",
+        "Device": "OP5D3BL1",
+        "Model": "CPH2691"
+      },
+      "india_reference": "https://www.oneplus.in/13r/specs",
+      "spec_source": "https://www.oneplus.in/13r/specs"
+    },
+    {
+      "id": "oneplus-12",
+      "name": "OnePlus 12",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus 12",
+        "Device": "OP595DL1",
+        "Model": "CPH2573"
+      },
+      "india_reference": "https://www.oneplus.in/12/specs",
+      "spec_source": "https://www.oneplus.in/12/specs"
+    },
+    {
+      "id": "oneplus-12r",
+      "name": "OnePlus 12R",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus 12R",
+        "Device": "OP5D35L1",
+        "Model": "CPH2585"
+      },
+      "india_reference": "https://www.oneplus.in/12r/specs",
+      "spec_source": "https://www.oneplus.in/12r/specs"
+    },
+    {
+      "id": "oneplus-11-5g",
+      "name": "OnePlus 11 5G",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus 11 5G",
+        "Device": "OP594DL1",
+        "Model": "CPH2447"
+      },
+      "india_reference": "https://www.oneplus.in/11/specs",
+      "spec_source": "https://www.oneplus.in/11/specs"
+    },
+    {
+      "id": "oneplus-11r-5g",
+      "name": "OnePlus 11R 5G",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus 11R 5G",
+        "Device": "OP5961L1",
+        "Model": "CPH2487"
+      },
+      "india_reference": "https://www.oneplus.in/11r/specs",
+      "spec_source": "https://www.oneplus.in/11r/specs"
+    },
+    {
+      "id": "oneplus-10-pro-5g",
+      "name": "OnePlus 10 Pro 5G",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus 10 Pro 5G",
+        "Device": "OP516FL1",
+        "Model": "NE2211"
+      },
+      "india_reference": "https://www.oneplus.in/10-pro/specs",
+      "spec_source": "https://www.oneplus.in/10-pro/specs"
+    },
+    {
+      "id": "oneplus-10r-5g",
+      "name": "OnePlus 10R 5G",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus 10R 5G",
+        "Device": "OP5566L1",
+        "Model": "CPH2411"
+      },
+      "india_reference": "https://www.oneplus.in/10r/specs",
+      "spec_source": "https://www.oneplus.in/10r/specs"
+    },
+    {
+      "id": "oneplus-10t-5g",
+      "name": "OnePlus 10T 5G",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus 10T 5G",
+        "Device": "OP5552L1",
+        "Model": "CPH2413"
+      },
+      "india_reference": "https://www.oneplus.in/10t/specs",
+      "spec_source": "https://www.oneplus.in/10t/specs"
+    },
+    {
+      "id": "oneplus-nord-4",
+      "name": "OnePlus Nord 4",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus Nord 4",
+        "Device": "OP5E93L1",
+        "Model": "CPH2661"
+      },
+      "india_reference": "https://www.oneplus.in/nord-4/specs",
+      "spec_source": "https://www.oneplus.in/nord-4/specs"
+    },
+    {
+      "id": "oneplus-nord-3-5g",
+      "name": "OnePlus Nord 3 5G",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus Nord 3 5G",
+        "Device": "OP556FL1",
+        "Model": "CPH2491"
+      },
+      "india_reference": "https://www.oneplus.in/nord-3-5g/specs",
+      "spec_source": "https://www.oneplus.in/nord-3-5g/specs"
+    },
+    {
+      "id": "oneplus-nord-ce4",
+      "name": "OnePlus Nord CE4",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus Nord CE4",
+        "Device": "OP5D3FL1",
+        "Model": "CPH2613"
+      },
+      "india_reference": "https://www.oneplus.in/nord-ce4-5g/specs",
+      "spec_source": "https://www.oneplus.in/nord-ce4-5g/specs"
+    },
+    {
+      "id": "oneplus-nord-ce4-lite-5g",
+      "name": "OnePlus Nord CE4 Lite 5G",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus Nord CE4 Lite 5G",
+        "Device": "OP5D49L1",
+        "Model": "CPH2619"
+      },
+      "india_reference": "https://www.oneplus.in/nord-ce4-lite-5g/specs",
+      "spec_source": "https://www.oneplus.in/nord-ce4-lite-5g/specs"
+    },
+    {
+      "id": "oneplus-nord-2t-5g",
+      "name": "OnePlus Nord 2T 5G",
+      "google_row": {
+        "Retail Branding": "OnePlus",
+        "Marketing Name": "OnePlus Nord 2T 5G",
+        "Device": "OP557AL1",
+        "Model": "CPH2401"
+      },
+      "india_reference": "https://www.oneplus.in/nord-2t-5g/specs",
+      "spec_source": "https://www.oneplus.in/nord-2t-5g/specs"
+    },
+    {
+      "id": "xiaomi-15",
+      "name": "Xiaomi 15",
+      "google_row": {
+        "Retail Branding": "Xiaomi",
+        "Marketing Name": "Xiaomi 15",
+        "Device": "dada",
+        "Model": "24129PN74I"
+      },
+      "india_reference": "https://www.mi.com/in/product/xiaomi-15/specs/",
+      "spec_source": "https://www.mi.com/in/product/xiaomi-15/specs/"
+    },
+    {
+      "id": "xiaomi-14",
+      "name": "Xiaomi 14",
+      "google_row": {
+        "Retail Branding": "Xiaomi",
+        "Marketing Name": "Xiaomi 14",
+        "Device": "houji",
+        "Model": "23127PN0CG"
+      },
+      "india_reference": "https://www.mi.com/in/product/xiaomi-14/specs/",
+      "spec_source": "https://www.mi.com/in/product/xiaomi-14/specs/"
+    },
+    {
+      "id": "xiaomi-14-civi",
+      "name": "Xiaomi 14 Civi",
+      "google_row": {
+        "Retail Branding": "Xiaomi",
+        "Marketing Name": "Xiaomi 14 Civi",
+        "Device": "chenfeng",
+        "Model": "24053PY09I"
+      },
+      "india_reference": "https://www.mi.com/in/product/xiaomi-14-civi/specs/",
+      "spec_source": "https://www.mi.com/in/product/xiaomi-14-civi/specs/"
+    },
+    {
+      "id": "xiaomi-13-pro",
+      "name": "Xiaomi 13 Pro",
+      "google_row": {
+        "Retail Branding": "Xiaomi",
+        "Marketing Name": "Xiaomi 13 Pro",
+        "Device": "nuwa",
+        "Model": "2210132G"
+      },
+      "india_reference": "https://www.mi.com/in/product/xiaomi-13-pro/specs/",
+      "spec_source": "https://www.mi.com/global/product/xiaomi-13-pro/specs/"
+    },
+    {
+      "id": "xiaomi-12-pro",
+      "name": "Xiaomi 12 Pro",
+      "google_row": {
+        "Retail Branding": "Xiaomi",
+        "Marketing Name": "Xiaomi 12 Pro",
+        "Device": "zeus",
+        "Model": "2201122G"
+      },
+      "india_reference": "https://www.mi.com/in/product/xiaomi-12-pro/specs/",
+      "spec_source": "https://www.mi.com/global/product/xiaomi-12-pro/specs/"
+    },
+    {
+      "id": "xiaomi-11i",
+      "name": "Xiaomi 11i",
+      "google_row": {
+        "Retail Branding": "Xiaomi",
+        "Marketing Name": "Xiaomi 11i",
+        "Device": "pissarroin",
+        "Model": "21091116I"
+      },
+      "india_reference": "https://www.mi.com/in/product/xiaomi-11i/specs/",
+      "spec_source": "https://www.mi.com/in/product/xiaomi-11i-5g/specs/"
+    },
+    {
+      "id": "redmi-note-14-pro-plus-5g",
+      "name": "Redmi Note 14 Pro+ 5G",
+      "google_row": {
+        "Retail Branding": "Redmi",
+        "Marketing Name": "Redmi Note 14 Pro+ 5G",
+        "Device": "amethyst",
+        "Model": "24115RA8EI"
+      },
+      "india_reference": "https://www.mi.com/in/product/redmi-note-14-pro-plus-5g/specs/",
+      "spec_source": "https://www.mi.com/in/product/redmi-note-14-pro-plus-5g/specs/"
+    },
+    {
+      "id": "redmi-note-14-pro-5g",
+      "name": "Redmi Note 14 Pro 5G",
+      "google_row": {
+        "Retail Branding": "Redmi",
+        "Marketing Name": "Redmi Note 14 Pro 5G",
+        "Device": "malachite",
+        "Model": "24090RA29I"
+      },
+      "india_reference": "https://www.mi.com/in/product/redmi-note-14-pro-5g/specs/",
+      "spec_source": "https://www.mi.com/in/product/redmi-note-14-pro-5g/specs/"
+    },
+    {
+      "id": "redmi-note-14-5g",
+      "name": "Redmi Note 14 5G",
+      "google_row": {
+        "Retail Branding": "Redmi",
+        "Marketing Name": "Redmi Note 14 5G",
+        "Device": "beryl",
+        "Model": "24094RAD4I"
+      },
+      "india_reference": "https://www.mi.com/in/product/redmi-note-14-5g/specs/",
+      "spec_source": "https://www.mi.com/in/product/redmi-note-14-5g/specs/"
+    },
+    {
+      "id": "redmi-note-13-pro-plus-5g",
+      "name": "Redmi Note 13 Pro+ 5G",
+      "google_row": {
+        "Retail Branding": "Redmi",
+        "Marketing Name": "Redmi Note 13 Pro+ 5G",
+        "Device": "zircon",
+        "Model": "23090RA98I"
+      },
+      "india_reference": "https://www.mi.com/in/product/redmi-note-13-pro-plus-5g/specs/",
+      "spec_source": "https://www.mi.com/in/product/redmi-note-13-pro-plus-5g/specs/"
+    },
+    {
+      "id": "redmi-note-13-pro-5g",
+      "name": "Redmi Note 13 Pro 5G",
+      "google_row": {
+        "Retail Branding": "Redmi",
+        "Marketing Name": "Redmi Note 13 Pro 5G",
+        "Device": "garnet",
+        "Model": "2312DRA50I"
+      },
+      "india_reference": "https://www.mi.com/in/product/redmi-note-13-pro-5g/specs/",
+      "spec_source": "https://www.mi.com/in/product/redmi-note-13-pro-5g/specs/"
+    },
+    {
+      "id": "redmi-note-13-5g",
+      "name": "Redmi Note 13 5G",
+      "google_row": {
+        "Retail Branding": "Redmi",
+        "Marketing Name": "Redmi Note 13 5G",
+        "Device": "gold",
+        "Model": "2312DRAABI"
+      },
+      "india_reference": "https://www.mi.com/in/product/redmi-note-13-5g/specs/",
+      "spec_source": "https://www.mi.com/in/product/redmi-note-13-5g/specs/"
+    },
+    {
+      "id": "redmi-note-12-pro-plus-5g",
+      "name": "Redmi Note 12 Pro+ 5G",
+      "google_row": {
+        "Retail Branding": "Redmi",
+        "Marketing Name": "Redmi Note 12 Pro + 5G",
+        "Device": "rubypro",
+        "Model": "22101316UP"
+      },
+      "india_reference": "https://www.mi.com/in/product/redmi-note-12-pro-plus-5g/specs/",
+      "spec_source": "https://www.mi.com/in/product/redmi-note-12-pro-plus-5g/specs/"
+    },
+    {
+      "id": "redmi-note-12-pro-5g",
+      "name": "Redmi Note 12 Pro 5G",
+      "google_row": {
+        "Retail Branding": "Redmi",
+        "Marketing Name": "Redmi Note 12 Pro 5G",
+        "Device": "ruby",
+        "Model": "22101316I"
+      },
+      "india_reference": "https://www.mi.com/in/product/redmi-note-12-pro-5g/specs/",
+      "spec_source": "https://www.mi.com/in/product/redmi-note-12-pro-5g/specs/"
+    },
+    {
+      "id": "redmi-note-12",
+      "name": "Redmi Note 12",
+      "google_row": {
+        "Retail Branding": "Redmi",
+        "Marketing Name": "Redmi Note 12",
+        "Device": "tapas",
+        "Model": "23027RAD4I"
+      },
+      "india_reference": "https://www.mi.com/in/product/redmi-note-12/specs/",
+      "spec_source": "https://www.mi.com/in/product/redmi-note-12/specs/"
+    },
+    {
+      "id": "poco-f6",
+      "name": "POCO F6",
+      "google_row": {
+        "Retail Branding": "POCO",
+        "Marketing Name": "POCO F6",
+        "Device": "peridot",
+        "Model": "24069PC21I"
+      },
+      "india_reference": "https://www.po.co/in/product/poco-f6/specs/",
+      "spec_source": "https://www.po.co/global/product/poco-f6/specs/"
+    },
+    {
+      "id": "poco-x6-pro-5g",
+      "name": "POCO X6 Pro 5G",
+      "google_row": {
+        "Retail Branding": "POCO",
+        "Marketing Name": "POCO X6 Pro 5G",
+        "Device": "duchamp",
+        "Model": "2311DRK48I"
+      },
+      "india_reference": "https://www.po.co/in/product/poco-x6-pro/specs/",
+      "spec_source": "https://www.po.co/global/product/poco-x6-pro/specs/"
+    },
+    {
+      "id": "poco-x6-5g",
+      "name": "POCO X6 5G",
+      "google_row": {
+        "Retail Branding": "POCO",
+        "Marketing Name": "POCO X6 5G",
+        "Device": "garnet",
+        "Model": "23122PCD1I"
+      },
+      "india_reference": "https://www.po.co/in/product/poco-x6/specs/",
+      "spec_source": "https://www.po.co/global/product/poco-x6/specs/"
+    },
+    {
+      "id": "poco-m6-pro-5g",
+      "name": "POCO M6 Pro 5G",
+      "google_row": {
+        "Retail Branding": "POCO",
+        "Marketing Name": "POCO M6 Pro 5G",
+        "Device": "sky",
+        "Model": "23076PC4BI"
+      },
+      "india_reference": "https://www.po.co/in/product/poco-m6-pro-5g/",
+      "spec_source": null
+    },
+    {
+      "id": "poco-x5-pro-5g",
+      "name": "POCO X5 Pro 5G",
+      "google_row": {
+        "Retail Branding": "POCO",
+        "Marketing Name": "POCO X5 Pro 5G",
+        "Device": "redwoodin",
+        "Model": "22101320I"
+      },
+      "india_reference": "https://www.po.co/in/product/poco-x5-pro-5g/specs/",
+      "spec_source": "https://www.po.co/global/product/poco-x5-pro-5g/specs/"
+    },
+    {
+      "id": "motorola-edge-50-fusion",
+      "name": "Motorola edge 50 fusion",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "motorola edge 50 fusion",
+        "Device": "cuscoi",
+        "Model": "motorola edge 50 fusion"
+      },
+      "india_reference": "https://en-in.support.motorola.com/app/product_support/p/11871/motorola_edge_50_fusion",
+      "spec_source": "https://en-in.support.motorola.com/app/answers/detail/a_id/187370/"
+    },
+    {
+      "id": "motorola-edge-50-pro",
+      "name": "Motorola edge 50 pro",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "motorola edge 50 pro",
+        "Device": "eqe",
+        "Model": "motorola edge 50 pro"
+      },
+      "india_reference": "https://www.motorola.in/smartphones-motorola-edge-50-pro/p",
+      "spec_source": "https://en-in.support.motorola.com/app/answers/detail/a_id/178982/"
+    },
+    {
+      "id": "motorola-edge-50-ultra",
+      "name": "Motorola edge 50 ultra",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "motorola edge 50 ultra",
+        "Device": "ctwo",
+        "Model": "motorola edge 50 ultra"
+      },
+      "india_reference": "https://www.motorola.in/smartphones-motorola-edge-50-ultra/p",
+      "spec_source": "https://en-in.support.motorola.com/app/answers/detail/a_id/187368/"
+    },
+    {
+      "id": "motorola-edge-50",
+      "name": "Motorola edge 50",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "motorola edge 50",
+        "Device": "tank",
+        "Model": "motorola edge 50"
+      },
+      "india_reference": "https://www.motorola.in/smartphones-motorola-edge-50/p",
+      "spec_source": "https://en-in.support.motorola.com/app/answers/detail/a_id/183654/"
+    },
+    {
+      "id": "motorola-edge-50-neo",
+      "name": "Motorola edge 50 neo",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "motorola edge 50 neo",
+        "Device": "vienna",
+        "Model": "motorola edge 50 neo"
+      },
+      "india_reference": "https://www.motorola.in/smartphones-motorola-edge-50-neo/p",
+      "spec_source": "https://en-in.support.motorola.com/app/answers/detail/a_id/183718/"
+    },
+    {
+      "id": "motorola-edge-40",
+      "name": "Motorola edge 40",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "motorola edge 40",
+        "Device": "lyriq",
+        "Model": "motorola edge 40"
+      },
+      "india_reference": "https://www.motorola.in/smartphones-motorola-edge-40/p",
+      "spec_source": "https://en-us.support.motorola.com/app/answers/detail/a_id/175796/"
+    },
+    {
+      "id": "motorola-edge-40-neo",
+      "name": "Motorola edge 40 neo",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "motorola edge 40 neo",
+        "Device": "manaus",
+        "Model": "motorola edge 40 neo"
+      },
+      "india_reference": "https://www.motorola.in/smartphones-motorola-edge-40-neo/p",
+      "spec_source": "https://en-apac.support.motorola.com/app/answers/detail/a_id/176257/"
+    },
+    {
+      "id": "motorola-moto-g85-5g",
+      "name": "Motorola moto g85 5G",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "moto g85 5G",
+        "Device": "malmo",
+        "Model": "moto g85 5G"
+      },
+      "india_reference": "https://www.motorola.in/smartphones-moto-g85-5g/p",
+      "spec_source": "https://en-in.support.motorola.com/app/answers/detail/a_id/187380/"
+    },
+    {
+      "id": "motorola-moto-g84-5g",
+      "name": "Motorola moto g84 5G",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "moto g84 5G",
+        "Device": "bangkk",
+        "Model": "moto g84 5G"
+      },
+      "india_reference": "https://www.motorola.in/smartphones-moto-g84-5g/p",
+      "spec_source": "https://wiki.lineageos.org/devices/bangkk/"
+    },
+    {
+      "id": "motorola-moto-g64-5g",
+      "name": "Motorola moto g64 5G",
+      "google_row": {
+        "Retail Branding": "Motorola",
+        "Marketing Name": "moto g64 5G",
+        "Device": "cancunf",
+        "Model": "moto g64 5G"
+      },
+      "india_reference": "https://www.motorola.in/smartphones-moto-g64-5g/p",
+      "spec_source": "https://en-in.support.motorola.com/app/answers/detail/a_id/187382/"
+    },
+    {
+      "id": "realme-14-pro-plus-5g",
+      "name": "realme 14 Pro+ 5G",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "realme 14 Pro+ 5G",
+        "Device": "RE6079L1",
+        "Model": "RMX5051"
+      },
+      "india_reference": "https://www.realme.com/in/realme-14-pro-plus-5g/specs",
+      "spec_source": "https://www.realme.com/in/realme-14-pro-plus-5g/specs"
+    },
+    {
+      "id": "realme-14-pro-5g",
+      "name": "realme 14 Pro 5G",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "realme 14 Pro 5G",
+        "Device": "RE6081L1",
+        "Model": "RMX5056"
+      },
+      "india_reference": "https://www.realme.com/in/realme-14-pro-5g/specs",
+      "spec_source": "https://www.realme.com/in/realme-14-pro-5g/specs"
+    },
+    {
+      "id": "realme-13-pro-plus-5g",
+      "name": "realme 13 Pro+ 5G",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "realme 13 Pro+ 5G",
+        "Device": "RE5CA3L1",
+        "Model": "RMX3921"
+      },
+      "india_reference": "https://www.realme.com/in/realme-13-pro-plus-5g/specs",
+      "spec_source": "https://www.realme.com/in/realme-13-pro-plus-5g/specs"
+    },
+    {
+      "id": "realme-13-pro-5g",
+      "name": "realme 13 Pro 5G",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "realme 13 Pro 5G",
+        "Device": "RE5CA3L1",
+        "Model": "RMX3988"
+      },
+      "india_reference": "https://www.realme.com/in/realme-13-pro-5g/specs",
+      "spec_source": "https://www.realme.com/in/realme-13-pro-5g/specs"
+    },
+    {
+      "id": "realme-12-pro-plus-5g",
+      "name": "realme 12 Pro+ 5G",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "realme 12 Pro+ 5G",
+        "Device": "RE5C82L1",
+        "Model": "RMX3840"
+      },
+      "india_reference": "https://www.realme.com/in/realme-12-pro-plus/specs",
+      "spec_source": "https://www.realme.com/in/realme-12-pro-plus/specs"
+    },
+    {
+      "id": "realme-12-pro-5g",
+      "name": "realme 12 Pro 5G",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "realme 12 Pro 5G",
+        "Device": "RE5C84L1",
+        "Model": "RMX3842"
+      },
+      "india_reference": "https://www.realme.com/in/realme-12-pro/specs",
+      "spec_source": "https://www.realme.com/in/realme-12-pro/specs"
+    },
+    {
+      "id": "realme-gt-6",
+      "name": "realme GT 6",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "realme GT 6",
+        "Device": "RE5CA6L1",
+        "Model": "RMX3851"
+      },
+      "india_reference": "https://www.realme.com/in/realme-gt-6/specs",
+      "spec_source": "https://www.realme.com/in/realme-gt-6/specs"
+    },
+    {
+      "id": "realme-gt-6t",
+      "name": "realme GT 6T",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "realme GT 6T",
+        "Device": "RE606FL1",
+        "Model": "RMX3853"
+      },
+      "india_reference": "https://www.realme.com/in/realme-gt-6t/specs",
+      "spec_source": "https://www.realme.com/in/realme-gt-6t/specs"
+    },
+    {
+      "id": "realme-narzo-70-5g",
+      "name": "realme NARZO 70 5G",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "NARZO 70 5G",
+        "Device": "RE5C86L1",
+        "Model": "RMX3869"
+      },
+      "india_reference": "https://www.realme.com/in/realme-narzo-70-5g/specs",
+      "spec_source": "https://www.realme.com/in/realme-narzo-70-5g/specs"
+    },
+    {
+      "id": "realme-p3-5g",
+      "name": "realme P3 5G",
+      "google_row": {
+        "Retail Branding": "realme",
+        "Marketing Name": "realme P3 5G",
+        "Device": "RE608EL1",
+        "Model": "RMX5070"
+      },
+      "india_reference": "https://www.realme.com/in/realme-p3-5g/specs",
+      "spec_source": "https://www.realme.com/in/realme-p3-5g/specs"
+    },
+    {
+      "id": "vivo-v30",
+      "name": "vivo V30",
+      "google_row": {
+        "Retail Branding": "Vivo",
+        "Marketing Name": "V30",
+        "Device": "V2318",
+        "Model": "V2318"
+      },
+      "india_reference": "https://www.vivo.com/in/products/param/v30",
+      "spec_source": "https://www.vivo.com/in/products/param/v30"
+    },
+    {
+      "id": "vivo-v30-pro",
+      "name": "vivo V30 Pro",
+      "google_row": {
+        "Retail Branding": "Vivo",
+        "Marketing Name": "V30 Pro",
+        "Device": "V2319",
+        "Model": "V2319"
+      },
+      "india_reference": "https://www.vivo.com/in/products/param/v30-pro",
+      "spec_source": "https://www.vivo.com/in/products/param/v30-pro"
+    },
+    {
+      "id": "vivo-v40",
+      "name": "vivo V40",
+      "google_row": {
+        "Retail Branding": "Vivo",
+        "Marketing Name": "V40",
+        "Device": "V2348",
+        "Model": "V2348"
+      },
+      "india_reference": "https://www.vivo.com/in/products/param/v40",
+      "spec_source": "https://www.vivo.com/in/products/param/v40"
+    },
+    {
+      "id": "vivo-v40-pro",
+      "name": "vivo V40 Pro",
+      "google_row": {
+        "Retail Branding": "Vivo",
+        "Marketing Name": "V40 Pro",
+        "Device": "V2347",
+        "Model": "V2347"
+      },
+      "india_reference": "https://www.vivo.com/in/products/param/v40-pro",
+      "spec_source": "https://www.vivo.com/in/products/param/v40-pro"
+    },
+    {
+      "id": "vivo-t3-5g",
+      "name": "vivo T3 5G",
+      "google_row": {
+        "Retail Branding": "Vivo",
+        "Marketing Name": "T3 5G",
+        "Device": "V2334",
+        "Model": "V2334"
+      },
+      "india_reference": "https://www.vivo.com/in/products/param/t3-5g",
+      "spec_source": "https://www.vivo.com/in/products/param/t3-5g"
+    },
+    {
+      "id": "vivo-t3-pro-5g",
+      "name": "vivo T3 Pro 5G",
+      "google_row": {
+        "Retail Branding": "Vivo",
+        "Marketing Name": "vivo T3 Pro 5G",
+        "Device": "V2404",
+        "Model": "V2404"
+      },
+      "india_reference": "https://www.vivo.com/in/products/param/t3-pro-5g",
+      "spec_source": "https://www.vivo.com/in/products/param/t3-pro-5g"
+    },
+    {
+      "id": "oppo-reno11-5g",
+      "name": "OPPO Reno11 5G",
+      "google_row": {
+        "Retail Branding": "Oppo",
+        "Marketing Name": "Reno 11",
+        "Device": "OP5ABFL1",
+        "Model": "CPH2599"
+      },
+      "india_reference": "https://www.oppo.com/in/smartphones/series-reno/reno11/specs/",
+      "spec_source": "https://www.oppo.com/in/smartphones/series-reno/reno11/specs/"
+    },
+    {
+      "id": "oppo-reno11-pro-5g",
+      "name": "OPPO Reno11 Pro 5G",
+      "google_row": {
+        "Retail Branding": "Oppo",
+        "Marketing Name": "Reno 11 Pro",
+        "Device": "OP5AD3L1",
+        "Model": "CPH2607"
+      },
+      "india_reference": "https://www.oppo.com/in/smartphones/series-reno/reno11-pro/specs/",
+      "spec_source": "https://www.oppo.com/in/smartphones/series-reno/reno11-pro/specs/"
+    },
+    {
+      "id": "oppo-reno12-5g",
+      "name": "OPPO Reno12 5G",
+      "google_row": {
+        "Retail Branding": "Oppo",
+        "Marketing Name": "Reno12 5G",
+        "Device": "OP5ADDL1",
+        "Model": "CPH2625"
+      },
+      "india_reference": "https://www.oppo.com/in/smartphones/series-reno/reno12/specs/",
+      "spec_source": "https://www.oppo.com/in/smartphones/series-reno/reno12/specs/"
+    },
+    {
+      "id": "oppo-reno12-pro-5g",
+      "name": "OPPO Reno12 Pro 5G",
+      "google_row": {
+        "Retail Branding": "Oppo",
+        "Marketing Name": "Reno12 Pro 5G",
+        "Device": "OP5AE1L1",
+        "Model": "CPH2629"
+      },
+      "india_reference": "https://www.oppo.com/in/smartphones/series-reno/reno12-pro/specs/",
+      "spec_source": "https://www.oppo.com/in/smartphones/series-reno/reno12-pro/specs/"
+    },
+    {
+      "id": "nothing-phone-1",
+      "name": "Nothing Phone (1)",
+      "google_row": {
+        "Retail Branding": "Nothing",
+        "Marketing Name": "Nothing Phone (1)",
+        "Device": "Spacewar",
+        "Model": "A063"
+      },
+      "india_reference": "https://in.nothing.tech/pages/phone-1",
+      "spec_source": null
+    },
+    {
+      "id": "nothing-phone-2",
+      "name": "Nothing Phone (2)",
+      "google_row": {
+        "Retail Branding": "Nothing",
+        "Marketing Name": "Nothing Phone (2)",
+        "Device": "Pong",
+        "Model": "AIN065"
+      },
+      "india_reference": "https://in.nothing.tech/pages/phone-2",
+      "spec_source": null
+    },
+    {
+      "id": "nothing-phone-2a",
+      "name": "Nothing Phone (2a)",
+      "google_row": {
+        "Retail Branding": "Nothing",
+        "Marketing Name": "Nothing Phone (2a)",
+        "Device": "Pacman",
+        "Model": "A142"
+      },
+      "india_reference": "https://in.nothing.tech/pages/phone-2a",
+      "spec_source": "https://checkout.nothing.tech/pages/phone-2a;https://support.nothing.tech/hc/en-us/articles/22960522709265-What-s-the-screen-parameter-information-of-Phone-2a"
+    },
+    {
+      "id": "nothing-phone-2a-plus",
+      "name": "Nothing Phone (2a) Plus",
+      "google_row": {
+        "Retail Branding": "Nothing",
+        "Marketing Name": "Nothing Phone (2a) Plus",
+        "Device": "PacmanPro",
+        "Model": "A142P"
+      },
+      "india_reference": "https://in.nothing.tech/pages/phone-2a-plus",
+      "spec_source": "https://in.nothing.tech/pages/beta-program;https://support.nothing.tech/hc/en-us/articles/26184896907153-What-are-the-screen-parameters-of-Phone-2a-Plus"
+    },
+    {
+      "id": "google-pixel-8",
+      "name": "Google Pixel 8",
+      "google_row": {
+        "Retail Branding": "Google",
+        "Marketing Name": "Pixel 8",
+        "Device": "shiba",
+        "Model": "Pixel 8"
+      },
+      "india_reference": "https://store.google.com/in/product/pixel_8_specs",
+      "spec_source": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+    },
+    {
+      "id": "google-pixel-8a",
+      "name": "Google Pixel 8a",
+      "google_row": {
+        "Retail Branding": "Google",
+        "Marketing Name": "Pixel 8a",
+        "Device": "akita",
+        "Model": "Pixel 8a"
+      },
+      "india_reference": "https://store.google.com/in/product/pixel_8a_specs",
+      "spec_source": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+    },
+    {
+      "id": "google-pixel-9",
+      "name": "Google Pixel 9",
+      "google_row": {
+        "Retail Branding": "Google",
+        "Marketing Name": "Pixel 9",
+        "Device": "tokay",
+        "Model": "Pixel 9"
+      },
+      "india_reference": "https://store.google.com/in/product/pixel_9_specs",
+      "spec_source": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+    },
+    {
+      "id": "google-pixel-9-pro",
+      "name": "Google Pixel 9 Pro",
+      "google_row": {
+        "Retail Branding": "Google",
+        "Marketing Name": "Pixel 9 Pro",
+        "Device": "caiman",
+        "Model": "Pixel 9 Pro"
+      },
+      "india_reference": "https://store.google.com/in/product/pixel_9_pro_specs",
+      "spec_source": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+    },
+    {
+      "id": "lava-agni-2-5g",
+      "name": "Lava Agni 2 5G",
+      "google_row": {
+        "Retail Branding": "Lava",
+        "Marketing Name": "LAVA LXX504",
+        "Device": "LXX504",
+        "Model": "LAVA LXX504"
+      },
+      "india_reference": "https://www.lavamobiles.com/agni-2/index.html",
+      "spec_source": "https://www.lavamobiles.com/agni-2/index.html"
+    },
+    {
+      "id": "lava-agni-3",
+      "name": "Lava Agni 3",
+      "google_row": {
+        "Retail Branding": "Lava",
+        "Marketing Name": "Agni 3",
+        "Device": "LXX518",
+        "Model": "LXX518"
+      },
+      "india_reference": "https://www.lavamobiles.com/agni-3/index.html",
+      "spec_source": "https://www.lavamobiles.com/agni-3/index.html"
+    },
+    {
+      "id": "iqoo-12",
+      "name": "iQOO 12",
+      "google_row": {
+        "Retail Branding": "Vivo",
+        "Marketing Name": "iQOO 12",
+        "Device": "I2220",
+        "Model": "I2220"
+      },
+      "india_reference": "https://www.iqoo.com/in/products/param/iqoo12",
+      "spec_source": "https://www.iqoo.com/in/products/param/iqoo12"
+    },
+    {
+      "id": "iqoo-neo9-pro",
+      "name": "iQOO Neo9 Pro",
+      "google_row": {
+        "Retail Branding": "Vivo",
+        "Marketing Name": "iQOO Neo9 Pro",
+        "Device": "I2304",
+        "Model": "I2304"
+      },
+      "india_reference": "https://www.iqoo.com/in/products/param/neo9pro",
+      "spec_source": "https://www.iqoo.com/in/products/param/neo9pro"
+    }
+  ]
+}

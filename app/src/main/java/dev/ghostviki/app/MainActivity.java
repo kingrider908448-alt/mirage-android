@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.widget.*;
 import dev.ghostviki.core.Coordinates;
+import dev.ghostviki.core.DeviceCatalog;
+import dev.ghostviki.core.DeviceProfile;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -341,8 +343,8 @@ public final class MainActivity extends Activity {
         categoryCard("SYS", "APP & SYSTEM IDENTIFIERS",
                 "PACKAGE NAME  |  SIGNATURE  |  INSTALLER\nAPP SETS  |  ANDROID USER  |  PROCESS UID",
                 "system");
-        categoryCard("HW", "DEVICE PROFILE (HARDWARE)",
-                "BRAND  |  MODEL  |  MANUFACTURER  |  PRODUCT\nSOC  |  ROM  |  ANDROID  |  KERNEL  |  ABI  |  FINGERPRINT",
+        categoryCard("HW", "DEVICE PROFILE • 100 MODELS",
+                "REAL DEVICE NAME  |  MODEL CODE  |  BRAND\nSOC  |  RAM  |  STORAGE  |  DISPLAY  |  FIELD STATUS",
                 "hardware");
 
         space(8);
@@ -417,15 +419,49 @@ public final class MainActivity extends Activity {
                     render();
                 }).setNegativeButton("Cancel", null).show(), false);
         text("These are saved inputs, not values read from the target. An adapter label describes code coverage, not a successful device test.", 12, MUTED, false);
+        if ("hardware".equals(category)) {
+            button("CHOOSE DEVICE MODEL • " + DeviceCatalog.all().size(), () -> chooseDeviceProfile(pkg), true);
+            text("Model names and codes come from the device catalog. Specs follow the chosen model where sourced. Firmware and platform rows marked unchanged are retained.", 12, MUTED, false);
+        }
         space(16);
 
-        for (String[] row : categoryRows(category, pkg)) valueCard(row[0], row[1]);
+        for (String[] row : categoryRows(category, pkg)) valueCard(row[0], row[1], row.length > 2 ? row[2] : coverage(row[0]));
 
         space(8);
         button("ROTATE ALL SELECTED PROFILES", () -> {
             if (config.targets().isEmpty()) { selectTargets(); return; }
             save(config::rotateIdentity, "Profiles saved. Restart targets and verify their values.");
         }, true);
+    }
+
+    private void chooseDeviceProfile(String pkg) {
+        LinearLayout layout = column();
+        layout.setPadding(dp(16), dp(8), dp(16), dp(8));
+        EditText search = new EditText(this);
+        search.setSingleLine(true);
+        search.setHint("Search 100 models or brands");
+        layout.addView(search);
+        ListView list = new ListView(this);
+        List<String> names = new ArrayList<>();
+        Map<String, String> keys = new HashMap<>();
+        for (DeviceProfile p : DeviceCatalog.all()) { names.add(p.name); keys.put(p.name, p.key); }
+        Collections.sort(names);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, names);
+        list.setAdapter(adapter);
+        layout.addView(list, new LinearLayout.LayoutParams(-1, dp(360)));
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle("Device profile for " + label(pkg))
+                .setView(layout).setNegativeButton("Cancel", null).create();
+        search.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { adapter.getFilter().filter(s); }
+            @Override public void afterTextChanged(android.text.Editable s) {}
+        });
+        list.setOnItemClickListener((parent, view, position, id) -> {
+            String name = adapter.getItem(position);
+            dialog.dismiss();
+            save(() -> config.selectDeviceProfile(pkg, keys.get(name)), name + " saved. Restart this target to apply.");
+        });
+        dialog.show();
     }
 
     private String categoryTitle(String c) {
@@ -473,9 +509,9 @@ public final class MainActivity extends Activity {
             rows.add(row("ANDROID DEVICE ID", pref(pkg, "device_id", synth(pkg, "device_id", "hex16"))));
             rows.add(row("BOOT ID", pref(pkg, "boot_id", synth(pkg, "boot_id", "uuid"))));
             rows.add(row("BOOT COUNT", synth(pkg, "boot_count", "digits4")));
-            rows.add(row("DEVICE NAME", "GHOST-" + synth(pkg, "device_name", "hex4").toUpperCase(Locale.ROOT)));
-            rows.add(row("BUILD ID", pref(pkg, "build_id", "GV" + synth(pkg, "build_id", "hex14").toUpperCase(Locale.ROOT))));
-            rows.add(row("HARDWARE", pref(pkg, "hardware", "gv_" + synth(pkg, "hardware", "hex4"))));
+            rows.add(row("DEVICE NAME", pref(pkg, "device_name", "Select a device profile")));
+            rows.add(row("BUILD ID", android.os.Build.ID, "UNCHANGED • original firmware build"));
+            rows.add(row("HARDWARE", android.os.Build.HARDWARE, "UNCHANGED • no verified board properties in catalog"));
         } else if ("network".equals(c)) {
             rows.add(row("WIFI MAC", pref(pkg, "wifi_mac", synth(pkg, "wifi_mac", "mac"))));
             rows.add(row("BLUETOOTH MAC", pref(pkg, "bluetooth_mac", synth(pkg, "bt_mac", "mac"))));
@@ -527,33 +563,51 @@ public final class MainActivity extends Activity {
             rows.add(row("WEBVIEW PROFILE ID", synth(pkg, "webview_id", "uuid")));
             rows.add(row("INSTALL SESSION ID", synth(pkg, "install_session", "uuid")));
         } else if ("hardware".equals(c)) {
-            rows.add(row("BRAND", pref(pkg, "brand", "GhostViki")));
-            rows.add(row("MODEL", pref(pkg, "model", "GV-" + synth(pkg, "model", "hex4").toUpperCase(Locale.ROOT))));
-            rows.add(row("MANUFACTURER", pref(pkg, "manufacturer", "GhostViki Labs")));
-            rows.add(row("DEVICE", pref(pkg, "device", "gv_" + synth(pkg, "device", "hex4"))));
-            rows.add(row("PRODUCT", pref(pkg, "product", "gv_" + synth(pkg, "product", "hex4"))));
-            rows.add(row("BOARD", "board_" + synth(pkg, "board", "hex4")));
-            rows.add(row("BOOTLOADER", "GV" + synth(pkg, "bootloader", "hex14").toUpperCase(Locale.ROOT)));
-            rows.add(row("PROCESSOR / SOC", "Google Tensor G4"));
-            rows.add(row("ROM", "256 GB"));
-            rows.add(row("ANDROID VERSION", "16"));
-            rows.add(row("SECURITY PATCH", "2026-09-05"));
-            rows.add(row("KERNEL", "6.1.99-android15"));
-            rows.add(row("ABI", "arm64-v8a"));
-            rows.add(row("DISPLAY PROFILE", (1080 + Integer.parseInt(synth(pkg, "display", "hex4").substring(0,2),16)%400) + " × 2400"));
-            rows.add(row("MEMORY PROFILE", (6 + Integer.parseInt(synth(pkg, "memory", "hex4").substring(0,1),16)%7) + " GB"));
-            rows.add(row("BUILD FINGERPRINT", pref(pkg, "fingerprint", "ghostviki/gv/gv:16/GV" + synth(pkg, "fingerprint", "hex14").toUpperCase(Locale.ROOT) + "/" + synth(pkg, "build_number", "digits8") + ":user/release-keys")));
+            DeviceProfile p = DeviceCatalog.find(pref(pkg, "device_profile_key", ""));
+            rows.add(row("DEVICE NAME", pref(pkg, "device_name", "Choose a profile")));
+            rows.add(row("BRAND", pref(pkg, "brand", "Not set")));
+            rows.add(row("MODEL", pref(pkg, "model", "Not set")));
+            rows.add(row("MANUFACTURER", pref(pkg, "manufacturer", "Not set")));
+            rows.add(row("DEVICE", pref(pkg, "device", "Not set")));
+            String unchanged = "UNCHANGED • host firmware value, not a catalog claim";
+            rows.add(row("PRODUCT", android.os.Build.PRODUCT, unchanged));
+            rows.add(row("BOARD", android.os.Build.BOARD, unchanged));
+            rows.add(row("HARDWARE", android.os.Build.HARDWARE, unchanged));
+            rows.add(row("BOOTLOADER", android.os.Build.BOOTLOADER, unchanged));
+            rows.add(row("PROCESSOR / SOC", p == null || p.socModel.isEmpty() ? android.os.Build.SOC_MODEL : p.socModel,
+                    p == null || p.socModel.isEmpty() ? "UNCHANGED • model's SoC not sourced" : "ADAPTER: Java Build.SOC_MODEL / ro.soc.model • catalog processor name"));
+            rows.add(row("SOC MANUFACTURER", p == null || p.socManufacturer.isEmpty() ? android.os.Build.SOC_MANUFACTURER : p.socManufacturer,
+                    p == null || p.socManufacturer.isEmpty() ? "UNCHANGED • SoC manufacturer not sourced" : "ADAPTER: Java Build / property getter"));
+            rows.add(row("MEMORY PROFILE", p == null || p.ramGiB == 0 ? "Not overridden" : p.ramGiB + " GB",
+                    p == null || p.ramGiB == 0 ? "UNCHANGED • capacity not sourced" : "ADAPTER: ActivityManager.MemoryInfo • advertised capacity • allocations unchanged"));
+            rows.add(row("STORAGE PROFILE", p == null || p.storageGB == 0 ? "Not overridden" : p.storageGB + " GB",
+                    p == null || p.storageGB == 0 ? "UNCHANGED • capacity not sourced" : "ADAPTER: StorageStatsManager internal volume • filesystem unchanged"));
+            rows.add(row("DISPLAY PROFILE", p == null || !p.hasDisplay() ? "Not overridden" : p.width + " × " + p.height,
+                    p == null || !p.hasDisplay() ? "UNCHANGED • panel resolution not sourced" : "ADAPTER: Display size / metrics • default display • resources/native not covered"));
+            rows.add(row("ANDROID VERSION", android.os.Build.VERSION.RELEASE, "UNCHANGED • actual OS version"));
+            rows.add(row("ANDROID API LEVEL", Integer.toString(android.os.Build.VERSION.SDK_INT), "UNCHANGED • API compatibility retained"));
+            rows.add(row("SECURITY PATCH", android.os.Build.VERSION.SECURITY_PATCH, unchanged));
+            rows.add(row("KERNEL", System.getProperty("os.version", "Unavailable"), "UNCHANGED • actual running kernel"));
+            rows.add(row("ABI", String.join(", ", android.os.Build.SUPPORTED_ABIS), "UNCHANGED • executable architectures retained"));
+            rows.add(row("BUILD ID", android.os.Build.ID, unchanged));
+            rows.add(row("BUILD DISPLAY", android.os.Build.DISPLAY, unchanged));
+            rows.add(row("BUILD INCREMENTAL", android.os.Build.VERSION.INCREMENTAL, unchanged));
+            rows.add(row("BUILD TYPE / TAGS", android.os.Build.TYPE + " / " + android.os.Build.TAGS, unchanged));
+            rows.add(row("BUILD FINGERPRINT", android.os.Build.FINGERPRINT, unchanged));
+            rows.add(row("SPEC SOURCE", p == null || p.specSource.isEmpty() ? "No additional specs verified" : p.specSource,
+                    "REFERENCE • 100 name/model/device pairs pinned from Google Play catalog"));
         }
         return rows;
     }
 
     private String[] row(String name, String value) { return new String[]{name, value}; }
+    private String[] row(String name, String value, String status) { return new String[]{name, value, status}; }
 
     private String pref(String pkg, String key, String fallback) {
         return config.preferences.getString(key + ":" + pkg, fallback);
     }
 
-    private void valueCard(String title, String value) {
+    private void valueCard(String title, String value, String status) {
         LinearLayout card = column();
         card.setPadding(dp(14), dp(11), dp(14), dp(12));
         card.setBackground(shape(Color.rgb(5, 22, 14), Color.rgb(22, 93, 58), 13));
@@ -562,7 +616,7 @@ public final class MainActivity extends Activity {
         name.setLetterSpacing(0.04f);
         card.addView(name);
 
-        TextView coverage = labelView(coverage(title), 10, MUTED, false);
+        TextView coverage = labelView(status, 10, MUTED, false);
         coverage.setPadding(0, dp(4), 0, 0);
         card.addView(coverage);
 
@@ -580,6 +634,7 @@ public final class MainActivity extends Activity {
 
     private String coverage(String title) {
         switch (title) {
+            case "DEVICE NAME": return "ADAPTER: Settings device_name / readable local Bluetooth name • target only";
             case "ANDROID ID (SSAID)": return "ADAPTER: Settings.Secure.getString • verify in target";
             case "DEVICE SERIAL": return "ADAPTER: Build fields / readable getSerial • permission limits apply";
             case "BUILD ID": case "HARDWARE": case "BRAND": case "MODEL":
