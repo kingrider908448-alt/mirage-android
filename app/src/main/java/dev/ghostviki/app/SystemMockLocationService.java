@@ -81,9 +81,9 @@ public final class SystemMockLocationService extends Service {
             }
 
             prefs.edit()
-                    .putDouble("latitude", latitude)
-                    .putDouble("longitude", longitude)
-                    .putDouble("altitude", altitude)
+                    .putLong("latitude_bits", Double.doubleToRawLongBits(latitude))
+                    .putLong("longitude_bits", Double.doubleToRawLongBits(longitude))
+                    .putLong("altitude_bits", Double.doubleToRawLongBits(altitude))
                     .putFloat("accuracy", accuracy)
                     .putString("label", label)
                     .putBoolean(KEY_ACTIVE, true)
