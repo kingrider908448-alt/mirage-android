@@ -207,14 +207,8 @@ public final class SystemMockLocationService extends Service {
         removeProviders();
         getSharedPreferences(PREFS, MODE_PRIVATE).edit().putBoolean(KEY_ACTIVE, false).apply();
 
-        if (permissionProblem) {
-            NotificationManager nm = getSystemService(NotificationManager.class);
-            if (nm != null) {
-                nm.notify(NOTIFICATION_ID, notification(
-                        "Mock location access required",
-                        "Select GhostViki as the mock location app in Developer options."));
-            }
-        }
+        // The activity already reports missing mock-location access. Avoid posting a
+        // second notification here so Android 13+ does not require notification permission.
         stopForeground(STOP_FOREGROUND_REMOVE);
         stopSelf();
     }
