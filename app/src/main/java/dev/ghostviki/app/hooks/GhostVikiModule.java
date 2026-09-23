@@ -18,9 +18,12 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
                     "isLoaded", XC_MethodReplacement.returnConstant(true));
             return;
         }
-        // Never install into system_server, zygote, or a shared system UID.
-        if (param.appInfo == null || param.appInfo.uid % 100000 < 10000
-                || "android".equals(param.packageName)) return;
+        if ("android".equals(param.packageName)) {
+            install("system location", () -> SystemLocationHooks.install(param.classLoader));
+            return;
+        }
+        // Keep identity/root adapters out of system_server, zygote and shared system UIDs.
+        if (param.appInfo == null || param.appInfo.uid % 100000 < 10000) return;
         HookConfig config = new HookConfig(param.packageName);
         if ("dev.ghostviki.probe".equals(param.packageName)) {
             install("probe marker", () -> XposedHelpers.findAndHookMethod(
@@ -37,7 +40,6 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
         }
         install("identity", () -> installIdentity(config, param.classLoader));
         install("root signals", () -> RootHooks.install(config));
-        install("location", () -> LocationHooks.install(config, param.classLoader));
         XposedBridge.log("GhostViki: adapter registration attempted for " + param.packageName
                 + "; check per-adapter errors and actual target values (not a passing test)");
     }

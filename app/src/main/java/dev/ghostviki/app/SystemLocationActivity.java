@@ -1,10 +1,8 @@
 package dev.ghostviki.app;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AppOpsManager;
-import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -12,8 +10,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Process;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowInsets;
@@ -29,21 +25,17 @@ public final class SystemLocationActivity extends Activity {
     private static final int TEXT = Color.rgb(239, 250, 244);
     private static final int MUTED = Color.rgb(139, 183, 157);
     private static final int ORANGE = Color.rgb(255, 184, 77);
-    private static final int REQ_LOCATION = 401;
 
     private LinearLayout body;
     private LinearLayout results;
     private EditText query;
     private EditText latitude;
     private EditText longitude;
-    private EditText altitude;
-    private EditText accuracy;
     private TextView selected;
     private TextView status;
     private double selectedLat = Double.NaN;
     private double selectedLon = Double.NaN;
     private String selectedLabel = "MANUAL COORDINATES";
-    private boolean pendingStart;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -69,11 +61,13 @@ public final class SystemLocationActivity extends Activity {
         buildSearch();
         buildCoordinates();
         buildControls();
+        loadSaved();
+        refreshStatus();
     }
 
     @Override protected void onResume() {
         super.onResume();
-        refreshStatus();
+        if (status != null) refreshStatus();
     }
 
     private void header() {
@@ -91,16 +85,16 @@ public final class SystemLocationActivity extends Activity {
         brand.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
         brand.setLetterSpacing(0.08f);
         center.addView(brand);
-        TextView sub = label("SYSTEM LOCATION", 10, GREEN, true);
+        TextView sub = label("VECTOR SYSTEM LOCATION", 10, GREEN, true);
         sub.setGravity(Gravity.CENTER);
-        sub.setLetterSpacing(0.22f);
+        sub.setLetterSpacing(0.18f);
         center.addView(sub);
         row.addView(center, new LinearLayout.LayoutParams(0, -2, 1f));
         row.addView(new View(this), new LinearLayout.LayoutParams(dp(44), 1));
         body.addView(row);
 
         space(18);
-        TextView title = text("SYSTEM-WIDE MOCK LOCATION", 24, TEXT, true);
+        TextView title = text("SYSTEM-WIDE LOCATION", 24, TEXT, true);
         title.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
         title.setLetterSpacing(0.05f);
         text("SEARCH A PLACE OR ENTER COORDINATES", 11, GREEN, true);
@@ -111,8 +105,7 @@ public final class SystemLocationActivity extends Activity {
     }
 
     private void buildSearch() {
-        query = input("SEARCH PLACE  •  CITY  •  ADDRESS  •  AIRPORT");
-        query.setInputType(android.text.InputType.TYPE_CLASS_TEXT);
+        query = input("SEARCH PLACE  •  CITY  •  ADDRESS  •  AIRPORT", false);
         button("SEARCH PLACE", this::searchPlace, true);
 
         results = column();
@@ -126,12 +119,8 @@ public final class SystemLocationActivity extends Activity {
         selected = text("SELECTED: NONE", 12, GREEN, true);
         selected.setPadding(0, 0, 0, dp(8));
 
-        latitude = input("LATITUDE  •  -90 TO 90");
-        longitude = input("LONGITUDE  •  -180 TO 180");
-        altitude = input("ALTITUDE METERS  •  DEFAULT 0");
-        accuracy = input("ACCURACY METERS  •  DEFAULT 3");
-        altitude.setText("0");
-        accuracy.setText("3");
+        latitude = input("LATITUDE  •  -90 TO 90", true);
+        longitude = input("LONGITUDE  •  -180 TO 180", true);
 
         button("USE THESE COORDINATES", () -> {
             try {
@@ -148,14 +137,13 @@ public final class SystemLocationActivity extends Activity {
     }
 
     private void buildControls() {
-        button("START SYSTEM LOCATION", this::startRequestedLocation, true);
-        button("STOP SYSTEM LOCATION", this::stopMock, false);
-        button("OPEN DEVELOPER OPTIONS", this::openDeveloperOptions, false);
+        button("ENABLE VECTOR SYSTEM LOCATION", this::enableSystemLocation, true);
+        button("DISABLE SYSTEM LOCATION", this::disableSystemLocation, false);
 
         space(16);
         TextView info = text(
-                "SET GHOSTVIKI AS THE DEVICE'S MOCK LOCATION APP. WHILE ACTIVE, THE SERVICE " +
-                "UPDATES GPS / NETWORK / FUSED TEST PROVIDERS. ANDROID MAY EXPOSE THE LOCATION AS MOCK.",
+                "VECTOR / LSPOSED MUST SCOPE GHOSTVIKI TO SYSTEM FRAMEWORK (android). " +
+                "NO DEVELOPER-OPTIONS MOCK APP IS USED. THIS TEST OVERRIDE REMAINS MARKED AS SIMULATED.",
                 10, MUTED, false);
         info.setLineSpacing(dp(2), 1f);
     }
@@ -167,8 +155,7 @@ public final class SystemLocationActivity extends Activity {
             return;
         }
         results.removeAllViews();
-        TextView searching = label("SEARCHING…", 12, GREEN, true);
-        results.addView(searching);
+        results.addView(label("SEARCHING…", 12, GREEN, true));
 
         if (!Geocoder.isPresent()) {
             results.removeAllViews();
@@ -259,7 +246,7 @@ public final class SystemLocationActivity extends Activity {
         return out.length() == 0 ? "SEARCH RESULT" : out.toString();
     }
 
-    private void startRequestedLocation() {
+    private void enableSystemLocation() {
         try {
             if (Double.isNaN(selectedLat) || Double.isNaN(selectedLon)) {
                 selectedLat = parseLat(latitude.getText().toString());
@@ -272,94 +259,66 @@ public final class SystemLocationActivity extends Activity {
             return;
         }
 
-        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            pendingStart = true;
-            requestPermissions(new String[]{
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            }, REQ_LOCATION);
-            return;
-        }
-        startMock();
+        SharedPreferences prefs = runtimePreferences();
+        boolean ok = prefs.edit()
+                .putString("system_latitude", Double.toString(selectedLat))
+                .putString("system_longitude", Double.toString(selectedLon))
+                .putString("system_location_label", selectedLabel)
+                .putBoolean("system_location_enabled", true)
+                .putLong("system_location_changed_at", System.currentTimeMillis())
+                .commit();
+        refreshStatus();
+        toast(ok
+                ? "System location saved. Restart System Framework or reboot if Vector has not loaded the new scope yet."
+                : "Could not save system location.");
     }
 
-    @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQ_LOCATION && pendingStart) {
-            pendingStart = false;
-            boolean granted = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-            if (granted) startMock();
-            else toast("Location permission is required for system location testing.");
-        }
+    private void disableSystemLocation() {
+        boolean ok = runtimePreferences().edit()
+                .putBoolean("system_location_enabled", false)
+                .putLong("system_location_changed_at", System.currentTimeMillis())
+                .commit();
+        refreshStatus();
+        toast(ok ? "System location disabled." : "Could not save setting.");
     }
 
-    private void startMock() {
-        if (!isMockAllowed()) {
-            status.setTextColor(ORANGE);
-            status.setText("MOCK LOCATION ACCESS: NOT ENABLED  •  OPEN DEVELOPER OPTIONS");
-            toast("Select GhostViki as the mock location app first.");
-            return;
-        }
-
-        double alt = parseNumberOr(altitude.getText().toString(), 0.0);
-        float acc = (float) Math.max(0.5, parseNumberOr(accuracy.getText().toString(), 3.0));
-
-        Intent intent = new Intent(this, SystemMockLocationService.class)
-                .setAction(SystemMockLocationService.ACTION_START)
-                .putExtra(SystemMockLocationService.EXTRA_LATITUDE, selectedLat)
-                .putExtra(SystemMockLocationService.EXTRA_LONGITUDE, selectedLon)
-                .putExtra(SystemMockLocationService.EXTRA_ALTITUDE, alt)
-                .putExtra(SystemMockLocationService.EXTRA_ACCURACY, acc)
-                .putExtra(SystemMockLocationService.EXTRA_LABEL, selectedLabel);
-        startForegroundService(intent);
-        status.postDelayed(this::refreshStatus, 300);
-        toast("System location started.");
-    }
-
-    private void stopMock() {
-        Intent intent = new Intent(this, SystemMockLocationService.class)
-                .setAction(SystemMockLocationService.ACTION_STOP);
-        startService(intent);
-        status.postDelayed(this::refreshStatus, 250);
-    }
-
-    private boolean isMockAllowed() {
+    private void loadSaved() {
+        SharedPreferences prefs = runtimePreferences();
+        String lat = prefs.getString("system_latitude", "");
+        String lon = prefs.getString("system_longitude", "");
+        selectedLabel = prefs.getString("system_location_label", "SAVED LOCATION");
+        latitude.setText(lat);
+        longitude.setText(lon);
         try {
-            AppOpsManager ops = getSystemService(AppOpsManager.class);
-            if (ops == null) return false;
-            int mode = ops.checkOpNoThrow(
-                    AppOpsManager.OPSTR_MOCK_LOCATION,
-                    Process.myUid(),
-                    getPackageName());
-            return mode == AppOpsManager.MODE_ALLOWED;
-        } catch (RuntimeException denied) {
-            return false;
+            if (!lat.isEmpty() && !lon.isEmpty()) {
+                selectedLat = parseLat(lat);
+                selectedLon = parseLon(lon);
+                updateSelected();
+            }
+        } catch (IllegalArgumentException ignored) {
+            selectedLat = Double.NaN;
+            selectedLon = Double.NaN;
         }
     }
 
-    private void openDeveloperOptions() {
+    @SuppressWarnings("deprecation")
+    private SharedPreferences runtimePreferences() {
         try {
-            startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
-        } catch (RuntimeException e) {
-            startActivity(new Intent(Settings.ACTION_SETTINGS));
+            return getSharedPreferences(ConfigStore.PREFS, Context.MODE_WORLD_READABLE);
+        } catch (SecurityException e) {
+            return getSharedPreferences(ConfigStore.PREFS, Context.MODE_PRIVATE);
         }
     }
 
     private void refreshStatus() {
-        boolean allowed = isMockAllowed();
-        boolean active = getSharedPreferences(SystemMockLocationService.PREFS, MODE_PRIVATE)
-                .getBoolean(SystemMockLocationService.KEY_ACTIVE, false);
-        if (!allowed) {
-            status.setTextColor(ORANGE);
-            status.setText("MOCK LOCATION ACCESS: NOT ENABLED");
-        } else if (active) {
+        SharedPreferences prefs = runtimePreferences();
+        boolean enabled = prefs.getBoolean("system_location_enabled", false);
+        if (enabled) {
             status.setTextColor(GREEN);
-            status.setText("SYSTEM LOCATION: ACTIVE  •  MOCK APP ACCESS: READY");
+            status.setText("SYSTEM LOCATION: ENABLED  •  VECTOR SYSTEM FRAMEWORK SCOPE REQUIRED");
         } else {
-            status.setTextColor(GREEN);
-            status.setText("SYSTEM LOCATION: OFF  •  MOCK APP ACCESS: READY");
+            status.setTextColor(MUTED);
+            status.setText("SYSTEM LOCATION: OFF  •  NO MOCK-APP SETUP REQUIRED");
         }
     }
 
@@ -391,16 +350,6 @@ public final class SystemLocationActivity extends Activity {
         }
     }
 
-    private double parseNumberOr(String raw, double fallback) {
-        try {
-            if (raw == null || raw.trim().isEmpty()) return fallback;
-            double value = Double.parseDouble(raw.trim());
-            return Double.isFinite(value) ? value : fallback;
-        } catch (NumberFormatException e) {
-            return fallback;
-        }
-    }
-
     private LinearLayout column() {
         LinearLayout view = new LinearLayout(this);
         view.setOrientation(LinearLayout.VERTICAL);
@@ -423,15 +372,17 @@ public final class SystemLocationActivity extends Activity {
         return view;
     }
 
-    private EditText input(String hint) {
+    private EditText input(String hint, boolean numeric) {
         EditText input = new EditText(this);
         input.setHint(hint);
         input.setTextColor(TEXT);
         input.setHintTextColor(MUTED);
         input.setSingleLine(true);
-        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER
-                | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
-                | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        input.setInputType(numeric
+                ? android.text.InputType.TYPE_CLASS_NUMBER
+                    | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+                    | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED
+                : android.text.InputType.TYPE_CLASS_TEXT);
         input.setMinHeight(dp(54));
         body.addView(input, new LinearLayout.LayoutParams(-1, -2));
         return input;
