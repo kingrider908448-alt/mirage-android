@@ -326,13 +326,17 @@ public final class SystemLocationActivity extends Activity {
     }
 
     private boolean isMockAllowed() {
-        AppOpsManager ops = getSystemService(AppOpsManager.class);
-        if (ops == null) return false;
-        int mode = ops.checkOpNoThrow(
-                AppOpsManager.OPSTR_MOCK_LOCATION,
-                Process.myUid(),
-                getPackageName());
-        return mode == AppOpsManager.MODE_ALLOWED;
+        try {
+            AppOpsManager ops = getSystemService(AppOpsManager.class);
+            if (ops == null) return false;
+            int mode = ops.checkOpNoThrow(
+                    AppOpsManager.OPSTR_MOCK_LOCATION,
+                    Process.myUid(),
+                    getPackageName());
+            return mode == AppOpsManager.MODE_ALLOWED;
+        } catch (RuntimeException denied) {
+            return false;
+        }
     }
 
     private void openDeveloperOptions() {
