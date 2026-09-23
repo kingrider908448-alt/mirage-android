@@ -1,19 +1,44 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
     </queries>
-    <application android:label="GhostViki" android:theme="@style/AppTheme"
-        android:icon="@drawable/ic_ghostviki" android:allowBackup="false"
-        android:supportsRtl="true" android:usesCleartextTraffic="false"
+
+    <application
+        android:label="GhostViki"
+        android:theme="@style/AppTheme"
+        android:icon="@drawable/ic_ghostviki"
+        android:allowBackup="false"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="false"
         android:enableOnBackInvokedCallback="true">
+
         <meta-data android:name="xposedmodule" android:value="true" />
         <meta-data android:name="xposeddescription" android:value="Selected-app identity and location testing" />
         <meta-data android:name="xposedminversion" android:value="93" />
         <meta-data android:name="xposedsharedprefs" android:value="true" />
         <meta-data android:name="xposedscope" android:resource="@array/module_scope" />
+
+        <activity
+            android:name=".SystemLocationActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".SystemMockLocationService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="User-initiated system mock location testing" />
+        </service>
+
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
