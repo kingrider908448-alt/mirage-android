@@ -1,6 +1,21 @@
 # GhostViki for Android
 
-An experimental Android app and Vector / LSPosed module for synthetic identity testing in **selected app processes**, plus the existing framework location test mode. GhostViki Probe is an independent reader, not the only supported target.
+An experimental Android app and Vector / LSPosed module for per-app privacy controls and synthetic identity testing in **selected app processes**, plus the existing framework location test mode. GhostViki Probe is an independent reader, not the only supported target.
+
+## 0.3.0-privacy
+
+Open **Change Identity → Per-app Privacy**, choose a target and configure:
+
+- **Block clipboard reads**: intercepts ClipboardManager `getPrimaryClip`, `getPrimaryClipDescription`, `getText`, `hasPrimaryClip` and `hasText` before the underlying read. Object getters return null; boolean getters return false. Opt-in per app; independent of identity enablement and profile validation. Paste through these APIs stops working for that app. Clipboard contents are neither read nor cleared by the module; other apps retain access.
+- **Keep original device model**: retains the host's device name, model, product-property getters, SoC, memory, storage and display readouts while supported identifier overrides continue. This avoids introducing a catalog/firmware mismatch; it still exposes the real hardware model and does not promise an undetectable module. Force-stop and reopen the target after switching modes.
+- **Pause identity for this app**: stops this target's identity overrides without affecting other targets or its clipboard policy. Restart the target to restore static Build fields. Rotation and catalog selection preserve these options.
+- **App permissions**: shows requested/granted contacts, location, camera, microphone, media, calendar and SMS permissions and opens Android app settings. This is a permission review, not automatic revocation or a network firewall. AppOps, one-time grants and selected-file access can differ from the permission summary.
+
+The searchable target picker now uses installed applications instead of launcher activities. Sideloaded apps and apps without launcher icons can be selected; **Add package** validates an installed package name in the current Android user. No Play Store membership or installer filter applies. Ordinary app UIDs, including preinstalled apps, are listed; the module itself and reserved system UIDs are excluded. Other Android users/work profiles need their own installation/scope. Selection never silently changes Vector scope. The app inventory stays local and is not logged or uploaded.
+
+Schema 6 keeps existing profiles and makes all three new options opt-in. API readers refresh preferences at most once per second; restart targets after changes. An unreadable/missing configuration disables adapters and reports an unavailable/error status; it is not protection. Clipboard coverage is limited to the listed Java getters in injected processes. Direct Binder/native routes, keyboard insertion, cached data and clipboard-change notifications are not blocked. No service registrations, attestation responses or detector verdicts are fabricated.
+
+**Probe clipboard test:** with Probe selected in both GhostViki and Vector, first leave clipboard blocking off, restart Probe and tap **Write test clipboard and check reads**. This replaces the shared clipboard with harmless test text and reports whether the five APIs can read it; it never displays prior clipboard contents. Enable blocking for Probe, restart it and repeat: expect empty/null and false on all five reads. Turn blocking off and confirm reads recover. Android can also deny clipboard reads, so an empty result alone is not proof that GhostViki works. Confirm an unselected app can still paste the test text.
 
 ## 0.2.0-profiles100
 
@@ -20,7 +35,7 @@ The writer now requests world-readable mode first, falls back privately on rejec
 
 **[Builds and APK downloads](https://github.com/kingrider908448-alt/mirage-android/actions/workflows/android.yml)**
 
-Choose a successful run for the desired commit and download its GhostViki-debug-* artifact. The ZIP contains GhostViki-alpha.apk, GhostViki-Probe.apk and SHA256SUMS.txt. GitHub may require sign-in; artifacts expire after 14 days. Both apps display **0.2.0-profiles100**, version code 3.
+Choose a successful run for the desired commit and download its GhostViki-debug-* artifact. The ZIP contains GhostViki-alpha.apk, GhostViki-Probe.apk and SHA256SUMS.txt. GitHub may require sign-in; artifacts expire after 14 days. Both apps display **0.3.0-privacy**, version code 4.
 
 Passing tests, lint or a build is not a verified phone result. The supplied Vector screenshots establish that GhostViki loaded into Probe, not that its configuration or API replacements worked. See [VALIDATION.md](VALIDATION.md).
 
@@ -30,6 +45,7 @@ Select the same target in **both Vector and GhostViki**. Each selected package h
 
 | Surface | Implemented path | Limits |
 | --- | --- | --- |
+| Clipboard | Opt-in before-hooks on five ClipboardManager read methods | Per selected injected process. Does not block direct Binder/native access, keyboard insertion or data already cached by an app. |
 | Android ID | Settings.Secure.getString for ANDROID_ID | Java getter only; no direct provider/Binder, native or previously cached reads. |
 | Device name | Settings.Global/System/Secure getString/getStringForUser for device_name; Secure bluetooth_name; local BluetoothAdapter.getName | Target-process reads only. Bluetooth permission errors and unavailable adapter results are preserved. Does not rename the phone in unselected system Settings or change Bluetooth broadcasts/remote-device names. |
 | Device build | Build.BRAND, MODEL, MANUFACTURER, DEVICE, SERIAL; sourced SOC_MODEL/SOC_MANUFACTURER | Process-local Java fields at startup; restart targets after changing or disabling. No fabricated stock firmware metadata. |
@@ -50,7 +66,8 @@ The profile viewer now lets you choose the selected package being displayed; pre
 - PROFILE_READY: selected identity profile loaded and validated; compare actual API reads to verify effects.
 - NOT_SELECTED: package is missing from GhostViki's saved targets.
 - IDENTITY_DISABLED: replacements switched off.
-- INVALID_PROFILE: malformed/missing Android ID/serial, or an inconsistent schema-5 catalog name/model/code combination.
+- IDENTITY_PAUSED: identity replacements paused for this target. Clipboard policy remains independent.
+- INVALID_PROFILE: malformed/missing supported identifiers or inconsistent catalog fields/firmware inputs.
 - CONFIG_UNAVAILABLE / CONFIG_READ_ERROR: settings absent, unsupported or unreadable.
 - MODULE_NOT_LOADED: Probe's diagnostic method was not replaced. An older module may also lack that adapter; confirm matching versions.
 
@@ -58,7 +75,7 @@ The profile viewer now lets you choose the selected package being displayed; pre
 
 1. Install matching APKs. Enable GhostViki in Vector and scope it to a test app such as DevInfo and optionally Probe. System Framework scope is only needed for the separate Location feature. Restart if Vector requests it.
 2. If the older Mirage module is scoped to the same target, temporarily disable it for that target to isolate the test. Prior logs showed both module packages: a possible conflict, not a proven cause.
-3. Force-stop and reopen **GhostViki itself once after updating**, so the old process cannot keep a private-mode preferences object cached. Confirm v0.2.0-profiles100.
+3. Force-stop and reopen **GhostViki itself once after updating**, so the old process cannot keep a private-mode preferences object cached. Confirm v0.3.0-privacy.
 4. Select the same target inside GhostViki. In Device Profile choose that exact package with **View profile**, then **Choose device model**. Note the saved name and model. Android ID is available in Android / Device Identifiers.
 5. Force-stop and reopen the target. Compare **Model, Device name and Android ID** against that package's saved values. A serial permission error is not evidence that Android ID failed. Build fields require a fresh process. Probe now independently reads Settings device name, local Bluetooth name (with permission), SoC, RAM, storage and display. New fields absent from an old baseline never count as a successful identity change.
 6. Rotate again, restart and repeat. Confirm an unselected app remains unchanged. To test disabling, switch off Identity Adapters and restart the target.
@@ -88,7 +105,7 @@ java scripts/RunConfigChecks.java
 gradle --no-daemon :core:check :app:lintDebug :probe:lintDebug :app:assembleDebug :probe:assembleDebug
 ~~~
 
-The first command runs production core/config code and the new name/hardware callbacks against explicit **JVM fixtures**. It checks 100 unique models, no-repeat rotations, persistence, migration, per-target isolation, getter results, error preservation and disabled/unselected targets, and syntax-parses all Android Java sources. It does not emulate Android, SELinux, real Vector IPC or hook installation. Fixtures live outside Android source sets. CI also checks that the exact tested catalog is packaged inside the module APK.
+The first command runs production core/config code and name/hardware/Build/clipboard callbacks against explicit **JVM fixtures**. It checks 100 unique models, no-repeat rotations, persistence, migration, per-target isolation, getter results, error preservation, privacy option independence, clipboard reads stopped before originals, and disabled/unselected targets, and syntax-parses all Android Java sources. It does not emulate Android, SELinux, real Vector IPC or hook installation. Fixtures live outside Android source sets. CI also checks that the exact tested catalog is packaged inside the module APK.
 
 Fresh CI runners can use different debug signing keys. If an update-signature error occurs, do not automatically uninstall or clear data: that erases profiles/baselines. A stable signing workflow is needed for routine updates. No private key belongs in this repository.
 
@@ -96,11 +113,15 @@ Fresh CI runners can use different debug signing keys. If an update-signature er
 
 GhostViki has no Internet permission or telemetry, executes no root shell commands and never clears other apps' data. Cross-process preferences contain synthetic profiles and test coordinates, not encrypted secrets; do not put credentials there.
 
+`QUERY_ALL_PACKAGES` is used only to let the user select installed apps without launcher activities and review their permissions. It does not grant access to their private data. The module does not need contacts, camera, microphone, media or clipboard-reading permission for its own UI.
+
 - [Vector](https://github.com/JingMatrix/Vector)
 - [Vector XSharedPreferences source](https://github.com/JingMatrix/Vector/blob/efb82883071643ca16128ecd588be7c40c1e45e6/legacy/src/main/java/de/robv/android/xposed/XSharedPreferences.java)
 - [AOSP ContextImpl preferences cache](https://github.com/aosp-mirror/platform_frameworks_base/blob/main/core/java/android/app/ContextImpl.java)
 - [AOSP SharedPreferencesImpl write mode](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/main/core/java/android/app/SharedPreferencesImpl.java)
 - [Android identifier guidance](https://developer.android.com/identity/user-data-ids)
+- [Android ClipboardManager contracts](https://developer.android.com/reference/android/content/ClipboardManager)
+- [Android package visibility declarations](https://developer.android.com/training/package-visibility/declaring)
 - [Firebase installation lifecycle](https://firebase.google.com/docs/projects/manage-installations)
 
 No open-source license has been selected for this project yet.

@@ -70,7 +70,7 @@ final class HardwareProfileHooks {
     private static DeviceProfile profile(HookConfig config, XC_MethodHook.MethodHookParam param) {
         if (param.hasThrowable()) return null;
         HookConfig.Snapshot state = config.get();
-        return state.identity ? state.deviceProfile : null;
+        return state.overrideDevice ? state.deviceProfile : null;
     }
 
     private static void register(Class<?> type, String name, XC_MethodHook hook) {

@@ -41,6 +41,7 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
         install("identity", () -> installIdentity(config, param.classLoader));
         install("device names and properties", () -> DeviceNameHooks.install(config, param.classLoader));
         install("hardware readouts", () -> HardwareProfileHooks.install(config));
+        install("clipboard privacy", () -> ClipboardHooks.install(config));
         install("root signals", () -> RootHooks.install(config));
         XposedBridge.log("GhostViki: adapter registration attempted for " + param.packageName
                 + "; check per-adapter errors and actual target values (not a passing test)");
@@ -84,22 +85,7 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
             if (bluetooth != null) hookString(bluetooth, "getAddress", config, s -> s.bluetoothMac);
         });
 
-        HookConfig.Snapshot state = config.get();
-        if (state.identity) {
-            setBuild("ID", state.buildId);
-            setBuild("HARDWARE", state.hardware);
-            setBuild("BRAND", state.brand);
-            setBuild("MODEL", state.model);
-            setBuild("MANUFACTURER", state.manufacturer);
-            setBuild("DEVICE", state.device);
-            setBuild("PRODUCT", state.product);
-            setBuild("FINGERPRINT", state.fingerprint);
-            setBuild("SERIAL", state.serial);
-            if (state.deviceProfile != null) {
-                setBuild("SOC_MODEL", state.deviceProfile.socModel);
-                setBuild("SOC_MANUFACTURER", state.deviceProfile.socManufacturer);
-            }
-        }
+        BuildProfileHooks.apply(config.get());
     }
 
     private static final ThreadLocal<Integer> paramSlot = ThreadLocal.withInitial(() -> 0);
@@ -131,12 +117,6 @@ public final class GhostVikiModule implements IXposedHookLoadPackage {
                 } finally { paramSlot.remove(); }
             }
         }));
-    }
-
-    private static void setBuild(String field, String value) {
-        if (value == null || value.isEmpty()) return;
-        try { XposedHelpers.setStaticObjectField(Build.class, field, value); }
-        catch (Throwable e) { XposedBridge.log("GhostViki: Build." + field + " not replaceable: " + e.getClass().getSimpleName()); }
     }
 
     private static void install(String name, Runnable action) {

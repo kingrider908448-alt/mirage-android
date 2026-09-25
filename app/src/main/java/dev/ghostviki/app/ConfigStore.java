@@ -14,7 +14,10 @@ import dev.ghostviki.core.ProfileConsistency;
 public final class ConfigStore {
     public static final String PACKAGE = "dev.ghostviki.app";
     public static final String PREFS = "runtime";
-    public static final int SCHEMA = 5;
+    public static final int SCHEMA = 6;
+    public static final String BLOCK_CLIPBOARD = "block_clipboard";
+    public static final String KEEP_REAL_DEVICE = "keep_real_device";
+    public static final String IDENTITY_PAUSED = "identity_paused";
     public final SharedPreferences preferences;
     public final boolean bridgeAvailable;
 
@@ -211,6 +214,22 @@ public final class ConfigStore {
     }
 
     public boolean setFlag(String name, boolean value) { return preferences.edit().putBoolean(name, value).commit(); }
+
+    public boolean privacyOption(String pkg, String option) {
+        checkPrivacyOption(option);
+        return preferences.getBoolean(option + ":" + pkg, false);
+    }
+
+    public boolean setPrivacyOption(String pkg, String option, boolean value) {
+        checkPrivacyOption(option);
+        if (!targets().contains(pkg)) throw new IllegalArgumentException("Select this target app first.");
+        return preferences.edit().putBoolean(option + ":" + pkg, value).commit();
+    }
+
+    private static void checkPrivacyOption(String option) {
+        if (!BLOCK_CLIPBOARD.equals(option) && !KEEP_REAL_DEVICE.equals(option) && !IDENTITY_PAUSED.equals(option))
+            throw new IllegalArgumentException("Unknown privacy option");
+    }
 
     public boolean setLocation(String pkg, Coordinates location, boolean enabled) {
         if (!targets().contains(pkg)) throw new IllegalArgumentException("Select this target app first.");

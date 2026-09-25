@@ -1,6 +1,15 @@
-# Validation record — 2026-09-23
+# Validation record — 2026-09-25
 
-## Current revision: 0.2.0-profiles100 (version code 3)
+## Current revision: 0.3.0-privacy (version code 4)
+
+- Synced upstream `91655aec8b17235098b3fd80f48cbfef57b01afc` before editing; retained its catalog consistency checks and existing framework location implementation.
+- Added searchable installed-app selection, manual installed-package validation, local permission review, and three per-app options: clipboard blocking, keep-original-device mode and identity pause. No installer/Play Store restriction. Both GhostViki and Vector selections are required.
+- Host harness: **22,115 core assertions, 34 configuration checks, 2,648 catalog/persistence/callback checks and 130 privacy checks pass**. All Android Java sources syntax-parse. The privacy harness executes production ClipboardHooks and BuildProfileHooks plus existing name/hardware callbacks. Counted originals confirm the clipboard is blocked before fetching data; disabled/unselected targets execute original reads once.
+- Covers per-target isolation, pause/clipboard independence, invalid identity with valid clipboard policy, schema-5 migration without ID rotation, saved options across restart/rotation/model selection, permission errors when unblocked, unavailable config, and failed writes. Keep-original mode preserves Build/model/property/name/RAM/storage/display values while the serial remains independently masked.
+- Probe now writes harmless test text on an explicit button tap and independently reports the five clipboard reads. Prior clipboard contents are not displayed, saved or logged; empty results are not presented as proof of injection.
+- CI performs Android compilation, lint, APK assembly and packaged catalog validation. See the associated run's conclusion. Local fixtures do not establish Android/Vector runtime success; no phone is connected. The new app picker, permission screen, clipboard callback behavior and OEM coverage still require phone testing. No undetectability or all-data protection is claimed.
+
+## Previous revision: 0.2.0-profiles100 (version code 3)
 
 - Merged the existing System Location work through upstream `3fb3f2b652d736c8e1b00e519630bfcafdd418e5`; retained its framework-only branch and separate settings.
 - Added 100 catalog profiles, schema-5 persistence/migration, a searchable per-target selector, and general name, product-property, SoC and sourced hardware-readout adapters.

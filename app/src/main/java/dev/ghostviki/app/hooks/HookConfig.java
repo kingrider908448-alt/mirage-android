@@ -51,7 +51,8 @@ final class HookConfig {
                 } else {
                     String id = value(data, "android_id");
                     String serial = value(data, "serial");
-                    boolean enabled = flag(data, "identity_enabled");
+                    boolean paused = flag(data, ConfigStore.IDENTITY_PAUSED + ":" + packageName);
+                    boolean enabled = flag(data, "identity_enabled") && !paused;
                     boolean validId = id.matches("[0-9a-f]{16}");
                     boolean validSerial = serial.matches("[0-9A-F]{16}");
                     DeviceProfile profile = DeviceCatalog.find(value(data, "device_profile_key"));
@@ -77,7 +78,7 @@ final class HookConfig {
                             && value(data, "fingerprint").isEmpty();
                     boolean identity = enabled && validId && validSerial && validProfile
                             && validAdapters && cleanFirmware;
-                    reason = !enabled ? "IDENTITY_DISABLED" : !identity ? "INVALID_PROFILE" : "PROFILE_READY";
+                    reason = paused ? "IDENTITY_PAUSED" : !enabled ? "IDENTITY_DISABLED" : !identity ? "INVALID_PROFILE" : "PROFILE_READY";
                     Coordinates coordinates = null;
                     if (flag(data, "location:" + packageName)) {
                         try {
@@ -90,9 +91,12 @@ final class HookConfig {
                             value(data, "build_id"), value(data, "hardware"), value(data, "brand"), value(data, "model"),
                             value(data, "manufacturer"), value(data, "device"), value(data, "product"), value(data, "fingerprint"),
                             flag(data, "hide_files"), flag(data, "hide_packages"), coordinates,
-                            profile, value(data, "device_name"));
+                            profile, value(data, "device_name"),
+                            identity && !flag(data, ConfigStore.KEEP_REAL_DEVICE + ":" + packageName),
+                            flag(data, ConfigStore.BLOCK_CLIPBOARD + ":" + packageName));
                 }
-                report(reason + " schema=" + schema + " generation=" + generation + " targets=" + targets.size());
+                report(reason + " schema=" + schema + " generation=" + generation + " targets=" + targets.size()
+                        + " device_override=" + snapshot.overrideDevice + " clipboard_block=" + snapshot.blockClipboard);
             } catch (RuntimeException e) {
                 snapshot = Snapshot.OFF;
                 report("CONFIG_READ_ERROR " + e.getClass().getSimpleName());
@@ -134,8 +138,8 @@ final class HookConfig {
 
     static final class Snapshot {
         static final Snapshot OFF = new Snapshot(false, "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", false, false, null, null, "");
-        final boolean identity, hideFiles, hidePackages;
+                "", "", "", "", "", "", "", "", false, false, null, null, "", false, false);
+        final boolean identity, hideFiles, hidePackages, overrideDevice, blockClipboard;
         final String androidId, serial, deviceId, wifiMac, bssid, bluetoothMac;
         final String imei1, imei2, imsi, iccid;
         final String buildId, hardware, brand, model, manufacturer, device, product, fingerprint;
@@ -147,7 +151,8 @@ final class HookConfig {
                  String imsi, String iccid, String buildId, String hardware, String brand,
                  String model, String manufacturer, String device, String product,
                  String fingerprint, boolean hideFiles, boolean hidePackages,
-                 Coordinates coordinates, DeviceProfile deviceProfile, String deviceName) {
+                 Coordinates coordinates, DeviceProfile deviceProfile, String deviceName,
+                 boolean overrideDevice, boolean blockClipboard) {
             this.identity = identity;
             this.androidId = androidId;
             this.serial = serial;
@@ -172,6 +177,8 @@ final class HookConfig {
             this.coordinates = coordinates;
             this.deviceProfile = deviceProfile;
             this.deviceName = deviceName;
+            this.overrideDevice = overrideDevice;
+            this.blockClipboard = blockClipboard;
         }
     }
 }

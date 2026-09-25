@@ -26,7 +26,7 @@ final class DeviceNameHooks {
                 if (param.hasThrowable() || !(param.getResult() instanceof String)
                         || param.args.length == 0 || !(param.args[0] instanceof String)) return;
                 HookConfig.Snapshot state = config.get();
-                if (!state.identity) return;
+                if (!state.overrideDevice) return;
                 String value = ProfileProperties.replacement(state.deviceProfile, (String) param.args[0]);
                 if (value != null && !value.isEmpty()) param.setResult(value);
             }
@@ -48,7 +48,7 @@ final class DeviceNameHooks {
         // Preserve permission exceptions and unexpected result types.
         if (param.hasThrowable() || (param.getResult() != null && !(param.getResult() instanceof String))) return;
         HookConfig.Snapshot state = config.get();
-        if (state.identity && state.deviceProfile != null && state.deviceName.equals(state.deviceProfile.name))
+        if (state.overrideDevice && state.deviceProfile != null && state.deviceName.equals(state.deviceProfile.name))
             param.setResult(state.deviceName);
     }
 

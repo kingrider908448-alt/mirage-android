@@ -40,7 +40,7 @@ public final class ConfigChecks {
         HookConfig betaReader = new HookConfig(beta);
         check(alphaReader.get().identity && first.equals(alphaReader.get().androidId), "Read loaded map even if direct backing path is unreadable");
         check(betaReader.get().identity && second.equals(betaReader.get().androidId), "General hooks read a second non-Probe target");
-        check(alphaReader.diagnostics().startsWith("PROFILE_READY schema=5 generation=1"), "Diagnostic reports loaded schema and generation, not a spoof verdict");
+        check(alphaReader.diagnostics().startsWith("PROFILE_READY schema=" + ConfigStore.SCHEMA + " generation=1"), "Diagnostic reports loaded schema and generation, not a spoof verdict");
         check(store.preferences.getString("bssid:" + alpha, "").equals(alphaReader.get().bssid), "BSSID reader matches saved UI profile");
         check(!new HookConfig("example.not.selected").get().identity, "Unselected app is untouched");
         check(new HookConfig("example.not.selected").diagnostics().startsWith("NOT_SELECTED"), "Unselected reason is explicit");
@@ -84,7 +84,7 @@ public final class ConfigChecks {
                 "Migration preserves existing identity");
         check(upgraded.preferences.contains("wifi_mac:" + alpha), "Migration backfills missing identity fields");
         check(upgraded.preferences.contains("bssid:" + alpha), "Upgrade backfills a dedicated BSSID");
-        check(upgraded.preferences.getInt("schema", 0) == 5, "Upgrade publishes schema 5");
+        check(upgraded.preferences.getInt("schema", 0) == ConfigStore.SCHEMA, "Upgrade publishes current schema");
         long revision = upgraded.preferences.getLong("writer_revision", 0);
         ConfigStore reopened = new ConfigStore(new Context(true, old));
         check(reopened.preferences.getLong("writer_revision", 0) > revision, "Writer startup forces a new disk commit to repair old file mode");

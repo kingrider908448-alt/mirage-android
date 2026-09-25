@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -43,6 +43,7 @@ public final class MainActivity extends Activity {
     private String page = "home";
     private String identityTarget = "";
     private boolean saving;
+    private boolean selectingTargets;
     private android.window.OnBackInvokedCallback backCallback;
     private boolean backRegistered;
 
@@ -77,7 +78,7 @@ public final class MainActivity extends Activity {
     }
 
     private void goBack() {
-        if (page.startsWith("identity:")) show("identity");
+        if (page.startsWith("identity:") || "privacy".equals(page)) show("identity");
         else if (!"home".equals(page)) show("home");
     }
 
@@ -117,6 +118,7 @@ public final class MainActivity extends Activity {
 
         if ("home".equals(page)) home();
         else if ("identity".equals(page)) identityCategories();
+        else if ("privacy".equals(page)) privacy();
         else if (page.startsWith("identity:")) identityDetail(page.substring("identity:".length()));
         else if ("root".equals(page)) { subHeader("ROOT HIDE"); root(); }
         else if ("location".equals(page)) { subHeader("LOCATION"); location(); }
@@ -316,6 +318,7 @@ public final class MainActivity extends Activity {
         text("For any selected app, not just Probe. Only fields with implemented adapters can affect target API reads. Preview fields do not.", 12, MUTED, false);
         text("After changing values, force-stop and reopen each target. Build fields are applied at process startup. No app data needs clearing.", 12, MUTED, false);
         toggle("IDENTITY ADAPTERS", "Applies to selected targets. Restart them after disabling to restore Build fields.", "identity_enabled");
+        button("PER-APP PRIVACY", () -> show("privacy"), false);
         button("ROTATE ALL SELECTED PROFILES", () -> {
             if (config.targets().isEmpty()) { selectTargets(); return; }
             save(config::rotateIdentity, "Profiles saved. Restart targets and verify their values.");
@@ -425,7 +428,11 @@ public final class MainActivity extends Activity {
         if ("hardware".equals(category)) {
             button("CHOOSE DEVICE MODEL • " + DeviceCatalog.all().size(), () -> chooseDeviceProfile(pkg), true);
             text("Model names and codes come from the device catalog. Specs follow the chosen model where sourced. Firmware and platform rows marked unchanged are retained.", 12, MUTED, false);
+            if (config.privacyOption(pkg, ConfigStore.KEEP_REAL_DEVICE))
+                text("KEEP ORIGINAL DEVICE IS ON: catalog name, model and hardware rows below are saved only. The target keeps its original device profile after restart.", 12, GREEN, true);
         }
+        if (config.privacyOption(pkg, ConfigStore.IDENTITY_PAUSED))
+            text("IDENTITY IS PAUSED FOR THIS APP. Restart it to restore its original Build fields.", 12, GREEN, true);
         space(16);
 
         for (String[] row : categoryRows(category, pkg)) valueCard(row[0], row[1], row.length > 2 ? row[2] : coverage(row[0]));
@@ -781,45 +788,172 @@ public final class MainActivity extends Activity {
         }, false);
     }
 
+    private void privacy() {
+        subHeader("PER-APP PRIVACY");
+        List<String> targets = new ArrayList<>(config.targets());
+        Collections.sort(targets);
+        if (targets.isEmpty()) {
+            heading("SELECT A TARGET", "Works with installed APKs from any source.");
+            button("SELECT TARGET APPS", this::selectTargets, true);
+            return;
+        }
+        if (!targets.contains(identityTarget)) identityTarget = targets.get(0);
+        String pkg = identityTarget;
+        button("APP: " + pkg, () -> new AlertDialog.Builder(this)
+                .setTitle("Privacy settings for")
+                .setSingleChoiceItems(targets.toArray(new String[0]), targets.indexOf(pkg), (dialog, which) -> {
+                    identityTarget = targets.get(which); dialog.dismiss(); render();
+                }).setNegativeButton("CANCEL", null).show(), false);
+        text("Select this app in Vector / LSPosed too. Force-stop and reopen it after changing settings.", 12, MUTED, false);
+        privacyToggle(pkg, "BLOCK CLIPBOARD READS", ConfigStore.BLOCK_CLIPBOARD,
+                "Makes supported clipboard reads empty for this app. Paste from the clipboard will stop working here. Other apps keep their clipboard access.");
+        privacyToggle(pkg, "KEEP ORIGINAL DEVICE MODEL", ConfigStore.KEEP_REAL_DEVICE,
+                "Keeps the original device name, brand, model, SoC, RAM, storage and display. Supported identifiers can still change. Restart this app to apply.");
+        privacyToggle(pkg, "PAUSE IDENTITY FOR THIS APP", ConfigStore.IDENTITY_PAUSED,
+                "Stops identifier and device profile overrides for this app. Clipboard blocking has its own switch. Restart this app to restore Build fields.");
+        text("Global identity adapters: " + (config.preferences.getBoolean("identity_enabled", false) ? "ON" : "OFF"), 12, GREEN, true);
+        space(16);
+        heading("APP PERMISSIONS", "Review access to personal data");
+        text(permissionSummary(pkg), 12, MUTED, false);
+        button("OPEN ANDROID APP SETTINGS", () -> {
+            try {
+                startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        android.net.Uri.fromParts("package", pkg, null)));
+            } catch (android.content.ActivityNotFoundException e) { toast("App settings are unavailable on this device."); }
+        }, false);
+        button("REFRESH PERMISSION STATUS", this::render, false);
+        text("Identity overrides do not revoke contacts, photos, microphone or location permissions. Manage those in Android settings. These controls do not block network traffic or guarantee that a module is undetectable.", 12, MUTED, false);
+    }
+
+    private void privacyToggle(String pkg, String title, String option, String detail) {
+        Switch control = new Switch(this);
+        control.setText(title); control.setTextSize(15); control.setTextColor(TEXT);
+        control.setMinHeight(dp(56)); control.setChecked(config.privacyOption(pkg, option));
+        control.setOnCheckedChangeListener((view, checked) -> save(
+                () -> config.setPrivacyOption(pkg, option, checked), "Saved for this app. Restart it to apply all changes."));
+        body.addView(control, new LinearLayout.LayoutParams(-1, -2));
+        text(detail, 12, MUTED, false);
+    }
+
+    @SuppressWarnings("deprecation")
+    private String permissionSummary(String pkg) {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(pkg, PackageManager.GET_PERMISSIONS);
+            String[][] groups = {
+                {"Contacts", "android.permission.READ_CONTACTS", "android.permission.WRITE_CONTACTS"},
+                {"Location", "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_BACKGROUND_LOCATION"},
+                {"Microphone", "android.permission.RECORD_AUDIO"},
+                {"Camera", "android.permission.CAMERA"},
+                {"Photos / media", "android.permission.READ_MEDIA_IMAGES", "android.permission.READ_MEDIA_VIDEO", "android.permission.READ_MEDIA_AUDIO", "android.permission.READ_MEDIA_VISUAL_USER_SELECTED", "android.permission.READ_EXTERNAL_STORAGE"},
+                {"Calendar", "android.permission.READ_CALENDAR", "android.permission.WRITE_CALENDAR"},
+                {"SMS", "android.permission.READ_SMS", "android.permission.RECEIVE_SMS"}
+            };
+            StringBuilder summary = new StringBuilder();
+            for (String[] group : groups) {
+                int requested = 0, granted = 0;
+                if (info.requestedPermissions != null) for (String permission : info.requestedPermissions)
+                    for (int i = 1; i < group.length; i++) if (group[i].equals(permission)) {
+                        requested++;
+                        if (getPackageManager().checkPermission(permission, pkg) == PackageManager.PERMISSION_GRANTED) granted++;
+                    }
+                summary.append(group[0]).append(": ").append(requested == 0 ? "not requested"
+                        : granted == 0 ? "not granted" : granted + " of " + requested + " requested permissions granted").append('\n');
+            }
+            return summary.append("Permission grants only; temporary access, AppOps and user-selected files can differ.").toString();
+        } catch (PackageManager.NameNotFoundException | SecurityException e) { return "Permission status unavailable for this app."; }
+    }
+
+    @SuppressWarnings("deprecation")
     private void selectTargets() {
-        if (saving) return;
+        if (saving || selectingTargets) return;
+        selectingTargets = true;
         worker.execute(() -> {
-            Intent launcher = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
-            List<ResolveInfo> found = getPackageManager().queryIntentActivities(launcher, 0);
-            Map<String, String> names = new TreeMap<>();
-            for (ResolveInfo item : found) {
-                String pkg = item.activityInfo.packageName;
-                ApplicationInfo info = item.activityInfo.applicationInfo;
-                if (!getPackageName().equals(pkg) && (info.flags & ApplicationInfo.FLAG_SYSTEM) == 0)
-                    names.put(pkg, item.loadLabel(getPackageManager()).toString());
+            try {
+                Map<String, String> names = new TreeMap<>();
+                for (ApplicationInfo info : getPackageManager().getInstalledApplications(0)) {
+                    if (selectable(info)) names.put(info.packageName, info.loadLabel(getPackageManager()).toString()
+                            + ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0 ? " (system app)" : ""));
+                }
+                Set<String> selected = config.targets();
+                for (String pkg : selected) names.putIfAbsent(pkg, pkg + " (not currently listed)");
+                runOnUiThread(() -> {
+                    selectingTargets = false;
+                    if (!isFinishing() && !isDestroyed()) showTargetPicker(names, selected);
+                });
+            } catch (RuntimeException e) {
+                runOnUiThread(() -> { selectingTargets = false; toast("Could not load installed apps: " + e.getClass().getSimpleName()); });
             }
-
-            Set<String> selected = config.targets();
-            for (String pkg : selected) names.putIfAbsent(pkg, pkg);
-            List<String> packages = new ArrayList<>(names.keySet());
-            packages.sort(Comparator.comparing(names::get, String.CASE_INSENSITIVE_ORDER));
-
-            String[] rows = new String[packages.size()];
-            boolean[] checked = new boolean[packages.size()];
-            for (int i = 0; i < packages.size(); i++) {
-                String pkg = packages.get(i);
-                rows[i] = names.get(pkg).toUpperCase(Locale.ROOT) + "\n" + pkg;
-                checked[i] = selected.contains(pkg);
-            }
-
-            runOnUiThread(() -> {
-                if (isFinishing() || isDestroyed()) return;
-                new AlertDialog.Builder(this)
-                        .setTitle("TARGET APPS")
-                        .setMultiChoiceItems(rows, checked, (dialog, index, on) -> {
-                            if (on) selected.add(packages.get(index)); else selected.remove(packages.get(index));
-                        })
-                        .setNegativeButton("CANCEL", null)
-                        .setPositiveButton("SAVE", (dialog, which) ->
-                                save(() -> config.setTargets(selected), "Targets saved."))
-                        .show();
-            });
         });
+    }
+
+    private boolean selectable(ApplicationInfo info) {
+        return !getPackageName().equals(info.packageName) && info.uid % 100000 >= 10000;
+    }
+
+    private void showTargetPicker(Map<String, String> names, Set<String> selected) {
+        LinearLayout layout = column();
+        layout.setPadding(dp(16), dp(8), dp(16), dp(8));
+        EditText search = new EditText(this);
+        search.setSingleLine(true); search.setHint("Search installed app or package");
+        layout.addView(search);
+        TextView count = new TextView(this);
+        layout.addView(count);
+        ListView list = new ListView(this);
+        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        layout.addView(list, new LinearLayout.LayoutParams(-1, dp(310)));
+        List<String> visible = new ArrayList<>();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, new ArrayList<>());
+        list.setAdapter(adapter);
+        Runnable refresh = () -> {
+            String query = search.getText().toString().trim().toLowerCase(Locale.ROOT);
+            visible.clear();
+            for (String pkg : names.keySet()) if ((names.get(pkg) + " " + pkg).toLowerCase(Locale.ROOT).contains(query)) visible.add(pkg);
+            visible.sort(Comparator.comparing(names::get, String.CASE_INSENSITIVE_ORDER));
+            adapter.clear(); list.clearChoices();
+            for (String pkg : visible) adapter.add(names.get(pkg) + "\n" + pkg);
+            for (int i = 0; i < visible.size(); i++) list.setItemChecked(i, selected.contains(visible.get(i)));
+            count.setText(selected.size() + " selected • " + visible.size() + " shown • current Android user");
+        };
+        list.setOnItemClickListener((parent, view, position, id) -> {
+            String pkg = visible.get(position);
+            if (list.isItemChecked(position)) selected.add(pkg); else selected.remove(pkg);
+            count.setText(selected.size() + " selected • " + visible.size() + " shown • current Android user");
+        });
+        search.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { refresh.run(); }
+            @Override public void afterTextChanged(android.text.Editable s) {}
+        });
+        refresh.run();
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle("TARGET APPS").setView(layout)
+                .setNegativeButton("CANCEL", null).setNeutralButton("ADD PACKAGE", null)
+                .setPositiveButton("SAVE", (d, which) -> save(() -> config.setTargets(new HashSet<>(selected)), "Targets saved. Select the same apps in Vector."))
+                .create();
+        dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> addTargetPackage(names, selected, refresh)));
+        dialog.show();
+    }
+
+    @SuppressWarnings("deprecation")
+    private void addTargetPackage(Map<String, String> names, Set<String> selected, Runnable refresh) {
+        EditText input = new EditText(this);
+        input.setSingleLine(true); input.setHint("com.example.app");
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle("ADD INSTALLED PACKAGE")
+                .setView(input).setNegativeButton("CANCEL", null).setPositiveButton("ADD", null).create();
+        dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String pkg = input.getText().toString().trim();
+            if (!pkg.matches("[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)+")) { input.setError("Enter a package name, such as com.example.app"); return; }
+            try {
+                ApplicationInfo info = getPackageManager().getApplicationInfo(pkg, 0);
+                if (!selectable(info)) { input.setError("This module or a reserved system UID cannot be selected here."); return; }
+                names.put(pkg, info.loadLabel(getPackageManager()).toString());
+                selected.add(pkg); refresh.run(); dialog.dismiss();
+                toast("Added to selection. Tap SAVE, then select it in Vector too.");
+            } catch (PackageManager.NameNotFoundException | SecurityException e) {
+                input.setError("Package is not installed or visible in this Android user.");
+            }
+        }));
+        dialog.show();
     }
 
     private void save(BooleanSupplier action, String message) {

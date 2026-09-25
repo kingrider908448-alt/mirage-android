@@ -7,6 +7,8 @@ import android.app.ActivityManager;
 import android.app.usage.StorageStatsManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -31,6 +33,7 @@ public final class ProbeActivity extends Activity {
     private TextView report;
     private TextView diagnostics;
     private TextView locationReport;
+    private TextView clipboardReport;
     private CancellationSignal pending;
     private LocationListener listener;
     private final Map<String, String> values = new LinkedHashMap<>();
@@ -76,6 +79,11 @@ public final class ProbeActivity extends Activity {
         Button compare = button(body, "Compare with baseline");
         compare.setOnClickListener(v -> compare());
         body.addView(report);
+        clipboardReport = new TextView(this);
+        clipboardReport.setTextColor(Color.WHITE);
+        clipboardReport.setText("\nClipboard test replaces your clipboard with harmless test text. It never displays your previous clipboard. Run with blocking off, then on.\n");
+        body.addView(clipboardReport);
+        button(body, "Write test clipboard and check reads").setOnClickListener(v -> checkClipboard());
         locationReport = new TextView(this);
         locationReport.setTextColor(Color.WHITE);
         locationReport.setText("\nLocation has not been requested.\n");
@@ -93,6 +101,36 @@ public final class ProbeActivity extends Activity {
 
     public static boolean ghostVikiHookActive() { return false; }
     public static String ghostVikiConfigStatus() { return "MODULE_NOT_LOADED"; }
+
+    @SuppressWarnings("deprecation")
+    private void checkClipboard() {
+        ClipboardManager clipboard = getSystemService(ClipboardManager.class);
+        if (clipboard == null) { clipboardReport.setText("Clipboard service unavailable."); return; }
+        String sample = "GhostViki test " + java.util.UUID.randomUUID();
+        try {
+            clipboard.setPrimaryClip(ClipData.newPlainText("GhostViki privacy test", sample));
+            ClipData data = clipboard.getPrimaryClip();
+            boolean description = clipboard.getPrimaryClipDescription() != null;
+            boolean hasClip = clipboard.hasPrimaryClip();
+            CharSequence legacy = clipboard.getText();
+            boolean hasText = clipboard.hasText();
+            boolean matches = data != null && data.getItemCount() > 0
+                    && sample.contentEquals(data.getItemAt(0).getText() == null ? "" : data.getItemAt(0).getText());
+            boolean legacyMatches = legacy != null && sample.contentEquals(legacy);
+            clipboardReport.setText("\nObserved clipboard API reads\n"
+                    + "getPrimaryClip: " + (data == null ? "empty" : matches ? "test text visible" : "other data; not displayed")
+                    + "\ngetPrimaryClipDescription: " + (description ? "present" : "empty")
+                    + "\nhasPrimaryClip: " + hasClip
+                    + "\ngetText: " + (legacy == null ? "empty" : legacyMatches ? "test text visible" : "other data; not displayed")
+                    + "\nhasText: " + hasText
+                    + "\n\n" + (data == null && !description && !hasClip && legacy == null && !hasText
+                        ? "All five reads are empty. Compare with blocking OFF; Android can also deny clipboard reads."
+                        : "At least one read is not empty. Clipboard blocking is not confirmed.")
+                    + "\nTest text remains in the shared clipboard.\n");
+        } catch (RuntimeException e) {
+            clipboardReport.setText("Clipboard test unavailable: " + e.getClass().getSimpleName() + ". This is not a passing result.");
+        }
+    }
 
     @SuppressWarnings("deprecation")
     private void read() {
