@@ -8,6 +8,7 @@
 - Covers per-target isolation, pause/clipboard independence, invalid identity with valid clipboard policy, schema-5 migration without ID rotation, saved options across restart/rotation/model selection, permission errors when unblocked, unavailable config, and failed writes. Keep-original mode preserves Build/model/property/name/RAM/storage/display values while the serial remains independently masked.
 - Probe now writes harmless test text on an explicit button tap and independently reports the five clipboard reads. Prior clipboard contents are not displayed, saved or logged; empty results are not presented as proof of injection.
 - CI performs Android compilation, lint, APK assembly and packaged catalog validation. See the associated run's conclusion. Local fixtures do not establish Android/Vector runtime success; no phone is connected. The new app picker, permission screen, clipboard callback behavior and OEM coverage still require phone testing. No undetectability or all-data protection is claimed.
+- First CI attempt (build 64) compiled both APKs and passed Probe lint, then app lint flagged `QUERY_ALL_PACKAGES`. The manifest now documents why arbitrary installed privacy targets without launcher activities require broad visibility and scopes a `QueryAllPackagesPermission` suppression to that one permission. All other lint errors still abort the build; this does not assert Play Store policy approval.
 
 ## Previous revision: 0.2.0-profiles100 (version code 3)
 

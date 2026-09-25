@@ -1,6 +1,10 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Target selection must include installed apps without launcher activities. List stays local. -->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- Core privacy controls target arbitrary user-selected installed apps, including sideloaded
+         packages without launcher activities. A fixed package/intent queries list cannot enumerate
+         those targets. The inventory stays on-device. This is not a Play approval declaration. -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
