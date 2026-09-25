@@ -141,8 +141,10 @@ public final class ProbeActivity extends Activity {
                 + "\nConfig: " + ghostVikiConfigStatus()
                 + "\nDiagnostics are not proof of changed values. Compare Android API reads below.\n");
         values.put("Android ID", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-        try { values.put("Device name (Settings.Global)", displayValue(Settings.Global.getString(getContentResolver(), Settings.Global.DEVICE_NAME))); }
-        catch (SecurityException e) { values.put("Device name (Settings.Global)", "Access denied by Android"); }
+        values.put("Device name (Settings.Global)", readSetting("global", Settings.Global.DEVICE_NAME));
+        values.put("Device name (Settings.System)", readSetting("system", "device_name"));
+        values.put("Device name (Settings.Secure)", readSetting("secure", "device_name"));
+        values.put("Bluetooth name (Settings.Secure)", readSetting("secure", "bluetooth_name"));
         values.put("Local Bluetooth name", bluetoothName());
         values.put("Manufacturer", Build.MANUFACTURER);
         values.put("Brand", Build.BRAND);
@@ -170,6 +172,23 @@ public final class ProbeActivity extends Activity {
     }
 
     private static String displayValue(String value) { return value == null || value.isEmpty() ? "Unavailable" : value; }
+
+    private String readSetting(String table, String key) {
+        try {
+            String value;
+            switch (table) {
+                case "global": value = Settings.Global.getString(getContentResolver(), key); break;
+                case "system": value = Settings.System.getString(getContentResolver(), key); break;
+                case "secure": value = Settings.Secure.getString(getContentResolver(), key); break;
+                default: return "Unavailable";
+            }
+            return displayValue(value);
+        } catch (SecurityException e) {
+            return "Access denied by Android";
+        } catch (RuntimeException e) {
+            return "Unavailable: " + e.getClass().getSimpleName();
+        }
+    }
 
     @SuppressLint("MissingPermission")
     private String bluetoothName() {
@@ -212,24 +231,58 @@ public final class ProbeActivity extends Activity {
         if (saved == null) { Toast.makeText(this, "Save a baseline first", Toast.LENGTH_SHORT).show(); return; }
         try {
             JSONObject baseline = new JSONObject(saved);
-            StringBuilder text = new StringBuilder("Changes since baseline\n\n");
-            int changes = 0;
+            StringBuilder changed = new StringBuilder();
+            StringBuilder unchanged = new StringBuilder();
+            StringBuilder unavailable = new StringBuilder();
+            int changedCount = 0, unchangedCount = 0, unavailableCount = 0, noBaselineCount = 0;
+
             for (Map.Entry<String, String> item : values.entrySet()) {
                 if (!baseline.has(item.getKey())) {
-                    text.append(item.getKey()).append(": no baseline for this field; not counted as a change.\n\n");
+                    noBaselineCount++;
                     continue;
                 }
-                String old = baseline.optString(item.getKey(), "");
-                if (!Objects.equals(old, item.getValue())) {
-                    text.append(item.getKey()).append("\nBefore: ").append(old)
-                            .append("\nNow: ").append(item.getValue()).append("\n\n");
-                    changes++;
+                String before = baseline.optString(item.getKey(), "");
+                String now = item.getValue();
+                if (isUnavailable(now) || isUnavailable(before)) {
+                    unavailable.append("• ").append(item.getKey()).append(": ").append(now).append("\n");
+                    unavailableCount++;
+                } else if (Objects.equals(before, now)) {
+                    unchanged.append("• ").append(item.getKey()).append(": ").append(now).append("\n");
+                    unchangedCount++;
+                } else {
+                    changed.append("• ").append(item.getKey())
+                            .append("\n  Before: ").append(before)
+                            .append("\n  Now: ").append(now).append("\n");
+                    changedCount++;
                 }
             }
-            if (changes == 0) text.append("No changed values observed.\n");
-            text.append("\nAn unchanged or unavailable value is not a passing test.");
+
+            StringBuilder text = new StringBuilder("Privacy coverage comparison\n\n")
+                    .append("Changed observable values: ").append(changedCount).append("\n")
+                    .append("Unchanged observable values: ").append(unchangedCount).append("\n")
+                    .append("Unavailable / access denied: ").append(unavailableCount).append("\n");
+            if (noBaselineCount > 0)
+                text.append("No baseline for newly added fields: ").append(noBaselineCount).append("\n");
+
+            if (changed.length() > 0)
+                text.append("\nCHANGED\n").append(changed);
+            if (unchanged.length() > 0)
+                text.append("\nUNCHANGED — possible host-value exposure; verify whether the field is expected to be virtualized\n")
+                        .append(unchanged);
+            if (unavailable.length() > 0)
+                text.append("\nNOT VERIFIED\n").append(unavailable);
+
+            text.append("\nA changed value proves only that this API read changed. "
+                    + "An unchanged value can indicate retained host data, and an unavailable value cannot be verified.");
             report.setText(text);
         } catch (org.json.JSONException e) { report.setText("Baseline could not be read. Save a new baseline."); }
+    }
+
+    private static boolean isUnavailable(String value) {
+        return value == null || value.isEmpty() || value.equals("Unavailable")
+                || value.startsWith("Unavailable:")
+                || value.startsWith("Access denied by Android")
+                || value.startsWith("Bluetooth permission not granted");
     }
 
     private void locate() {
